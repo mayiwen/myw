@@ -1,12 +1,15 @@
+use app::*;
+use axum::routing::get;
 use axum::Router;
+use leptos::logging::log;
 use leptos::prelude::*;
 use leptos_axum::{generate_route_list, LeptosRoutes};
-use app::*;
-use leptos::logging::log;
-
+mod api;
+mod appf;
+mod config;
+mod entity;
 #[tokio::main]
 async fn main() {
-
     let conf = get_configuration(None).unwrap();
     let addr = conf.leptos_options.site_addr;
     let leptos_options = conf.leptos_options;
@@ -14,6 +17,7 @@ async fn main() {
     let routes = generate_route_list(App);
 
     let app = Router::new()
+        .route("/hello", get(api_hello_world))
         .leptos_routes(&leptos_options, routes, {
             let leptos_options = leptos_options.clone();
             move || shell(leptos_options.clone())
@@ -28,4 +32,11 @@ async fn main() {
     axum::serve(listener, app.into_make_service())
         .await
         .unwrap();
+}
+// 更复杂的处理器示例
+async fn api_hello_world() -> axum::response::Json<serde_json::Value> {
+    axum::response::Json(serde_json::json!({
+        "message": "Hello from API!",
+        "status": "success"
+    }))
 }
