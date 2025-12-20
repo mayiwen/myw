@@ -1,0 +1,28 @@
+use crate::myw::{self, Gap};
+use leptos::prelude::*;
+use leptos::web_sys::window;
+/// Renders the home page of your application.
+#[component]
+pub fn I() -> impl IntoView {
+    view! {
+        <Gap/>
+        <MayiwenLogo/>
+        <Gap/>
+
+    }
+}
+
+#[component]
+pub fn MayiwenLogo() -> impl IntoView {
+    let open_new_window = move |_| {
+        if let Some(win) = window() {
+            // 打开新窗口
+            let _ = win.open_with_url("https://mayiwen.com");
+        }
+    };
+    view! {
+        <div style="text-align: center">
+            <img on:click=open_new_window src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAABLAgMAAABIEiB7AAAADFBMVEX8AABHcEz6AAD6AADtPLgpAAAABHRSTlP+AGG+hRXDYwAABAxJREFUSMfNlzFv20YUx59IqACR0JvST3DpBwgY1EXRCugUFAUEWEeexStMSJNTIabdvSXgyQGSDsVl8tTAQzVlLRDEjA0vAYJOmjupQwsU7aChQZr0HcWj7o6xKS1FbxAk8f3u3nv3f++OQNce8B8j8WxtpBesjXTbayMZWRuBTpOtsJAIRAMRBxbCXPUtnBSjNgPzLKTXqh5BMWp+9n0LSf0mJHQsJKtyzN7K8ee0FkxuIbmV47SOZFMDCaGzayL1BJZ/KaQP4rPq2SdSDHXkS9MxzPFyV906kkM5gsqu54RLxFkJSf0+0AMtmxltQrpt7qoshq06MqEuKiL7bXJSITlJWrSUWYEc2sGfKW+h0nHXi8ofof8u5FAtDZWOs7ZS5rsRaX6uIRg7EO5oyJmNSKfONIRhjjtJqczIK5Gv35bjr4WCFsIEJX3c/q6nIfJpqjIr85F0aNTSkMTHQPJABVbaGQgntO9pSOrzVqhKpL+w802EBZS1dcRj7b6q/qjw/7VP707K8aOcyKM8MJBQcNfIUORbRdmiCdFjwWiTlol4VpYd2p3qGUOnMu9qJBO5Xi9MKjS4GklvOEaJwUZfJawMuob0PvQNJIVjlbBFabh9G2HgmYUM4NCrkRCI1WFAmZwW2/KmEaEJWOcLa9cc821kowFJry2iBa0fmP2RB7Zfs8wzw78Om4ZJYndch45hZiT519zRDAYD6yCMccYQXFEh+AOj0TxLLD8HubROwa2a0hjniHXPOJgHYVY8xK0gJRLm0kD3jFkJTF2xmFqUyBgN7opEmzh6ZfZkXt49TstYcBESwpTB5Uf/wDr3x6gvDiKElS4YEvlK9vPM0Y/YBuQpyhbT5clDZjWEF4fGE4wmsBrGpUi6WMQV3GPupTEbSBdQOU/Qr2XrV2N4CTKGv3ERmS9iO3bvistVjtWDG5k4qyZZZmAWolwyf2UkRc2NwVNbufPsWfgmnMXiHp3Pf9qbx3tSLfhx+uj3X6bl7m9IzXSUYHq3bvHX0wsuhvTCu3j4nH0nq/Hnl9HHN91PlZIFLiILZiHF3vHxKOocbWHG7m/eDoaMHKEOgwMuXtwOlud+jr4p8W/tcBqTB0OJ/HPzo8dM3EFpd7a36H2yRGSJxqqTIRLnZH8fkc//+ADcAulP6Yg+JGS5SjZHv2YVMpqQ4ReIfPvD+4QyWiADC9lG39RGIrIfka0jRNLvb5BBgUSdkXRMQ5ZdukAOGOFzRJLj6eYIke0i/EfvmUhatRREknPCiES4OHzJ6R1U27lMsoFEVefHHjaIX51EBJW8E4ud2YDu7i62kp6cLG9KqOVN61o8bbjzR2Bf4DPRgPTAluQ3TW8WKaz6krS8KG6s/S62N1sb+d+9V/4Lb2fNIm6fVJUAAAAASUVORK5CYII="/>
+        </div>
+    }
+}

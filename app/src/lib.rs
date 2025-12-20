@@ -1,10 +1,15 @@
+use crate::myw::icon;
+use crate::myw::myw::MayiwenBeiAn;
+use crate::myw::tabset::{Tab, Tabset};
 use leptos::prelude::*;
 use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
 use leptos_router::{
     components::{Route, Router, Routes},
+    hooks::{use_location, use_navigate},
     StaticSegment,
 };
-
+pub mod myw;
+pub mod page;
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
         <!DOCTYPE html>
@@ -25,23 +30,75 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
 
 #[component]
 pub fn App() -> impl IntoView {
-    // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
-
+    let id: RwSignal<u64> = RwSignal::new(0);
+    let (router_active, set_router_active) = signal("".to_string());
+    let nav = |str: &'static str| {
+        let navigate = use_navigate();
+        navigate(str, Default::default());
+    };
     view! {
         <Stylesheet id="leptos" href="/pkg/myw.css"/>
-
-        // sets the document title
-        <Title text="Welcome to Leptos"/>
-
-        // content for this welcome page
+        <Title text="马一文 mayiwen mayiwen.com | 建设纪录"/>
+        <Tabset id=id>
+            <Tab slot id=0 title="马一文".to_string()
+                icon={
+                    ViewFn::from(move || {
+                        view! { <icon::Myw></icon::Myw> }
+                    })
+                }
+                click=Callback::from(move || {
+                     nav("/")
+                })
+                >""</Tab>
+            <Tab slot id=1
+                title="☰ 代码".to_string()
+                click=Callback::from(move || {
+                     nav("/code")
+                })>""</Tab>
+            <Tab slot id=2
+                title="✤ 阅读".to_string()
+                click=Callback::from(move || {
+                     nav("/yueduqi")
+                })>""</Tab>
+            <Tab slot id=4
+                title="❃ 设置".to_string()
+                click=Callback::from(move || {
+                     nav("/setting")
+                })>""</Tab>
+        </Tabset>
+        {router_active}
         <Router>
+            {
+                let location = use_location();
+                Effect::new(move |_| {
+                    let path = location.pathname.get();
+                    let trimmed_path = path.trim_start_matches('/').to_string();
+                    set_router_active.set(trimmed_path.clone());
+                    if trimmed_path == "code".to_string() {
+                        id.set(1);
+                    } else if trimmed_path == "".to_string() {
+                        id.set(0)
+                    } else if trimmed_path == "yueduqi".to_string() {
+                        id.set(2)
+                    } else if trimmed_path == "setting".to_string() {
+                        id.set(4)
+                    } else {
+                        id.set(9999999)
+                    }
+                });
+            }
             <main>
                 <Routes fallback=|| "Page not found.".into_view()>
-                    <Route path=StaticSegment("") view=HomePage/>
+                    <Route path=StaticSegment("") view=crate::page::home::I/>
+                    <Route path=StaticSegment("/code") view=crate::page::code::I/>
+                    <Route path=StaticSegment("/yueduqi") view=crate::page::yuedu::I/>
+                    <Route path=StaticSegment("/setting") view=crate::page::setting::I/>
                 </Routes>
             </main>
         </Router>
+
+        <MayiwenBeiAn></MayiwenBeiAn>
     }
 }
 
