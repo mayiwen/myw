@@ -1,9 +1,9 @@
 use axum::routing::get;
 use axum::{extract::Request, Router};
+use leptos::config::LeptosOptions;
 
-use crate::appf::AppState;
 // hello.rs
-pub fn create_route() -> Router<AppState> {
+pub fn create_route() -> Router<LeptosOptions> {
     Router::new().route(
         "/",
         get(say_hi)

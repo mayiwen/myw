@@ -2,17 +2,18 @@ use crate::appf::common::{Page, PaginationParams};
 use crate::appf::error::ApiResult;
 use crate::appf::response::ApiResponse;
 use crate::appf::valid::ValidQuery;
-use crate::appf::AppState;
+
 use crate::entity::{login_user, prelude::*};
-use axum::routing;
+use axum::{routing, Extension};
 // use axum::extract::Query;
 use axum::Router;
 use axum::{debug_handler, extract::State};
+use leptos::config::LeptosOptions;
 use sea_orm::{prelude::*, Condition, QueryOrder, QueryTrait};
 
 use serde::Deserialize;
 use validator::Validate;
-pub fn create_route() -> Router<AppState> {
+pub fn create_route() -> Router<LeptosOptions> {
     Router::new()
         .route("/", routing::get(index))
         .route("/find_page", routing::get(find_page).post(find_page))
@@ -32,7 +33,7 @@ async fn index() -> &'static str {
 #[tracing::instrument(name = "Query users", skip_all, fields(name = "m"))]
 #[debug_handler]
 async fn find_page(
-    State(AppState { db }): State<AppState>,
+    Extension(db): Extension<DatabaseConnection>,
     ValidQuery(UserQueryParams {
         keyword,
         pagination,

@@ -1,11 +1,13 @@
 use std::net::SocketAddr;
 
-use crate::{appf::latency::LatencyOnResponse, appf::AppState, config::server::ServerConfig};
+use crate::{appf::latency::LatencyOnResponse, config::server::ServerConfig};
 use axum::{
     extract::{DefaultBodyLimit, Request},
-    middleware, Router,
+    middleware, Extension, Router,
 };
 use bytesize::ByteSize;
+use leptos::config::LeptosOptions;
+use sea_orm::DatabaseConnection;
 use std::time::Duration;
 use tokio::net::TcpListener;
 use tower_http::{
@@ -24,8 +26,13 @@ impl Server {
     pub fn new(config: &'static ServerConfig) -> Self {
         Self { config }
     }
-    pub async fn start(&self, state: AppState, router: Router<AppState>) -> anyhow::Result<()> {
-        let router = self.build_router(state, router);
+    pub async fn start(
+        &self,
+        state: LeptosOptions,
+        router: Router<LeptosOptions>,
+        db: DatabaseConnection,
+    ) -> anyhow::Result<()> {
+        let router = self.build_router(state, router, db);
         let port = self.config.port();
         let listener = TcpListener::bind(format!("0.0.0.0:{}", port)).await?;
         // tracing::info!("listening on {}", listener.local_addr()?);
@@ -38,7 +45,12 @@ impl Server {
 
         Ok(())
     }
-    fn build_router(&self, state: AppState, router: Router<AppState>) -> Router {
+    fn build_router(
+        &self,
+        state: LeptosOptions,
+        router: Router<LeptosOptions>,
+        db: DatabaseConnection,
+    ) -> Router {
         let timeout = TimeoutLayer::new(Duration::from_secs(120));
         let body_limit = DefaultBodyLimit::max(ByteSize::mib(10).as_u64() as usize);
         let cors = CorsLayer::new()
@@ -64,10 +76,11 @@ impl Server {
         let normalize_path = NormalizePathLayer::trim_trailing_slash();
         Router::new()
             .merge(router)
+            .layer(Extension(db))
             // .layer(middleware::from_fn(myw_middleware::add_response_header::i))
             .layer(timeout)
             .layer(body_limit)
-            .layer(timeout)
+            // .layer(timeout)
             .layer(tracing)
             .layer(cors)
             .layer(normalize_path)

@@ -17,23 +17,27 @@ pub mod utils;
 pub mod valid;
 pub mod validdation;
 use axum::Router;
+use leptos::config::LeptosOptions;
 use sea_orm::DatabaseConnection;
-#[derive(Clone)]
-pub struct AppState {
-    pub db: DatabaseConnection,
-}
+// #[derive(Clone)]
+// pub struct AppState {
+//     pub db: DatabaseConnection,
+// }
 
-impl AppState {
-    pub fn new(db: DatabaseConnection) -> Self {
-        Self { db }
-    }
-}
+// impl AppState {
+//     pub fn new(db: DatabaseConnection) -> Self {
+//         Self { db }
+//     }
+// }
 
-pub async fn run(router: Router<AppState>) -> anyhow::Result<()> {
+pub async fn run(
+    leptos_options: LeptosOptions,
+    router: Router<LeptosOptions>,
+) -> anyhow::Result<()> {
     logger::init();
     tracing::info!("Starting app server...");
     let db = database::init().await?;
-    let state = AppState::new(db);
+    // let state = AppState::new(db);
     let server = server::Server::new(crate::config::get().server());
-    server.start(state, router).await
+    server.start(leptos_options, router, db).await
 }

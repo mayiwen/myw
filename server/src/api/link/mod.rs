@@ -4,14 +4,15 @@ use crate::appf::path::Path;
 use crate::appf::query::Query;
 use crate::appf::response::ApiResponse;
 use crate::appf::valid::{ValidJson, ValidQuery};
-use crate::appf::AppState;
+
 // use crate::entity::{login_user, prelude::*};
 use anyhow::Context;
+use leptos::config::LeptosOptions;
 // use axum::extract::Query;
 use crate::entity::link;
 use crate::entity::link::ActiveModel;
-use axum::Router;
 use axum::{debug_handler, extract::State, response::IntoResponse, routing};
+use axum::{Extension, Router};
 use axum_valid::Valid;
 use sea_orm::{
     prelude::*, ActiveValue, Condition, IntoActiveModel, Paginator, QueryOrder, QueryTrait,
@@ -37,21 +38,21 @@ pub struct LinkParams {
     pub title_id: i64,
 }
 
-pub fn index() -> Router<AppState> {
+pub fn index() -> Router<LeptosOptions> {
     Router::new()
         .route("/", routing::post(create))
         .route("/sort", routing::post(sort))
         .route("/{id}", routing::delete(delete))
         .route("/{id}", routing::put(update))
 }
-pub fn i() -> Router<AppState> {
+pub fn i() -> Router<LeptosOptions> {
     Router::new()
         .route("/{id}", routing::get(read_by_title_id))
         .route("/", routing::get(read))
 }
 #[debug_handler]
 async fn read(
-    State(AppState { db }): State<AppState>,
+    Extension(db): Extension<DatabaseConnection>,
     ValidQuery(LinkQueryParams {
         keyword,
         pagination,
@@ -72,7 +73,7 @@ async fn read(
 }
 #[debug_handler]
 async fn read_by_title_id(
-    State(AppState { db }): State<AppState>,
+    Extension(db): Extension<DatabaseConnection>,
     ValidQuery(LinkQueryParams {
         keyword,
         pagination,
@@ -96,7 +97,7 @@ async fn read_by_title_id(
 
 #[debug_handler]
 async fn create(
-    State(AppState { db }): State<AppState>,
+    Extension(db): Extension<DatabaseConnection>,
     ValidJson(params): ValidJson<LinkParams>,
 ) -> ApiResult<ApiResponse<link::Model>> {
     if params.title.is_empty() {
@@ -111,7 +112,7 @@ async fn create(
 
 #[debug_handler]
 async fn delete(
-    State(AppState { db }): State<AppState>,
+    Extension(db): Extension<DatabaseConnection>,
     Path(id): Path<i64>,
 ) -> ApiResult<ApiResponse<()>> {
     let existed_user = link::Entity::find_by_id(id)
@@ -130,7 +131,7 @@ async fn delete(
 
 #[debug_handler]
 async fn update(
-    State(AppState { db }): State<AppState>,
+    Extension(db): Extension<DatabaseConnection>,
     Path(id): Path<i64>,
     ValidJson(params): ValidJson<LinkParams>,
 ) -> ApiResult<ApiResponse<link::Model>> {
@@ -169,7 +170,7 @@ pub struct SortParams {
 }
 #[debug_handler]
 async fn sort(
-    State(AppState { db }): State<AppState>,
+    Extension(db): Extension<DatabaseConnection>,
     ValidJson(params_list): ValidJson<Vec<SortParams>>,
 ) -> ApiResult<ApiResponse<Vec<link::Model>>> {
     // 开启事务保证原子性

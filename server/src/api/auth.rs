@@ -4,17 +4,17 @@ use crate::appf::middleware::get_auth_layer;
 use crate::appf::response::ApiResponse;
 use crate::appf::utils::verify_password;
 use crate::appf::valid::ValidJson;
-use crate::appf::AppState;
 use crate::entity::login_user;
 use crate::entity::prelude::*;
 use axum::extract::{ConnectInfo, State};
 use axum::{debug_handler, routing, Extension, Router};
+use leptos::config::LeptosOptions;
 use sea_orm::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use validator::Validate;
 
-pub fn create_router() -> Router<AppState> {
+pub fn create_router() -> Router<LeptosOptions> {
     Router::new()
         .route("/user-info", routing::get(get_user_info))
         .route_layer(get_auth_layer())
@@ -38,7 +38,7 @@ pub struct LoginResult {
 #[debug_handler]
 #[tracing::instrument(name = "login", skip_all, fields(account = %params.name, ip = %addr.ip()))]
 async fn login(
-    State(AppState { db }): State<AppState>,
+    Extension(db): Extension<DatabaseConnection>,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     ValidJson(params): ValidJson<LoginParams>,
 ) -> ApiResult<ApiResponse<LoginResult>> {
