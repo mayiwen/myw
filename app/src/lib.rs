@@ -40,7 +40,7 @@ pub fn App() -> impl IntoView {
     view! {
         <Stylesheet id="leptos" href="/pkg/myw.css"/>
         <Title text="马一文 mayiwen mayiwen.com | 建设纪录"/>
-        <Tabset id=id>
+        <Tabset id=id show_line=false>
             <Tab slot id=0 title="马一文".to_string()
                 icon={
                     ViewFn::from(move || {
@@ -67,7 +67,7 @@ pub fn App() -> impl IntoView {
                      nav("/setting")
                 })>""</Tab>
         </Tabset>
-        {router_active}
+        // {router_active}
         <Router>
             {
                 let location = use_location();

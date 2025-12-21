@@ -8,25 +8,20 @@ pub mod tabset;
 
 #[component]
 pub fn Gap(
-    #[prop(optional)] w: &'static str,
-    #[prop(optional)] h: &'static str,
-    #[prop(optional)] width: &'static str,
-    #[prop(optional)] height: &'static str,
+    #[prop(optional)] w: Option<u32>,         // 像素值
+    #[prop(optional)] h: Option<u32>,         // 像素值
+    #[prop(optional)] width: Option<String>,  // 带单位的字符串
+    #[prop(optional)] height: Option<String>, // 带单位的字符串
 ) -> impl IntoView {
-    let style = if !w.is_empty() {
-        format!("display: inline-block; width: {}px", w)
-    } else if !h.is_empty() {
-        format!("height: {}px", h)
-    } else if !width.is_empty() {
-        format!("display: inline-block; width: {}", width)
-    } else if !height.is_empty() {
-        format!("height: {}", height)
-    } else {
-        format!("height: 30px{}", "")
+    let style = match (w, h, width, height) {
+        (Some(w), _, _, _) => format!("display: inline-block; width: {}px", w),
+        (_, Some(h), _, _) => format!("height: {}px", h),
+        (_, _, Some(width), _) => format!("display: inline-block; width: {}", width),
+        (_, _, _, Some(height)) => format!("height: {}", height),
+        _ => "height: 30px".to_string(),
     };
     view! { <div style=style></div> }
 }
-
 #[component]
 pub fn I() -> impl IntoView {
     view! {

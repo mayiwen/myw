@@ -23,7 +23,11 @@ impl Clone for Tab {
     }
 }
 #[component]
-pub fn Tabset(#[prop(default=vec![])] tab: Vec<Tab>, id: RwSignal<u64>) -> impl IntoView {
+pub fn Tabset(
+    #[prop(default=vec![])] tab: Vec<Tab>,
+    id: RwSignal<u64>,
+    #[prop(optional)] show_line: Option<bool>, // 改为 Option<bool>
+) -> impl IntoView {
     let (select_id, set_select_id) = signal(0);
     let (arr_vec, _set_arr_vec) = signal(tab);
     let vec_first_vlue = id.get();
@@ -32,46 +36,54 @@ pub fn Tabset(#[prop(default=vec![])] tab: Vec<Tab>, id: RwSignal<u64>) -> impl 
     // } else {
     //     0 as u64
     // };
+    // 明确处理默认值
+    let should_show_line = move || show_line.unwrap_or(true);
     Effect::new(move |_| {
         // immediately prints "Value: 0" and subscribes to `a`
         set_select_id.set(id.get());
     });
     set_select_id.set(vec_first_vlue);
     view! {
-        <For
-            each=move || arr_vec.get()
-            key=|state| state.id.clone()
-            let:child
-        >
-           <button::I
-                border=Signal::derive(move || if select_id.get() == child.id {"both".to_string()} else { "none".to_string()})
-                active= Signal::derive(move || select_id.get() == child.id)
-                on:click=move |_| {
-                    set_select_id.set(child.id);
-                    id.set(child.id);
-                    if let Some(cb) = &child.click {
-                        cb.run(());
-                    }
-                }
+        <div class="pr">
+            <For
+                each=move || arr_vec.get()
+                key=|state| state.id.clone()
+                let:child
             >
-                {
-                    let icon_view = match child.icon.as_ref() {
-                        Some(view_fn) => {
-                            view! {
-                                    {view_fn.run()}  // 图标
-                                    <span style="line-height: 38px">{child.title.clone()}</span>  // 标题
-                            }.into_any()
+
+                <button::I
+                    border=Signal::derive(move || if select_id.get() == child.id {"both".to_string()} else { "none".to_string()})
+                    active= Signal::derive(move || select_id.get() == child.id)
+                    on:click=move |_| {
+                        set_select_id.set(child.id);
+                        id.set(child.id);
+                        if let Some(cb) = &child.click {
+                            cb.run(());
                         }
-                        None => {
-                            view! { <span style="line-height: 38px">{child.title.clone()}</span> }.into_any()
-                        }
-                    };
-                    view! {
-                        {icon_view}
                     }
-                }
-            </button::I>
-        </For>
+                >
+                    {
+                        let icon_view = match child.icon.as_ref() {
+                            Some(view_fn) => {
+                                view! {
+                                        {view_fn.run()}  // 图标
+                                        <span style="line-height: 38px">{child.title.clone()}</span>  // 标题
+                                }.into_any()
+                            }
+                            None => {
+                                view! { <span style="line-height: 38px">{child.title.clone()}</span> }.into_any()
+                            }
+                        };
+                        view! {
+                            {icon_view}
+                        }
+                    }
+                </button::I>
+            </For>
+            <Show when=should_show_line>
+                <div style="border-bottom: 1px solid var(--myw-border); text-align: left; bottom: 0; left: 0; width: 100%;" class="pa"></div>
+            </Show>
+         </div>
         <div>
             {
                 move || {

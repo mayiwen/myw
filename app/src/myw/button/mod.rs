@@ -4,6 +4,7 @@ use leptos::prelude::*;
 pub fn I(
     children: Children,
     #[prop(optional, into)] border: MaybeSignal<String>,
+    #[prop(optional, into)] style: MaybeSignal<String>,
     #[prop(optional, into)] active: MaybeSignal<bool>,
 ) -> impl IntoView {
     let border_style = move || {
@@ -16,10 +17,12 @@ pub fn I(
             "1px solid var(--myw-border)".to_string()
         }
     };
+
     view! {
         <button
             class="myw-button"
             style:border=border_style
+            style=style
             class:active=move ||active.get()
             >{children()}
         </button>

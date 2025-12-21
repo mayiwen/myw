@@ -1,5 +1,5 @@
-pub mod server;
 pub mod database;
+pub mod server;
 use std::sync::LazyLock;
 
 use anyhow::Context;
@@ -20,19 +20,19 @@ impl AppConfig {
             .add_source(
                 config::File::with_name("application")
                     .format(FileFormat::Yaml)
-                    .required(true)
-            )  
+                    .required(true),
+            )
             .add_source(
                 config::Environment::with_prefix("APP")
                     .try_parsing(true)
                     .separator("_")
-                    .list_separator(",")
+                    .list_separator(","),
             );
 
         let config = config_builder.build().context("Failed to build config")?;
 
         // 打印实际加载的配置
-        println!("Loaded config: {:#?}", config);
+        // println!("Loaded config: {:#?}", config);
 
         config
             .try_deserialize()

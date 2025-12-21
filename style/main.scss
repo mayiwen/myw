@@ -6,15 +6,11 @@
 html,
 body {
     height: 100%;
-    background-color: var(--myw-bc);
-    color: var(--myw-color);
 }
 
 body {
-    padding: 1px;
-    height: calc(100% - 2px);
-    width: calc(100% - 2px);
-    
+    background-color: var(--myw-bc);
+    color: var(--myw-color);
 }
 p,
 span,
@@ -69,7 +65,7 @@ html[data-mayiwen-theme="black"] {
     --myw-activeBc: #393939;
     /* 一级盒子选中色 */
     /* --myw-active: #4e6ef2; */
-        --myw-active: #3f85ff;
+    --myw-active: #3f85ff;
     /* 选中色 */
     --myw-redDefault: #e74c3c;
     /* 红色悬停 */
@@ -101,8 +97,8 @@ a {
     height: 38px;
     font-size: 16px;
     line-height: 18px;
-    padding: 0px  4px;
-      position: relative;
+    padding: 0px 4px;
+    position: relative;
     border-radius: 4px;
     outline: none;
     cursor: pointer;
@@ -121,7 +117,6 @@ a {
     box-sizing: border-box; /* 确保padding包含在高度内 */
     user-select: none;
     vertical-align: top;
-
 }
 
 a {
@@ -135,7 +130,7 @@ a {
 .myw-button.active {
     background-color: var(--myw-activeBc);
     color: var(--myw-active);
-    border: 1px solid var(--myw-border)!important;
+    border: 1px solid var(--myw-border) !important;
 }
 .myw-button:disabled {
     cursor: not-allowed;
@@ -238,6 +233,10 @@ html,
     padding-top: 30px;
 }
 
-table {
-    border: 1;
+.pa {
+    position: absolute;
+}
+
+.pr {
+    position: relative;
 }
