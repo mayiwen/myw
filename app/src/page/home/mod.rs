@@ -1,6 +1,8 @@
 use crate::myw::{self, Gap};
+use crate::util::open_url;
 use leptos::prelude::*;
 use leptos::web_sys::window;
+mod nav;
 /// Renders the home page of your application.
 #[component]
 pub fn I() -> impl IntoView {
@@ -8,6 +10,9 @@ pub fn I() -> impl IntoView {
         <Gap/>
         <MayiwenLogo/>
         <Gap/>
+        <nav::I/>
+
+
 
     }
 }
@@ -15,10 +20,7 @@ pub fn I() -> impl IntoView {
 #[component]
 pub fn MayiwenLogo() -> impl IntoView {
     let open_new_window = move |_| {
-        if let Some(win) = window() {
-            // 打开新窗口
-            let _ = win.open_with_url("https://mayiwen.com");
-        }
+        open_url("https://mayiwen.com");
     };
     view! {
         <div style="text-align: center">

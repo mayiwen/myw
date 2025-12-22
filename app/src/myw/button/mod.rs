@@ -1,4 +1,4 @@
-use leptos::prelude::*;
+use leptos::{ev, prelude::*};
 
 #[component]
 pub fn I(
@@ -24,6 +24,7 @@ pub fn I(
             style:border=border_style
             style=style
             class:active=move ||active.get()
+
             >{children()}
         </button>
     }

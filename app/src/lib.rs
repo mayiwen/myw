@@ -10,6 +10,7 @@ use leptos_router::{
 };
 pub mod myw;
 pub mod page;
+pub mod util;
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
         <!DOCTYPE html>

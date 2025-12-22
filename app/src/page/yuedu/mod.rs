@@ -1,6 +1,9 @@
-use crate::myw::{
-    self,
-    tabset::{Tab, Tabset},
+use crate::{
+    myw::{
+        self,
+        tabset::{Tab, Tabset},
+    },
+    util::open_url,
 };
 use leptos::prelude::*;
 use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
@@ -28,9 +31,11 @@ pub fn I() -> impl IntoView {
                 <myw::Gap h=12/>
                 <h1 style="font-weight: bold;">一文小说阅读器</h1>
                 <myw::Gap h=12/>
-                <myw::button::I style="transform: scale(1.2); transform-origin: center">软件与说明书下载</myw::button::I>
+                <myw::button::I style="transform: scale(1.2); transform-origin: center"  on:click=move |_| {
+                    open_url("https://gitlink.org.cn/mayiwen/yueduqi/releases");
+                }>软件与说明书下载</myw::button::I>
                 <myw::Gap  h=12/>
-                <a href="https://github.com/mayiwen/yueduqi/releases">github分流下载</a>
+                <a href="https://github.com/mayiwen/yueduqi/releases" target="_blank">github分流下载</a>
                 <myw::Gap h=12/>
                 <div style="text-align: left;">
                     <Tabset id=id>
