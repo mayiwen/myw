@@ -34,7 +34,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
 pub fn App() -> impl IntoView {
     provide_meta_context();
     let id: RwSignal<u64> = RwSignal::new(0);
-    let (router_active, set_router_active) = signal("".to_string());
+    let (_router_active, set_router_active) = signal("".to_string());
     let nav = |str: &'static str| {
         let navigate = use_navigate();
         navigate(str, Default::default());

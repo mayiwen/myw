@@ -1,7 +1,6 @@
-use crate::myw::{self, Gap};
+use crate::myw::Gap;
 use crate::util::open_url;
 use leptos::prelude::*;
-use leptos::web_sys::window;
 mod nav;
 /// Renders the home page of your application.
 #[component]

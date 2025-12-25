@@ -8,10 +8,3 @@ pub fn I() -> impl IntoView {
         </div>
     }
 }
-
-// #[server]
-// pub async fn add_todo(title: String) -> Result<(), ServerFnError> {
-//     // 服务器逻辑
-//     println!("Adding todo: {}", title);
-//     Ok(())
-// }

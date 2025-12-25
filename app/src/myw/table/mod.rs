@@ -42,7 +42,7 @@ struct DataMock {
 }
 
 #[component]
-pub fn I<T: Clone + 'static + Debug + Send + Sync>(
+pub fn Table<T: Clone + 'static + Debug + Send + Sync>(
     data: ReadSignal<Vec<T>>,
     col_vec: ReadSignal<Vec<TabColumn<T>>>,
 ) -> impl IntoView {
@@ -56,11 +56,11 @@ pub fn I<T: Clone + 'static + Debug + Send + Sync>(
                 </tr>
             </thead>
             <tbody>
-                {move || data.get().into_iter().enumerate().map(|(row_index, item)| {
+                {move || data.get().into_iter().enumerate().map(|(_row_index, item)| {
                     let item = item.clone();
                     view! {
                         <tr style={"height: 40px;"}>
-                            {col_vec.get().iter().enumerate().map(|(col_index, col)| {
+                            {col_vec.get().iter().enumerate().map(|(_col_index, col)| {
                             let cell_view = match &col.view {
                                 Some(view_fn) => {
                                     let view_fn_instance = view_fn(item.clone());
@@ -85,83 +85,84 @@ pub fn I<T: Clone + 'static + Debug + Send + Sync>(
     }
 }
 
-#[component]
-pub fn Test() -> impl IntoView {
-    let data = vec![
-        DataMock {
-            id: 1,
-            name: "张三",
-        },
-        DataMock {
-            id: 2,
-            name: "李四",
-        },
-        DataMock {
-            id: 3,
-            name: "王五",
-        },
-    ];
-    let (data_vec, set_data_vec) = signal(data);
+// #[component]
+// pub fn Test() -> impl IntoView {
+//     let data = vec![
+//         DataMock {
+//             id: 1,
+//             name: "张三",
+//         },
+//         DataMock {
+//             id: 2,
+//             name: "李四",
+//         },
+//         DataMock {
+//             id: 3,
+//             name: "王五",
+//         },
+//     ];
+//     let (data_vec, _set_data_vec) = signal(data);
 
-    let col_vec: Vec<TabColumn<DataMock>> = vec![
-        TabColumn {
-            width: 100,
-            title: "id",
-            id: "id",
-            view: Some(Arc::new(|data: DataMock| {
-                ViewFn::from(move || {
-                    view! { {data.id} }
-                })
-            })),
-        },
-        TabColumn {
-            width: 100,
-            title: "姓名",
-            id: "name",
-            view: Some(Arc::new(|data: DataMock| {
-                ViewFn::from(move || {
-                    view! { {data.id} }
-                })
-            })),
-        },
-        TabColumn {
-            width: 100,
-            title: "操作",
-            id: "ctrl",
-            view: Some(Arc::new(|data: DataMock| {
-                let data_clone = data.clone();
-                // 方法1：使用 ViewFn::from() - 最推荐的方式
-                ViewFn::from(move || {
-                    let data = data_clone.clone();
-                    view! {
-                        <button::I on:click=move |_| {
-                            leptos::logging::log!("操作: {:?}", data);
-                        }>
-                            {format!("操作 {}", data.name)}
-                        </button::I>
-                    }
-                })
+//     let col_vec: Vec<TabColumn<DataMock>> = vec![
+//         TabColumn {
+//             width: 100,
+//             title: "id",
+//             id: "id",
+//             view: Some(Arc::new(|data: DataMock| {
+//                 ViewFn::from(move || {
+//                     view! { {data.id} }
+//                 })
+//             })),
+//         },
+//         TabColumn {
+//             width: 100,
+//             title: "姓名",
+//             id: "name",
+//             view: Some(Arc::new(|data: DataMock| {
+//                 ViewFn::from(move || {
+//                     view! { {data.id} }
+//                 })
+//             })),
+//         },
+//         TabColumn {
+//             width: 100,
+//             title: "操作",
+//             id: "ctrl",
+//             view: Some(Arc::new(|data: DataMock| {
+//                 let data_clone = data.clone();
+//                 // 方法1：使用 ViewFn::from() - 最推荐的方式
+//                 ViewFn::from(move || {
+//                     let data = data_clone.clone();
+//                     view! {
+//                         <button::I on:click=move |_| {
+//                             leptos::logging::log!("操作: {:?}", data);
+//                         }>
+//                             {format!("操作 {}", data.name)}
+//                         </button::I>
+//                     }
+//                 })
 
-                // 方法2：或者更简单，让闭包自动转换为 ViewFn
-                // let view_closure = move || {
-                //     let data = data.clone();
-                //     view! {
-                //         <button on:click=move |_| {
-                //             leptos::logging::log!("操作: {:?}", data);
-                //         }>
-                //             {format!("操作 {}", data.name)}
-                //         </button>
-                //     }
-                // };
-                // view_closure.into()
-            })),
-        },
-    ];
-    let (col_vec, set_col_vec) = signal(col_vec);
-    view! {
-        <I
-            data=data_vec
-            col_vec=col_vec
-        ></I>
-    }
-}
+//                 // 方法2：或者更简单，让闭包自动转换为 ViewFn
+//                 // let view_closure = move || {
+//                 //     let data = data.clone();
+//                 //     view! {
+//                 //         <button on:click=move |_| {
+//                 //             leptos::logging::log!("操作: {:?}", data);
+//                 //         }>
+//                 //             {format!("操作 {}", data.name)}
+//                 //         </button>
+//                 //     }
+//                 // };
+//                 // view_closure.into()
+//             })),
+//         },
+//     ];
+//     let (col_vec, _set_col_vec) = signal(col_vec);
+//     view! {
+//         <I
+//             data=data_vec
+//             col_vec=col_vec
+//         ></I>
+//     }
+// }
+// thread_local! {}

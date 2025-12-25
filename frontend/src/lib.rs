@@ -1,3 +1,5 @@
+use leptos::{prelude::ServerFnError, server};
+
 #[wasm_bindgen::prelude::wasm_bindgen]
 pub fn hydrate() {
     use app::*;

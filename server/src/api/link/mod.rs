@@ -8,6 +8,8 @@ use crate::appf::valid::{ValidJson, ValidQuery};
 // use crate::entity::{login_user, prelude::*};
 use anyhow::Context;
 use leptos::config::LeptosOptions;
+use leptos::prelude::ServerFnError;
+use leptos::server;
 // use axum::extract::Query;
 use crate::entity::link;
 use crate::entity::link::ActiveModel;
@@ -196,4 +198,8 @@ async fn sort(
     txn.commit().await?;
 
     Ok(ApiResponse::ok("批量更新索引成功", Some(updated_models)))
+}
+#[server]
+pub async fn add_todo(title: String) -> Result<(), ServerFnError> {
+    Ok(())
 }

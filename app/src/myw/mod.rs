@@ -18,7 +18,7 @@ pub fn Gap(
         (_, Some(h), _, _) => format!("height: {}px", h),
         (_, _, Some(width), _) => format!("display: inline-block; width: {}", width),
         (_, _, _, Some(height)) => format!("height: {}", height),
-        _ => "height: 30px".to_string(),
+        _ => "height: 8px".to_string(),
     };
     view! { <div style=style></div> }
 }

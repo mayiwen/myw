@@ -1,0 +1,102 @@
+use crate::{
+    myw::{
+        self,
+        table::{TabColumn, Table},
+        tabset::{Tab, Tabset},
+    },
+    util::open_url,
+};
+use leptos::prelude::*;
+use myw::button;
+use std::{fmt::Debug, sync::Arc};
+
+#[derive(Clone, Debug)]
+struct DataMock {
+    id: u64,
+    name: &'static str,
+}
+/// Renders the home page of your application.
+#[component]
+pub fn I() -> impl IntoView {
+    let id: RwSignal<u64> = RwSignal::new(0);
+
+    // <myw::Gap h=8/>
+    let data = vec![
+        DataMock {
+            id: 1,
+            name: "张三",
+        },
+        DataMock {
+            id: 2,
+            name: "李四",
+        },
+        DataMock {
+            id: 3,
+            name: "王五",
+        },
+    ];
+    let (data_vec, _set_data_vec) = signal(data);
+
+    let col_vec: Vec<TabColumn<DataMock>> = vec![
+        TabColumn {
+            width: 100,
+            title: "id",
+            id: "id",
+            view: Some(Arc::new(|data: DataMock| {
+                ViewFn::from(move || {
+                    view! { {data.id} }
+                })
+            })),
+        },
+        TabColumn {
+            width: 100,
+            title: "姓名",
+            id: "name",
+            view: Some(Arc::new(|data: DataMock| {
+                ViewFn::from(move || {
+                    view! { {data.id} }
+                })
+            })),
+        },
+        TabColumn {
+            width: 100,
+            title: "操作",
+            id: "ctrl",
+            view: Some(Arc::new(|data: DataMock| {
+                let data_clone = data.clone();
+                // 方法1：使用 ViewFn::from() - 最推荐的方式
+                ViewFn::from(move || {
+                    let data = data_clone.clone();
+                    view! {
+                        <button::I on:click=move |_| {
+                            leptos::logging::log!("操作: {:?}", data);
+                        }>
+                            {format!("操作 {}", data.name)}
+                        </button::I>
+                    }
+                })
+
+                // 方法2：或者更简单，让闭包自动转换为 ViewFn
+                // let view_closure = move || {
+                //     let data = data.clone();
+                //     view! {
+                //         <button on:click=move |_| {
+                //             leptos::logging::log!("操作: {:?}", data);
+                //         }>
+                //             {format!("操作 {}", data.name)}
+                //         </button>
+                //     }
+                // };
+                // view_closure.into()
+            })),
+        },
+    ];
+    let (col_vec, _set_col_vec) = signal(col_vec);
+    view! {
+        <myw::Gap/>
+        <Table
+            data=data_vec
+            col_vec=col_vec
+            > </Table>
+    }
+}
