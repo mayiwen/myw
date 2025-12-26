@@ -30,7 +30,7 @@ pub fn Tabset(
 ) -> impl IntoView {
     let (select_id, set_select_id) = signal(0);
     let (arr_vec, _set_arr_vec) = signal(tab);
-    let vec_first_vlue = id.get();
+    let vec_first_vlue = id.get_untracked();
     // if let Some(tab) = value.get(0) {
     //     tab.id
     // } else {

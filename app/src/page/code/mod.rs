@@ -16,10 +16,10 @@ pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
     view! {
         <myw::Gap h=8/>
-        <p>
+        <div>
             <h1 style="display: inline-block;">代码</h1>
             <h3 style="display: inline-block;">自己用的软件</h3>
-        </p>
+        </div>
         <myw::Gap h=8/>
         <Tabset id=id>
             <Tab slot id=0 title="自制组件".to_string()><component::I/></Tab>
