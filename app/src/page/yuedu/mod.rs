@@ -1,6 +1,7 @@
 use crate::{
     myw::{
         self,
+        button::Button,
         tabset::{Tab, Tabset},
     },
     util::open_url,
@@ -27,9 +28,9 @@ pub fn I() -> impl IntoView {
                 <myw::Gap h=12/>
                 <h1 style="font-weight: bold;">一文小说阅读器</h1>
                 <myw::Gap h=12/>
-                <myw::button::I style="transform: scale(1.2); transform-origin: center"  on:click=move |_| {
+                <Button style="transform: scale(1.2); transform-origin: center"  on_click=move |_| {
                     open_url("https://gitlink.org.cn/mayiwen/yueduqi/releases");
-                }>软件与说明书下载</myw::button::I>
+                }>软件与说明书下载</Button>
                 <myw::Gap  h=12/>
                 <a href="https://github.com/mayiwen/yueduqi/releases" target="_blank">github分流下载</a>
                 <myw::Gap h=12/>

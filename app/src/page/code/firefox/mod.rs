@@ -1,6 +1,7 @@
 use crate::{
     myw::{
         self,
+        button::Button,
         tabset::{Tab, Tabset},
     },
     util::open_url,
@@ -18,9 +19,10 @@ pub fn I() -> impl IntoView {
             </h1>
 
             <myw::Gap h=30/>
-            <myw::button::I style="transform: scale(1.4); transform-origin: center"  on:click=move |_| {
+            <Button style="transform: scale(1.4); transform-origin: center"  on_click=move |_| {
                 open_url("https://addons.mozilla.org/zh-CN/firefox/addon/mayiwen/");
-            }>获取开源软件</myw::button::I>
+            }>获取开源软件</Button>
+
             <myw::Gap h=30/>
               <p>"可以火狐插件中搜索“mayiwen”找到此插件"</p>
             <p>"实现的功能："</p>
@@ -32,9 +34,6 @@ pub fn I() -> impl IntoView {
             <div>
                 <img style="width: 100%; max-width: 1000px;" src="img/firefox/firefox.png" alt="主界面" />
             </div>
-
-
-
         </div>
     }
 }
