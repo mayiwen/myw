@@ -116,3 +116,14 @@ fn HomePage() -> impl IntoView {
         <button on:click=on_click>"Click Me: " {count}</button>
     }
 }
+
+// 修复后的 Server Function
+// 关键修改：
+// 1. 函数标识用 PascalCase（Greet），确保是「纯标识符」（无特殊字符）
+// 2. 显式指定返回值的 Error 类型为 ServerFnError
+// 3. 函数体用 async + Result
+#[server(Greet, "/api")]
+pub async fn greet() -> Result<String, ServerFnError> {
+    // 服务端逻辑：简单返回字符串
+    Ok("Hello from Server Function!".to_string())
+}

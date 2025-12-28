@@ -6,7 +6,6 @@ use crate::{
     util::open_url,
 };
 use leptos::prelude::*;
-pub mod about;
 #[component]
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);

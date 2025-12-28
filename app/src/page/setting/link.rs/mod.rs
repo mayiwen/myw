@@ -6,7 +6,6 @@ use crate::{
     util::open_url,
 };
 use leptos::prelude::*;
-pub mod about;
 #[component]
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
@@ -17,7 +16,7 @@ pub fn I() -> impl IntoView {
         <Tabset id=id>
             <Tab slot id=0 title="首页标题".to_string()>""</Tab>
             <Tab slot id=1 title="链接".to_string()>""</Tab>
-            <Tab slot id=2 title="关于".to_string()><about::I/></Tab>
+            <Tab slot id=2 title="关于".to_string()>""</Tab>
             // <Tab slot id=1 title="android".to_string()><android::I/></Tab>
             // <Tab slot id=2 title="windows".to_string()><windows::I/></Tab>
             // <Tab slot id=3 title="macos".to_string()><macos::I/></Tab>
