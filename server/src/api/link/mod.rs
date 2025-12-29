@@ -199,7 +199,3 @@ async fn sort(
 
     Ok(ApiResponse::ok("批量更新索引成功", Some(updated_models)))
 }
-#[server]
-pub async fn add_todo(title: String) -> Result<(), ServerFnError> {
-    Ok(())
-}

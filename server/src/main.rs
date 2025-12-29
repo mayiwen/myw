@@ -29,15 +29,6 @@ async fn main() {
         })
         .fallback(leptos_axum::file_and_error_handler(shell));
     appf::run(leptos_options, app).await;
-    // .with_state(core_state);
-
-    // run our app with hyper
-    // `axum::Server` is a re-export of `hyper::Server`
-    // log!("listening on http://{}", &addr);
-    // let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
-    // axum::serve(listener, app.into_make_service())
-    //     .await
-    //     .unwrap();
 }
 // 更复杂的处理器示例
 async fn api_hello_world() -> axum::response::Json<serde_json::Value> {
