@@ -5,35 +5,26 @@ use leptos::logging::log;
 use leptos::prelude::*;
 use leptos_axum::{generate_route_list, LeptosRoutes};
 
-use crate::api::create_route;
+// 从 lib.rs 引用模块（而非本地 mod）
+use server::api::create_route;
+use server::appf::run;
+use server::config::get_configuration;
 
-mod api;
-mod appf;
-mod config;
-mod entity;
 #[tokio::main]
 async fn main() {
     let conf = get_configuration(None).unwrap();
     let addr = conf.leptos_options.site_addr;
     let leptos_options = conf.leptos_options;
-    // Generate the list of routes in your Leptos App
     let routes = generate_route_list(App);
-    // let db = appf::database::init().await.expect("数据库连接错误！！！");
 
     let app = Router::new()
-        .route("/hello", get(api_hello_world))
+        .route("/hello", get(server::api_hello_world)) // 引用 lib.rs 导出的函数
         .nest("/api", create_route())
         .leptos_routes(&leptos_options, routes, {
             let leptos_options = leptos_options.clone();
             move || shell(leptos_options.clone())
         })
         .fallback(leptos_axum::file_and_error_handler(shell));
-    appf::run(leptos_options, app).await;
-}
-// 更复杂的处理器示例
-async fn api_hello_world() -> axum::response::Json<serde_json::Value> {
-    axum::response::Json(serde_json::json!({
-        "message": "Hello from API!",
-        "status": "success"
-    }))
+
+    run(leptos_options, app).await;
 }

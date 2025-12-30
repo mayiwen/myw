@@ -73,6 +73,27 @@ async fn read(
     let page = Page::from_pagination(pagination, total, items);
     Ok(ApiResponse::ok("ok", Some(page)))
 }
+
+async fn read_ssr(db: DatabaseConnection) -> ApiResult<ApiResponse<Page<link::Model>>> {
+    let pagination = PaginationParams {
+        page: 1,
+        size: 1000,
+    };
+    let keyword = Some("".to_string());
+    let paginator = link::Entity::find()
+        .apply_if(keyword.as_ref(), |query, keyword| {
+            query.filter(
+                Condition::any().add(link::Column::Title.contains(keyword)), // .add(link::Column::Account.contains(keyword)),
+            )
+        })
+        .order_by_desc(link::Column::Id)
+        .paginate(&db, pagination.size);
+    let total = paginator.num_items().await?;
+    let items = paginator.fetch_page(pagination.page - 1).await?;
+    let page = Page::from_pagination(pagination, total, items);
+    Ok(ApiResponse::ok("ok", Some(page)))
+}
+
 #[debug_handler]
 async fn read_by_title_id(
     Extension(db): Extension<DatabaseConnection>,
