@@ -1,5 +1,4 @@
 use crate::appf::error::{ApiError, ApiResult};
-use app;
 use leptos::config::LeptosOptions;
 use leptos::*;
 use leptos_axum::*;

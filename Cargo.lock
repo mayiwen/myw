@@ -92,6 +92,7 @@ checksum = "a23eb6b1614318a8071c9b2521f36b424b2c83db5eb3a0fead4a6c0809af6e61"
 name = "app"
 version = "0.1.0"
 dependencies = [
+ "backend",
  "cfg-if",
  "http",
  "leptos",
@@ -391,6 +392,38 @@ dependencies = [
  "quote",
  "syn 2.0.111",
  "ubyte",
+]
+
+[[package]]
+name = "backend"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "axum",
+ "axum-valid",
+ "bcrypt",
+ "bytesize",
+ "config",
+ "idgenerator",
+ "jsonwebtoken",
+ "leptos",
+ "leptos_axum",
+ "log",
+ "num_cpus",
+ "regex",
+ "rust-embed",
+ "sea-orm",
+ "serde",
+ "serde_json",
+ "simple_logger",
+ "thiserror 2.0.17",
+ "tokio",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "validator",
+ "xid",
 ]
 
 [[package]]
@@ -3856,6 +3889,7 @@ dependencies = [
  "app",
  "axum",
  "axum-valid",
+ "backend",
  "bcrypt",
  "bytesize",
  "config",

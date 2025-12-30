@@ -129,6 +129,11 @@ pub async fn greet() -> Result<String, ServerFnError> {
 
 #[server(GetTitle, "/api/ssr/title")]
 pub async fn get_title() -> Result<String, ServerFnError> {
+    #[cfg(feature = "ssr")]
+    {
+        // 调用 server 模块的异步方法
+        // let async_data = server::
+    }
     // 服务端逻辑：简单返回字符串
     Ok("Hello from Server Function!".to_string())
 }
