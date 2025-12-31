@@ -1,0 +1,15 @@
+# shared/Cargo.toml
+[package]
+name = "shared"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# 仅导入 SeaORM 的类型（无运行时），需启用 `derive` 特性（仅类型）
+sea-orm = { version = "1.1.11", features = [
+    "with-chrono",
+    "debug-print",
+    "sqlx-postgres",
+    "with-rust_decimal",
+    "runtime-tokio",
+] }

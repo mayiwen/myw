@@ -1,6 +1,10 @@
 use crate::myw::icon;
 use crate::myw::myw::MayiwenBeiAn;
 use crate::myw::tabset::{Tab, Tabset};
+#[cfg(feature = "ssr")]
+// 明确指定 ServerFnError 的类型参数为 String（解决类型推导错误）
+#[cfg(feature = "ssr")]
+use backend::DbConn;
 use leptos::prelude::*;
 use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
 use leptos_router::{
@@ -8,9 +12,12 @@ use leptos_router::{
     hooks::{use_location, use_navigate},
     StaticSegment,
 };
+#[cfg(feature = "ssr")]
+use shared;
 pub mod myw;
 pub mod page;
 pub mod util;
+type ServerFnResult<T> = Result<T, ServerFnError<String>>;
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
         <!DOCTYPE html>
@@ -128,12 +135,35 @@ pub async fn greet() -> Result<String, ServerFnError> {
 }
 
 #[server(GetTitle, "/api/ssr/title")]
-pub async fn get_title() -> Result<String, ServerFnError> {
+pub async fn get_title() -> ServerFnResult<String> {
+    // 仅在服务端（SSR）执行数据库逻辑
     #[cfg(feature = "ssr")]
     {
-        // 调用 server 模块的异步方法
-        // let async_data = server::
+        // 1. 导入共享的 DB 类型（限定 SSR 特性，避免客户端编译错误）
+        use shared::DbConn;
+
+        // 2. 从 Leptos 上下文获取 DB 连接（明确类型+强化错误提示）
+        let db = use_context::<DbConn>().ok_or_else(|| {
+            ServerFnError::ServerError(
+                "❌ 未从上下文获取到数据库连接，请检查：
+                    1. 服务端是否在请求处理器内调用 provide_context 注入 DbConn
+                    2. DbConn 类型是否与注入的类型完全一致（如是否混用 Arc/裸类型）
+                    3. 是否启用了 ssr 特性"
+                    .to_string(),
+            ) as ServerFnError<String> // 显式指定类型参数
+        })?;
+
+        // 3. 调用 backend 的数据库方法（示例：传入 db 执行查询）
+        // 替换为你实际的业务函数，注意加 await + 错误转换
+        let async_data = backend::api::title::read_ssr(&db).await.map_err(|e| {
+            // 显式指定错误类型，解决推导问题
+            ServerFnError::ServerError(format!("查询标题失败：{}", e)) as ServerFnError<String>
+        })?;
+
+        // 4. 返回实际查询结果（而非固定字符串）
+        // return Ok(async_data);
     }
-    // 服务端逻辑：简单返回字符串
+
+    // 客户端兜底返回（仅为编译通过，不会实际执行）
     Ok("Hello from Server Function!".to_string())
 }

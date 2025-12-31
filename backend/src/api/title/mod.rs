@@ -6,6 +6,7 @@ use crate::appf::valid::{ValidJson, ValidQuery};
 
 // use crate::entity::{login_user, prelude::*};
 use crate::appf::path::Path;
+
 use anyhow::Context;
 use leptos::config::LeptosOptions;
 // use axum::extract::Query;
@@ -55,6 +56,28 @@ async fn read(
         })
         .order_by_asc(title::Column::Index)
         .paginate(&db, pagination.size);
+    let total = paginator.num_items().await?;
+    let items = paginator.fetch_page(pagination.page - 1).await?;
+    let page = Page::from_pagination(pagination, total, items);
+    Ok(ApiResponse::ok("ok", Some(page)))
+}
+
+pub async fn read_ssr(db: &DatabaseConnection) -> ApiResult<ApiResponse<Page<title::Model>>> {
+    // 1. 获取全局 DB（安全版：推荐生产环境用 try_get_global_db）
+
+    let pagination = PaginationParams {
+        page: 1,
+        size: 1000,
+    };
+    let keyword = Some("".to_string());
+    let paginator = title::Entity::find()
+        .apply_if(keyword.as_ref(), |query, keyword| {
+            query.filter(
+                Condition::any().add(title::Column::Title.contains(keyword)), // .add(link::Column::Account.contains(keyword)),
+            )
+        })
+        .order_by_desc(title::Column::Id)
+        .paginate(db, pagination.size);
     let total = paginator.num_items().await?;
     let items = paginator.fetch_page(pagination.page - 1).await?;
     let page = Page::from_pagination(pagination, total, items);

@@ -1,9 +1,3 @@
-// crates/server/src/lib.rs
-// 导出可被 app crate 引用的模块
-pub mod api;
-pub mod appf;
-pub mod config;
-pub mod entity;
 // shared/src/db.rs
 // 仅导出 SeaORM 的 DatabaseConnection 类型别名（无任何运行时逻辑）
 pub type DbConn = sea_orm::DatabaseConnection;

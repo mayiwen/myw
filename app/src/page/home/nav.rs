@@ -13,7 +13,7 @@ pub fn I() -> impl IntoView {
                 // 点击事件：异步调用服务端函数
                 spawn_local(async move {
                     // 修复点1：处理 ServerFnError 并给出友好提示
-                    let result = greet().await;
+                    let result = crate::get_title().await;
                     let a = match result {
                         Ok(s) => s,
                         Err(e) => format!("请求失败: {}", e), // 错误信息格式化

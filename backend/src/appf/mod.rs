@@ -18,6 +18,7 @@ pub mod valid;
 pub mod validdation;
 use axum::Router;
 use leptos::config::LeptosOptions;
+use leptos::context::provide_context;
 use sea_orm::DatabaseConnection;
 // #[derive(Clone)]
 // pub struct AppState {
@@ -33,10 +34,11 @@ use sea_orm::DatabaseConnection;
 pub async fn run(
     leptos_options: LeptosOptions,
     router: Router<LeptosOptions>,
+    db: DatabaseConnection,
 ) -> anyhow::Result<()> {
     logger::init();
     tracing::info!("Starting app server...");
-    let db = database::init().await?;
+
     // let state = AppState::new(db);
     let server = server::Server::new(crate::config::get().server());
     server.start(leptos_options, router, db).await
