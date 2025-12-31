@@ -135,25 +135,25 @@ type ServerFnResult<T> = Result<T, ServerFnError<String>>;
 #[server(GetTitle, "/api/ssr/title")]
 pub async fn get_title() -> ServerFnResult<String> {
     // // 仅在服务端执行数据库逻辑
-    // #[cfg(feature = "ssr")]
-    // {
-    //     // 1. 调用数据库方法并处理错误（无 Serde）
-    //     let async_data = backend::api::title::read_ssr()
-    //         .await
-    //         // 错误转换：任意错误 → 字符串形式的 ServerFnError
-    //         .map_err(|e| ServerFnError::ServerError(format!("查询失败：{}", e)))?;
+    #[cfg(feature = "ssr")]
+    {
+        // 1. 调用数据库方法并处理错误（无 Serde）
+        let async_data = backend::api::title::read_ssr()
+            .await
+            // 错误转换：任意错误 → 字符串形式的 ServerFnError
+            .map_err(|e| ServerFnError::ServerError(format!("查询失败：{}", e)))?;
 
-    //     // 2. 提取复杂类型中的字符串（核心：避开 Serde，直接取可用字段）
-    //     // 示例1：如果返回 ApiResponse，提取 msg 字段
-    //     let result_str = "".to_string().clone();
-    //     // 示例2：如果返回 Page<Model>，拼接列表文本（根据你的实际结构调整）
-    //     // let result_str = format!("共{}条数据", async_data.total);
-    //     // 示例3：如果仅需固定文本，直接返回
-    //     // let result_str = "查询成功".to_string();
+        // 2. 提取复杂类型中的字符串（核心：避开 Serde，直接取可用字段）
+        // 示例1：如果返回 ApiResponse，提取 msg 字段
+        let result_str = "async_data.msg".to_string().clone();
+        // 示例2：如果返回 Page<Model>，拼接列表文本（根据你的实际结构调整）
+        // let result_str = format!("共{}条数据", async_data.total);
+        // 示例3：如果仅需固定文本，直接返回
+        // let result_str = "查询成功".to_string();
 
-    //     // 3. 返回纯字符串结果（无 Serde 依赖）
-    //     return Ok(result_str);
-    // }
+        // 3. 返回纯字符串结果（无 Serde 依赖）
+        return Ok(result_str);
+    }
 
     // 客户端兜底返回（纯字符串，无 Serde）
     Ok("Hello from Server Function!".to_string())

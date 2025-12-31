@@ -38,7 +38,7 @@ pub async fn run(
     logger::init();
     tracing::info!("Starting app server...");
     let db: DatabaseConnection = database::init().await?;
-    crate::init(db.clone());
+    crate::init(db.clone()).await;
     // provide_context(db.clone()); // 关键：克隆 Arc，原 db 仍可用
     // let state = AppState::new(db);
     let server = server::Server::new(crate::config::get().server());
