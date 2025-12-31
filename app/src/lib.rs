@@ -138,21 +138,29 @@ pub async fn get_title() -> ServerFnResult<String> {
     #[cfg(feature = "ssr")]
     {
         // 1. 调用数据库方法并处理错误（无 Serde）
-        let async_data = backend::api::title::read_ssr()
-            .await
-            // 错误转换：任意错误 → 字符串形式的 ServerFnError
-            .map_err(|e| ServerFnError::ServerError(format!("查询失败：{}", e)))?;
+
+        use backend::appf::{common::Page, response::ApiResponse};
+        let async_data: ApiResponse<Page<backend::entity::title::Model>> =
+            backend::api::title::read_ssr()
+                .await
+                // 错误转换：任意错误 → 字符串形式的 ServerFnError
+                .map_err(|e| ServerFnError::ServerError(format!("查询失败：{}", e)))?;
 
         // 2. 提取复杂类型中的字符串（核心：避开 Serde，直接取可用字段）
         // 示例1：如果返回 ApiResponse，提取 msg 字段
-        let result_str = "async_data.msg".to_string().clone();
+        let result_str = async_data.data;
+        let page = result_str.expect("msg");
+        let model = page.items;
+        let str = model.get(0).unwrap();
+        let str = str.title.clone();
+        // let p = pate.
         // 示例2：如果返回 Page<Model>，拼接列表文本（根据你的实际结构调整）
         // let result_str = format!("共{}条数据", async_data.total);
         // 示例3：如果仅需固定文本，直接返回
         // let result_str = "查询成功".to_string();
 
         // 3. 返回纯字符串结果（无 Serde 依赖）
-        return Ok(result_str);
+        return Ok(str.to_string());
     }
 
     // 客户端兜底返回（纯字符串，无 Serde）
