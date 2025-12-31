@@ -1,10 +1,7 @@
 use crate::myw::icon;
 use crate::myw::myw::MayiwenBeiAn;
 use crate::myw::tabset::{Tab, Tabset};
-#[cfg(feature = "ssr")]
 // 明确指定 ServerFnError 的类型参数为 String（解决类型推导错误）
-#[cfg(feature = "ssr")]
-use backend::DbConn;
 use leptos::prelude::*;
 use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
 use leptos_router::{
@@ -12,12 +9,11 @@ use leptos_router::{
     hooks::{use_location, use_navigate},
     StaticSegment,
 };
-#[cfg(feature = "ssr")]
-use shared;
+
 pub mod myw;
 pub mod page;
 pub mod util;
-type ServerFnResult<T> = Result<T, ServerFnError<String>>;
+
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
         <!DOCTYPE html>
@@ -134,36 +130,31 @@ pub async fn greet() -> Result<String, ServerFnError> {
     Ok("Hello from Server Function!".to_string())
 }
 
+type ServerFnResult<T> = Result<T, ServerFnError<String>>;
+// 第三步：无 Serde、无报错的完整实现
 #[server(GetTitle, "/api/ssr/title")]
 pub async fn get_title() -> ServerFnResult<String> {
-    // 仅在服务端（SSR）执行数据库逻辑
-    #[cfg(feature = "ssr")]
-    {
-        // 1. 导入共享的 DB 类型（限定 SSR 特性，避免客户端编译错误）
-        use shared::DbConn;
+    // // 仅在服务端执行数据库逻辑
+    // #[cfg(feature = "ssr")]
+    // {
+    //     // 1. 调用数据库方法并处理错误（无 Serde）
+    //     let async_data = backend::api::title::read_ssr()
+    //         .await
+    //         // 错误转换：任意错误 → 字符串形式的 ServerFnError
+    //         .map_err(|e| ServerFnError::ServerError(format!("查询失败：{}", e)))?;
 
-        // 2. 从 Leptos 上下文获取 DB 连接（明确类型+强化错误提示）
-        let db = use_context::<DbConn>().ok_or_else(|| {
-            ServerFnError::ServerError(
-                "❌ 未从上下文获取到数据库连接，请检查：
-                    1. 服务端是否在请求处理器内调用 provide_context 注入 DbConn
-                    2. DbConn 类型是否与注入的类型完全一致（如是否混用 Arc/裸类型）
-                    3. 是否启用了 ssr 特性"
-                    .to_string(),
-            ) as ServerFnError<String> // 显式指定类型参数
-        })?;
+    //     // 2. 提取复杂类型中的字符串（核心：避开 Serde，直接取可用字段）
+    //     // 示例1：如果返回 ApiResponse，提取 msg 字段
+    //     let result_str = "".to_string().clone();
+    //     // 示例2：如果返回 Page<Model>，拼接列表文本（根据你的实际结构调整）
+    //     // let result_str = format!("共{}条数据", async_data.total);
+    //     // 示例3：如果仅需固定文本，直接返回
+    //     // let result_str = "查询成功".to_string();
 
-        // 3. 调用 backend 的数据库方法（示例：传入 db 执行查询）
-        // 替换为你实际的业务函数，注意加 await + 错误转换
-        let async_data = backend::api::title::read_ssr(&db).await.map_err(|e| {
-            // 显式指定错误类型，解决推导问题
-            ServerFnError::ServerError(format!("查询标题失败：{}", e)) as ServerFnError<String>
-        })?;
+    //     // 3. 返回纯字符串结果（无 Serde 依赖）
+    //     return Ok(result_str);
+    // }
 
-        // 4. 返回实际查询结果（而非固定字符串）
-        // return Ok(async_data);
-    }
-
-    // 客户端兜底返回（仅为编译通过，不会实际执行）
+    // 客户端兜底返回（纯字符串，无 Serde）
     Ok("Hello from Server Function!".to_string())
 }

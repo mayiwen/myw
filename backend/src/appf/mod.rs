@@ -34,11 +34,12 @@ use sea_orm::DatabaseConnection;
 pub async fn run(
     leptos_options: LeptosOptions,
     router: Router<LeptosOptions>,
-    db: DatabaseConnection,
 ) -> anyhow::Result<()> {
     logger::init();
     tracing::info!("Starting app server...");
-
+    let db: DatabaseConnection = database::init().await?;
+    crate::init(db.clone());
+    // provide_context(db.clone()); // 关键：克隆 Arc，原 db 仍可用
     // let state = AppState::new(db);
     let server = server::Server::new(crate::config::get().server());
     server.start(leptos_options, router, db).await

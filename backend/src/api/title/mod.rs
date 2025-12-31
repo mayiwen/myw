@@ -62,9 +62,9 @@ async fn read(
     Ok(ApiResponse::ok("ok", Some(page)))
 }
 
-pub async fn read_ssr(db: &DatabaseConnection) -> ApiResult<ApiResponse<Page<title::Model>>> {
+pub async fn read_ssr() -> ApiResult<ApiResponse<Page<title::Model>>> {
     // 1. 获取全局 DB（安全版：推荐生产环境用 try_get_global_db）
-
+    let db = crate::get_global_db();
     let pagination = PaginationParams {
         page: 1,
         size: 1000,
