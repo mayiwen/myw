@@ -1,31 +1,57 @@
-use leptos::{prelude::*, task::spawn_local};
+use std::sync::Arc;
 
-use crate::greet;
+use crate::myw::tabset::{Tab, Tabset};
+use crate::Title;
+use leptos::prelude::*;
 
 #[component]
 pub fn I() -> impl IntoView {
-    // 响应式信号：存储服务端返回的字符串
-    let show_string = RwSignal::new("".to_string());
+    let id: RwSignal<u64> = RwSignal::new(0);
+    let arr_vec = RwSignal::new(vec![
+        Title {
+            id: 0,
+            title: "你好".to_string(),
+        },
+        Title {
+            id: 1,
+            title: "你好2".to_string(),
+        },
+    ]);
 
+    let tabs = move || {
+        arr_vec
+            .get()
+            .into_iter()
+            .map(|title| {
+                let id = title.id;
+                // 正确创建 ChildrenFn
+                let children_fn: ChildrenFn = Arc::new(move || view! { "111" }.into_any());
+
+                Tab {
+                    children: children_fn,
+                    title: title.title.clone(),
+                    id: title.id,
+                    icon: None,
+                    click: None,
+                }
+            })
+            .collect::<Vec<Tab>>()
+    };
+    let button_click = move |_| {
+        arr_vec.set(vec![
+            Title {
+                id: 3,
+                title: "你好3".to_string(),
+            },
+            Title {
+                id: 4,
+                title: "你好4".to_string(),
+            },
+        ]);
+        id.set(1);
+    };
     view! {
-        <button
-            on:click=move |_| {
-                // 点击事件：异步调用服务端函数
-                spawn_local(async move {
-                    // 修复点1：处理 ServerFnError 并给出友好提示
-                    let result = crate::get_title().await;
-                    let a = match result {
-                        Ok(s) => s,
-                        Err(e) => format!("请求失败: {}", e), // 错误信息格式化
-                    };
-                    // 修复点2：正确更新响应式信号
-                    show_string.set(a);
-                });
-            }
-        >
-            "Add Todo"
-        </button>
-        // 修复点3：响应式信号渲染（直接用 {show_string} 也可以，但推荐用 move 确保捕获）
-        <p>{move || show_string.get()}</p>
+        <button on:click=button_click>你好</button>
+        <Tabset tab=tabs() id=id />
     }
 }

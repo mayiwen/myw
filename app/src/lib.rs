@@ -1,6 +1,7 @@
 use crate::myw::icon;
 use crate::myw::myw::MayiwenBeiAn;
 use crate::myw::tabset::{Tab, Tabset};
+use serde::{Deserialize, Serialize};
 // 明确指定 ServerFnError 的类型参数为 String（解决类型推导错误）
 use leptos::prelude::*;
 use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
@@ -131,38 +132,54 @@ pub async fn greet() -> Result<String, ServerFnError> {
 }
 
 type ServerFnResult<T> = Result<T, ServerFnError<String>>;
-// 第三步：无 Serde、无报错的完整实现
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Title {
+    pub id: u64,
+    pub title: String,
+}
 #[server(GetTitle, "/api/ssr/title")]
-pub async fn get_title() -> ServerFnResult<String> {
-    // // 仅在服务端执行数据库逻辑
+pub async fn get_title() -> Result<Vec<Title>, ServerFnError> {
     #[cfg(feature = "ssr")]
     {
-        // 1. 调用数据库方法并处理错误（无 Serde）
-
         use backend::appf::{common::Page, response::ApiResponse};
-        let async_data: ApiResponse<Page<backend::entity::title::Model>> =
-            backend::api::title::read_ssr()
-                .await
-                // 错误转换：任意错误 → 字符串形式的 ServerFnError
-                .map_err(|e| ServerFnError::ServerError(format!("查询失败：{}", e)))?;
 
-        // 2. 提取复杂类型中的字符串（核心：避开 Serde，直接取可用字段）
-        // 示例1：如果返回 ApiResponse，提取 msg 字段
-        let result_str = async_data.data;
-        let page = result_str.expect("msg");
-        let model = page.items;
-        let str = model.get(0).unwrap();
-        let str = str.title.clone();
-        // let p = pate.
-        // 示例2：如果返回 Page<Model>，拼接列表文本（根据你的实际结构调整）
-        // let result_str = format!("共{}条数据", async_data.total);
-        // 示例3：如果仅需固定文本，直接返回
-        // let result_str = "查询成功".to_string();
+        // 调用 API 获取数据
+        let result = backend::api::title::read_ssr().await;
 
-        // 3. 返回纯字符串结果（无 Serde 依赖）
-        return Ok(str.to_string());
+        let async_data: ApiResponse<Page<backend::entity::title::Model>> = match result {
+            Ok(data) => data,
+            Err(api_error) => {
+                // 使用 ServerFnError::ServerError
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    api_error
+                )));
+            }
+        };
+
+        // 检查数据是否存在
+        let page = async_data.data;
+        let page = match page {
+            Some(page) => page,
+            None => return Err(ServerFnError::ServerError("API调用失败: ".to_string())),
+        };
+        // 转换模型
+        let titles: Vec<Title> = page
+            .items
+            .into_iter()
+            .map(|model| Title {
+                id: model.id as u64,
+                title: model.title,
+            })
+            .collect();
+
+        Ok(titles)
     }
 
-    // 客户端兜底返回（纯字符串，无 Serde）
-    Ok("Hello from Server Function!".to_string())
+    #[cfg(not(feature = "ssr"))]
+    {
+        Err(ServerFnError::ServerError(
+            "此函数仅在服务端可用".to_string(),
+        ))
+    }
 }

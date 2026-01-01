@@ -13,6 +13,7 @@ leptos_axum = { workspace = true, optional = true }
 # 新增：依赖 server crate（仅 ssr 特性下启用）
 backend = { path = "../backend", optional = true }
 shared = { path = "../shared", optional = true }
+serde = { version = "1.0.219", features = ["derive"] }
 
 http.workspace = true
 cfg-if.workspace = true
