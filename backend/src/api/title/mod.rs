@@ -76,7 +76,7 @@ pub async fn read_ssr() -> ApiResult<ApiResponse<Page<title::Model>>> {
                 Condition::any().add(title::Column::Title.contains(keyword)), // .add(link::Column::Account.contains(keyword)),
             )
         })
-        .order_by_desc(title::Column::Id)
+        .order_by_asc(title::Column::Index)
         .paginate(db, pagination.size);
     let total = paginator.num_items().await?;
     let items = paginator.fetch_page(pagination.page - 1).await?;
