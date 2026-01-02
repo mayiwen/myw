@@ -11,3 +11,33 @@ pub fn Myw() -> impl IntoView {
         />
     }
 }
+use leptos::*;
+
+/// 搜索图标组件
+#[component]
+pub fn Search(
+    /// 图标宽度和高度（像素）
+    #[prop(default = 24)]
+    wh: usize,
+    /// 自定义样式
+    #[prop(default = "".to_string())]
+    style: String,
+) -> impl IntoView {
+    // 计算尺寸字符串
+    let size_str = format!("{}px", wh);
+    // 组合样式（基础样式 + 自定义样式）
+    let combined_style = format!("vertical-align: middle; {style}");
+
+    view! {
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            view_box="0 0 24 24"
+            fill="var(--myw-color)"
+            width=size_str.clone()
+            height=size_str
+            style=combined_style
+        >
+            <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z" />
+        </svg>
+    }
+}

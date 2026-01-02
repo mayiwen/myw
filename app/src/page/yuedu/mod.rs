@@ -22,7 +22,7 @@ pub fn I() -> impl IntoView {
         <div style="text-align: center">
             <p style="text-align: right; margin-right: 8px;">
                 <a href="https://mayiwen.com/yueduqi/yinsishengming"
-                    title="https://mayiwen.com/yueduqi/yinsishengming">隐私声明1</a>
+                    title="https://mayiwen.com/yueduqi/yinsishengming">隐私声明</a>
             </p>
             <div style="text-align: center; max-width: 400px; margin: auto;">
                 <myw::Gap h=12/>
