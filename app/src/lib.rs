@@ -6,9 +6,9 @@ use serde::{Deserialize, Serialize};
 use leptos::prelude::*;
 use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
 use leptos_router::{
-    components::{Route, Router, Routes},
+    components::{ParentRoute, Route, Router, Routes},
     hooks::{use_location, use_navigate},
-    StaticSegment,
+    path, StaticSegment,
 };
 
 pub mod myw;
@@ -106,10 +106,15 @@ pub fn App() -> impl IntoView {
             }
             <main>
                 <Routes fallback=|| "Page not found.".into_view()>
-                    <Route path=StaticSegment("") view=crate::page::home::I/>
-                    <Route path=StaticSegment("/code") view=crate::page::code::I/>
-                    <Route path=StaticSegment("/yueduqi") view=crate::page::yuedu::I/>
-                    <Route path=StaticSegment("/setting") view=crate::page::setting::I/>
+                <Route path=StaticSegment("") view=crate::page::home::I/>
+                    <Route path=StaticSegment("code") view=crate::page::code::I/>
+                    // <Route path!="yueduqi" view=crate::page::yuedu::I/>
+                    <Route path=StaticSegment("setting") view=crate::page::setting::I/>
+                    <ParentRoute path=StaticSegment("yueduqi") view=crate::page::yuedu::I>
+                        // 默认子路由（访问 /yueduqi 时渲染 Index）
+                        <Route path=StaticSegment("") view=crate::page::yuedu::Index/>
+                        <Route path=StaticSegment("yinsishengming") view=crate::page::yuedu::YinSiShengMing/>
+                    </ParentRoute >
                 </Routes>
             </main>
         </Router>
