@@ -2,6 +2,7 @@
 use app::*;
 use axum::routing::get;
 use axum::Router;
+use backend::appf::middleware::get_auth_layer;
 use leptos::logging::log;
 use leptos::prelude::*;
 use leptos_axum::{generate_route_list, LeptosRoutes};
@@ -26,6 +27,7 @@ async fn main() {
     let app = Router::new()
         // .route("/hello", get(api_hello_world)) // 调用 backend 的 api_hello_world
         .nest("/api", create_route()) // 调用 backend 的 create_route
+        .route_layer(get_auth_layer())
         .leptos_routes(&leptos_options, routes, {
             let leptos_options = leptos_options.clone();
             move || shell(leptos_options.clone())
