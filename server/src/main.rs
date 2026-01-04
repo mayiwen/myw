@@ -1,6 +1,6 @@
 // crates/server/src/main.rs
 use app::*;
-use axum::routing::get;
+use axum::routing::{any, get};
 use axum::Router;
 use backend::appf::middleware::get_auth_layer;
 use leptos::logging::log;
@@ -20,13 +20,12 @@ async fn main() {
     let addr = conf.leptos_options.site_addr;
     let leptos_options = conf.leptos_options;
     let routes = generate_route_list(App);
-    // let db = database::init().await;
-    // let db = db.expect("数据连接失败");
-    // provide_context(db.clone()); // 关键：克隆 Arc，原 db 仍可用
-    //                              // 2. 构建路由：所有原 server/lib.rs 的函数替换为 backend 导入
     let app = Router::new()
-        // .route("/hello", get(api_hello_world)) // 调用 backend 的 api_hello_world
-        .nest("/api", create_route()) // 调用 backend 的 create_route
+        .nest("/api", create_route())
+        // .route(
+        //     "/ssrf/*rest",
+        //     any(|| async { /* 空处理，仅用于挂载中间件 */ }),
+        // )
         .route_layer(get_auth_layer())
         .leptos_routes(&leptos_options, routes, {
             let leptos_options = leptos_options.clone();
@@ -34,6 +33,5 @@ async fn main() {
         })
         .fallback(leptos_axum::file_and_error_handler(shell));
 
-    // 3. 调用 backend 的 run 方法（替换原 server::appf::run）
     run(leptos_options, app).await;
 }

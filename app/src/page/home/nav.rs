@@ -65,7 +65,7 @@ pub fn I() -> impl IntoView {
     });
 
     view! {
-        <div style="max-width: 1200px; width: 100%; padding: 0px 4px; margin: auto">
+        <div style="max-width: 1200px; width: 100%; margin: auto">
             <Tabs tab=tabs id=id />
         </div>
         <div style="display: grid; gap: 4px 4px;grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); padding: 4px 0px;  max-width: 1200px;  margin: auto">

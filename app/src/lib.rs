@@ -56,70 +56,92 @@ pub fn App() -> impl IntoView {
     view! {
         <Stylesheet id="leptos" href="/pkg/myw.css"/>
         <Title text="马一文 mayiwen mayiwen.com | 建设纪录"/>
-        <Tabset id=id show_line=false>
-            <Tab slot id=0 title="马一文".to_string()
-                icon={
-                    ViewFn::from(move || {
-                        view! { <icon::Myw></icon::Myw> }
-                    })
-                }
-                click=Callback::from(move || {
-                     nav("/")
-                })
-                >""</Tab>
-            <Tab slot id=1
-                title="☰ 代码".to_string()
-                click=Callback::from(move || {
-                     nav("/code")
-                })>""</Tab>
-            <Tab slot id=2
-                title="✤ 阅读".to_string()
-                click=Callback::from(move || {
-                     nav("/yueduqi")
-                })>""</Tab>
-            <Tab slot id=4
-                title="❃ 设置".to_string()
-                click=Callback::from(move || {
-                     nav("/setting")
-                })>""</Tab>
-        </Tabset>
-        // {router_active}
-        <Router>
-            {
-                let location = use_location();
-                Effect::new(move |_| {
-                    let path = location.pathname.get();
-                    let trimmed_path = path.trim_start_matches('/').to_string();
-                    set_router_active.set(trimmed_path.clone());
-                    if trimmed_path == "code".to_string() {
-                        id.set(1);
-                    } else if trimmed_path == "".to_string() {
-                        id.set(0)
-                    } else if trimmed_path == "yueduqi".to_string() {
-                        id.set(2)
-                    } else if trimmed_path == "setting".to_string() {
-                        id.set(4)
-                    } else {
-                        id.set(9999999)
+        <div style="height: 100%" class="front_box">
+            <div style="height: 40px">
+                <myw::Gap h=1/>
+                <Tabset id=id show_line=false>
+                    <Tab slot id=0 title="马一文".to_string()
+                        icon={
+                            ViewFn::from(move || {
+                                view! { <icon::Myw></icon::Myw> }
+                            })
+                        }
+                        click=Callback::from(move || {
+                            nav("/")
+                        })
+                        >""</Tab>
+                    <Tab slot id=1
+                        title="☰ 代码".to_string()
+                        click=Callback::from(move || {
+                            nav("/code")
+                        })>""</Tab>
+                    <Tab slot id=2
+                        title="✤ 阅读".to_string()
+                        click=Callback::from(move || {
+                            nav("/yueduqi")
+                        })>""</Tab>
+                    <Tab slot id=3
+                        title="✯ 网站".to_string()
+                        click=Callback::from(move || {
+                            nav("/website")
+                        })>""</Tab>
+                    <Tab slot id=4
+                        title="❃ 设置".to_string()
+                        click=Callback::from(move || {
+                            nav("/setting")
+                        })>""</Tab>
+                </Tabset>
+                <myw::Gap h=1/>
+            </div>
+            <div style="height: calc(100% - 40px); overflow: auto;" class="myw-context">
+            // {router_active}
+                <Router>
+                    {
+                        let location = use_location();
+                        Effect::new(move |_| {
+                            let path = location.pathname.get();
+                            let trimmed_path = path.trim_start_matches('/').to_string();
+                            set_router_active.set(trimmed_path.clone());
+                            if trimmed_path == "code".to_string() {
+                                id.set(1);
+                            } else if trimmed_path == "".to_string() {
+                                id.set(0)
+                            } else if trimmed_path == "yueduqi".to_string() {
+                                id.set(2)
+                            } else if trimmed_path == "website".to_string() {
+                                id.set(3)
+                            } else if trimmed_path == "setting".to_string() {
+                                id.set(4)
+                            }else {
+                                id.set(9999999)
+                            }
+                        });
                     }
-                });
-            }
-            <main>
-                <Routes fallback=|| "Page not found.".into_view()>
-                <Route path=StaticSegment("") view=crate::page::home::I/>
-                    <Route path=StaticSegment("code") view=crate::page::code::I/>
-                    // <Route path!="yueduqi" view=crate::page::yuedu::I/>
-                    <Route path=StaticSegment("setting") view=crate::page::setting::I/>
-                    <ParentRoute path=StaticSegment("yueduqi") view=crate::page::yuedu::I>
-                        // 默认子路由（访问 /yueduqi 时渲染 Index）
-                        <Route path=StaticSegment("") view=crate::page::yuedu::Index/>
-                        <Route path=StaticSegment("yinsishengming") view=crate::page::yuedu::YinSiShengMing/>
-                    </ParentRoute >
-                </Routes>
-            </main>
-        </Router>
+                    <main>
+                        <Routes fallback=|| "Page not found.".into_view()>
+                        <Route path=StaticSegment("") view=crate::page::home::I/>
+                            <Route path=StaticSegment("code") view=crate::page::code::I/>
+                            // <Route path!="yueduqi" view=crate::page::yuedu::I/>
+                            <Route path=StaticSegment("setting") view=crate::page::setting::I/>
+                            <Route path=StaticSegment("website") view=crate::page::website::I/>
+                            <ParentRoute path=StaticSegment("yueduqi") view=crate::page::yuedu::I>
+                                // 默认子路由（访问 /yueduqi 时渲染 Index）
+                                <Route path=StaticSegment("") view=crate::page::yuedu::Index/>
+                                <Route path=StaticSegment("yinsishengming") view=crate::page::yuedu::YinSiShengMing/>
+                            </ParentRoute >
+                        </Routes>
+                    </main>
+                </Router>
 
-        <MayiwenBeiAn></MayiwenBeiAn>
+                <MayiwenBeiAn></MayiwenBeiAn>
+
+
+            </div>
+
+
+
+        </div>
+
     }
 }
 

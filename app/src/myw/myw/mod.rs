@@ -18,7 +18,7 @@ pub fn MayiwenBeiAn() -> impl IntoView {
                     豫公网安备 41162402000184号</p>
                 </a>
             </div>
-            <div style="heght: 60px"></div>
+            <div style="height: 8px">" "</div>
         </div>
     }
 }
