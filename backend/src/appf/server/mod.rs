@@ -76,6 +76,7 @@ impl Server {
         let normalize_path = NormalizePathLayer::trim_trailing_slash();
         Router::new()
             .merge(router)
+            .layer(super::middleware::get_auth_layer())
             .layer(Extension(db))
             // .layer(middleware::from_fn(myw_middleware::add_response_header::i))
             .layer(timeout)

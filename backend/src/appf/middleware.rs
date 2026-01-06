@@ -34,8 +34,11 @@ impl AsyncAuthorizeRequest<Body> for JWTAuth {
 
     fn authorize(&mut self, mut request: Request<Body>) -> Self::Future {
         let jwt = self.jwt;
+
         // ========== 核心修改：路径白名单判断 ==========
         let uri = request.uri().clone();
+        tracing::info!("tracing url {}", uri.path().to_string());
+        // println!("tracing url {}", uri.path().to_string());
         // 如果不是 api/ssrp/*** 路径，直接放行
         if !is_path_protected(&uri) {
             return Box::pin(async move { Ok(request) });

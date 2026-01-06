@@ -16,6 +16,7 @@ use backend::appf::{database, run}; // 原 server::appf::run
 #[tokio::main]
 async fn main() {
     // 1. 从 backend 调用配置加载（替换原 server::config）
+
     let conf = get_configuration(None).unwrap();
     let addr = conf.leptos_options.site_addr;
     let leptos_options = conf.leptos_options;
@@ -26,7 +27,7 @@ async fn main() {
         //     "/ssrf/*rest",
         //     any(|| async { /* 空处理，仅用于挂载中间件 */ }),
         // )
-        .route_layer(get_auth_layer())
+        // .route_layer(get_auth_layer())
         .leptos_routes(&leptos_options, routes, {
             let leptos_options = leptos_options.clone();
             move || shell(leptos_options.clone())
