@@ -121,25 +121,17 @@ pub fn App() -> impl IntoView {
                         <Routes fallback=|| "Page not found.".into_view()>
                         <Route path=StaticSegment("") view=crate::page::home::I/>
                             <Route path=StaticSegment("code") view=crate::page::code::I/>
-                            // <Route path!="yueduqi" view=crate::page::yuedu::I/>
                             <Route path=StaticSegment("setting") view=crate::page::setting::I/>
                             <Route path=StaticSegment("website") view=crate::page::website::I/>
                             <ParentRoute path=StaticSegment("yueduqi") view=crate::page::yuedu::I>
-                                // 默认子路由（访问 /yueduqi 时渲染 Index）
                                 <Route path=StaticSegment("") view=crate::page::yuedu::Index/>
                                 <Route path=StaticSegment("yinsishengming") view=crate::page::yuedu::YinSiShengMing/>
                             </ParentRoute >
                         </Routes>
                     </main>
                 </Router>
-
                 <MayiwenBeiAn></MayiwenBeiAn>
-
-
             </div>
-
-
-
         </div>
 
     }
@@ -263,12 +255,6 @@ pub async fn get_link(id: u64) -> Result<Vec<Link>, ServerFnError> {
                 src: model.src.clone(),
             })
             .collect();
-        // pub id: i64,
-        // pub title: String,
-        // pub src: String,
-        // pub title_id: i64,
-        // pub index: i32,
-
         Ok(links)
     }
 

@@ -1,7 +1,7 @@
 use crate::appf::auth::{get_jwt, JWT};
 use crate::appf::error::ApiError;
 use axum::body::Body;
-use axum::http::{header, Request, Response};
+use axum::http::{header, Request, Response, Uri};
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::LazyLock;
@@ -34,7 +34,12 @@ impl AsyncAuthorizeRequest<Body> for JWTAuth {
 
     fn authorize(&mut self, mut request: Request<Body>) -> Self::Future {
         let jwt = self.jwt;
-
+        // ========== 核心修改：路径白名单判断 ==========
+        let uri = request.uri().clone();
+        // 如果不是 api/ssrp/*** 路径，直接放行
+        if !is_path_protected(&uri) {
+            return Box::pin(async move { Ok(request) });
+        }
         Box::pin(async move {
             let token = request
                 .headers()
@@ -71,4 +76,14 @@ impl AsyncAuthorizeRequest<Body> for JWTAuth {
 
 pub fn get_auth_layer() -> &'static AsyncRequireAuthorizationLayer<JWTAuth> {
     &AUTH_LAYER
+}
+
+// 支持多个保护前缀
+const PROTECTED_PREFIXES: &[&str] = &["/api/ssrp/", "/api/admin/"];
+
+fn is_path_protected(uri: &Uri) -> bool {
+    let path = uri.path();
+    PROTECTED_PREFIXES
+        .iter()
+        .any(|prefix| path.starts_with(prefix))
 }
