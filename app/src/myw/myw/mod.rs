@@ -1,9 +1,52 @@
+use crate::myw;
+use crate::myw::button::Button;
+use crate::myw::icon;
+use crate::util::open_url;
+use leptos::web_sys::{Document, HtmlElement, Window};
+
 use leptos::prelude::*;
 #[component]
 pub fn MayiwenBeiAn() -> impl IntoView {
+    let (count, set_count) = signal(0);
+    // 2. 点击事件处理逻辑（完全还原原有功能）
+    let toggle_theme = move || {
+        // 更新计数器
+        set_count.update(|c| *c += 1);
+
+        // 直接获取 html 根元素（不再依赖外部函数，避免找不到的问题）
+        if let Some(html_el) = leptos::web_sys::window()
+            .and_then(|win| win.document())
+            .and_then(|doc| doc.document_element())
+        {
+            // 切换主题属性
+            let theme = if count.get() % 2 == 1 {
+                "black"
+            } else {
+                "none"
+            };
+            if let Err(e) = html_el.set_attribute("data-mayiwen-theme", theme) {
+                // log::error!("Failed to set theme attribute: {:?}", e);
+            }
+        }
+    };
     view! {
-        <div style="text-align: center">
-            <div style="text-align: center; margin-top: 40px ">
+        <div style="text-align: center; margin-top: 40px">
+            <div>
+                <Button  on_click=move |_| {
+                    toggle_theme()
+                }><icon::Theme/></Button> <myw::Gap w=8/>
+                <Button  on_click=move |_| {
+                    open_url("https://github.com/mayiwen");
+                }><icon::Github/></Button><myw::Gap w=8/>
+                <Button  on_click=move |_| {
+                    // open_url(&child.src);
+                     open_url("https://gitlink.org.cn/mayiwen");
+                }><icon::GitLink/></Button>
+            </div>
+            <myw::Gap h=20/>
+
+
+            <div style="text-align: center;  ">
                 <a href="http://mayiwen.com/" target="_blank" style="color:#666; text-decoration: none">mayiwen.com</a>
             </div>
             <div style="text-align: center; margin-top: -0px;">
@@ -18,7 +61,7 @@ pub fn MayiwenBeiAn() -> impl IntoView {
                     豫公网安备 41162402000184号</p>
                 </a>
             </div>
-            <div style="height: 8px">" "</div>
+            <div style="height: 30px">" "</div>
         </div>
     }
 }

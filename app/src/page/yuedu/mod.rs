@@ -2,6 +2,7 @@ use crate::{
     myw::{
         self,
         button::Button,
+        icon,
         tabset::{Tab, Tabset},
     },
     util::open_url,
@@ -31,9 +32,9 @@ pub fn Index() -> impl IntoView {
         use_context::<RwSignal<Option<crate::NavFn>>>().expect("请确保 App 组件已提供全局导航信号");
     view! {
         <div style="text-align: center">
-            <p style="text-align: right; margin-right: 8px;">
+            <div style="text-align: right; margin-right: 8px;">
                 <a
-                    style="text-decoration: underline; cursor: pointer;"
+                    style="text-decoration: underline; cursor: pointer; line-height: 40px;"
                     on:click= move |_| {
                         global_nav.with(|nav_opt| {
                             if let Some(nav) = nav_opt {
@@ -41,8 +42,17 @@ pub fn Index() -> impl IntoView {
                             };
                         });
                     }
-                    title="https://mayiwen.com/yueduqi/yinsishengming">隐私声明</a>
-            </p>
+                    title="https://mayiwen.com/yueduqi/yinsishengming">
+                        隐私声明
+                </a>
+                <myw::Gap w=8/>
+                <Button  on_click=move |_| {
+                    open_url("https://github.com/mayiwen/yueduqi");
+                    }><icon::Github/></Button><myw::Gap w=8/>
+                <Button  on_click=move |_| {
+                        open_url("https://gitlink.org.cn/mayiwen/yueduqi");
+                }><icon::GitLink/></Button>
+            </div>
             <div style="text-align: center; max-width: 400px; margin: auto;">
                 <myw::Gap h=12/>
                 <h1 style="font-weight: bold;">一文小说阅读器</h1>

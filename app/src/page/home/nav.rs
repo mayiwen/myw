@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
+use crate::models::{link::Link, title::Title};
 use crate::myw::button::Button;
 use crate::myw::tabset::{Tab, Tabs, Tabset};
 use crate::util::open_url;
-use crate::{Link, Title};
 use leptos::prelude::*;
 use leptos::reactive::spawn_local;
 

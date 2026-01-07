@@ -11,6 +11,7 @@ use leptos_router::{
     path, StaticSegment,
 };
 
+pub mod models;
 pub mod myw;
 pub mod page;
 pub mod util;
@@ -161,20 +162,8 @@ pub async fn greet() -> Result<String, ServerFnError> {
     Ok("Hello from Server Function!".to_string())
 }
 
-type ServerFnResult<T> = Result<T, ServerFnError<String>>;
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Title {
-    pub id: u64,
-    pub title: String,
-}
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Link {
-    pub id: u64,
-    pub title: String,
-    pub src: String,
-}
-#[server(GetTitle, "/api/ssr/title")]
-pub async fn get_title() -> Result<Vec<Title>, ServerFnError> {
+#[server(GetTitle, "/api/title")]
+pub async fn get_title() -> Result<Vec<models::title::Title>, ServerFnError> {
     #[cfg(feature = "ssr")]
     {
         use backend::appf::{common::Page, response::ApiResponse};
@@ -200,10 +189,10 @@ pub async fn get_title() -> Result<Vec<Title>, ServerFnError> {
             None => return Err(ServerFnError::ServerError("API调用失败: ".to_string())),
         };
         // 转换模型
-        let titles: Vec<Title> = page
+        let titles: Vec<models::title::Title> = page
             .items
             .into_iter()
-            .map(|model| Title {
+            .map(|model| models::title::Title {
                 id: model.id as u64,
                 title: model.title,
             })
@@ -219,8 +208,8 @@ pub async fn get_title() -> Result<Vec<Title>, ServerFnError> {
         ))
     }
 }
-#[server(GetLink, "/api/ssr/link")]
-pub async fn get_link(id: u64) -> Result<Vec<Link>, ServerFnError> {
+#[server(GetLink, "/api/link")]
+pub async fn get_link(id: u64) -> Result<Vec<models::link::Link>, ServerFnError> {
     #[cfg(feature = "ssr")]
     {
         use backend::appf::{common::Page, response::ApiResponse};
@@ -246,10 +235,10 @@ pub async fn get_link(id: u64) -> Result<Vec<Link>, ServerFnError> {
             None => return Err(ServerFnError::ServerError("API调用失败: ".to_string())),
         };
         // 转换模型
-        let links: Vec<Link> = page
+        let links: Vec<models::link::Link> = page
             .items
             .into_iter()
-            .map(|model| Link {
+            .map(|model| models::link::Link {
                 id: model.id as u64,
                 title: model.title.clone(),
                 src: model.src.clone(),
