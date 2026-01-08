@@ -47,11 +47,12 @@ pub fn Table<T: Clone + 'static + Debug + Send + Sync>(
     col_vec: ReadSignal<Vec<TabColumn<T>>>,
 ) -> impl IntoView {
     view! {
+        <div style="overflow: auto;">
         <table style="border-collapse: collapse;" >
             <thead>
                 <tr style={"height: 40px"}>
                     {move || col_vec.get().iter().map(|col| view! {
-                        <th style={format!("border: 1px solid #ddd; width: {}px", col.width)}>{col.title}</th>
+                        <th style={format!("width: {}px; font-size: 16px; padding: 0 4px; border: 1px solid var(--myw-border);background-color: var(--myw-boxBc);", col.width)}>{col.title}</th>
                     }).collect::<Vec<_>>()}
                 </tr>
             </thead>
@@ -59,7 +60,7 @@ pub fn Table<T: Clone + 'static + Debug + Send + Sync>(
                 {move || data.get().into_iter().enumerate().map(|(_row_index, item)| {
                     let item = item.clone();
                     view! {
-                        <tr style={"height: 40px;"}>
+                        <tr style={"height: 40px;  "}>
                             {col_vec.get().iter().enumerate().map(|(_col_index, col)| {
                             let cell_view = match &col.view {
                                 Some(view_fn) => {
@@ -72,7 +73,7 @@ pub fn Table<T: Clone + 'static + Debug + Send + Sync>(
                             };
 
                             view! {
-                                <td style=" border: 1px solid #ddd; padding: 0 4px;">
+                                <td style=" border: 1px solid var(--myw-border); padding: 0 4px;">
                                     {cell_view}  // 这里会自动转换为合适的类型
                                 </td>
                             }
@@ -82,6 +83,7 @@ pub fn Table<T: Clone + 'static + Debug + Send + Sync>(
                 }).collect::<Vec<_>>()}
             </tbody>
         </table>
+        </div>
     }
 }
 

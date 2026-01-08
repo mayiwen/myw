@@ -74,6 +74,18 @@ pub fn Index() -> impl IntoView {
                     </Tabset>
                 </div>
             </div>
+            <div style="text-align: center; margin-top: 30px;">
+                // p 标签显示阅读器名称
+                <p style="color: #666;">"一文小说阅读器"</p>
+                // a 标签显示备案号并链接到工信部备案平台
+                <a
+                    href="https://beian.miit.gov.cn/"
+                    target="_blank"
+                    style="color: #666;"
+                >
+                    "豫ICP备2022018473号-2A"
+                </a>
+            </div>
         </div>
     }
 }

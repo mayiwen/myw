@@ -39,7 +39,7 @@ pub fn I() -> impl IntoView {
 
     let col_vec: Vec<TabColumn<DataMock>> = vec![
         TabColumn {
-            width: 100,
+            width: 50,
             title: "id",
             id: "id",
             view: Some(Arc::new(|data: DataMock| {
@@ -49,18 +49,18 @@ pub fn I() -> impl IntoView {
             })),
         },
         TabColumn {
-            width: 100,
+            width: 300,
             title: "姓名",
             id: "name",
             view: Some(Arc::new(|data: DataMock| {
                 ViewFn::from(move || {
-                    view! { {data.id} }
+                    view! { {data.name} }
                 })
             })),
         },
         TabColumn {
-            width: 100,
-            title: "操作",
+            width: 150,
+            title: "自定义列",
             id: "ctrl",
             view: Some(Arc::new(|data: DataMock| {
                 let data_clone = data.clone();
@@ -71,7 +71,251 @@ pub fn I() -> impl IntoView {
                         <button::I on:click=move |_| {
                             leptos::logging::log!("操作: {:?}", data);
                         }>
-                            {format!("操作 {}", data.name)}
+                            {format!("操作 {} - {}",data.id, data.name)}
+                        </button::I>
+                    }
+                })
+
+                // 方法2：或者更简单，让闭包自动转换为 ViewFn
+                // let view_closure = move || {
+                //     let data = data.clone();
+                //     view! {
+                //         <button on:click=move |_| {
+                //             leptos::logging::log!("操作: {:?}", data);
+                //         }>
+                //             {format!("操作 {}", data.name)}
+                //         </button>
+                //     }
+                // };
+                // view_closure.into()
+            })),
+        },
+        TabColumn {
+            width: 50,
+            title: "id",
+            id: "id",
+            view: Some(Arc::new(|data: DataMock| {
+                ViewFn::from(move || {
+                    view! { {data.id} }
+                })
+            })),
+        },
+        TabColumn {
+            width: 300,
+            title: "姓名",
+            id: "name",
+            view: Some(Arc::new(|data: DataMock| {
+                ViewFn::from(move || {
+                    view! { {data.name} }
+                })
+            })),
+        },
+        TabColumn {
+            width: 150,
+            title: "自定义列",
+            id: "ctrl",
+            view: Some(Arc::new(|data: DataMock| {
+                let data_clone = data.clone();
+                // 方法1：使用 ViewFn::from() - 最推荐的方式
+                ViewFn::from(move || {
+                    let data = data_clone.clone();
+                    view! {
+                        <button::I on:click=move |_| {
+                            leptos::logging::log!("操作: {:?}", data);
+                        }>
+                            {format!("操作 {} - {}",data.id, data.name)}
+                        </button::I>
+                    }
+                })
+
+                // 方法2：或者更简单，让闭包自动转换为 ViewFn
+                // let view_closure = move || {
+                //     let data = data.clone();
+                //     view! {
+                //         <button on:click=move |_| {
+                //             leptos::logging::log!("操作: {:?}", data);
+                //         }>
+                //             {format!("操作 {}", data.name)}
+                //         </button>
+                //     }
+                // };
+                // view_closure.into()
+            })),
+        },
+        TabColumn {
+            width: 150,
+            title: "自定义列",
+            id: "ctrl",
+            view: Some(Arc::new(|data: DataMock| {
+                let data_clone = data.clone();
+                // 方法1：使用 ViewFn::from() - 最推荐的方式
+                ViewFn::from(move || {
+                    let data = data_clone.clone();
+                    view! {
+                        <button::I on:click=move |_| {
+                            leptos::logging::log!("操作: {:?}", data);
+                        }>
+                            {format!("操作 {} - {}",data.id, data.name)}
+                        </button::I>
+                    }
+                })
+
+                // 方法2：或者更简单，让闭包自动转换为 ViewFn
+                // let view_closure = move || {
+                //     let data = data.clone();
+                //     view! {
+                //         <button on:click=move |_| {
+                //             leptos::logging::log!("操作: {:?}", data);
+                //         }>
+                //             {format!("操作 {}", data.name)}
+                //         </button>
+                //     }
+                // };
+                // view_closure.into()
+            })),
+        },
+        TabColumn {
+            width: 150,
+            title: "自定义列",
+            id: "ctrl",
+            view: Some(Arc::new(|data: DataMock| {
+                let data_clone = data.clone();
+                // 方法1：使用 ViewFn::from() - 最推荐的方式
+                ViewFn::from(move || {
+                    let data = data_clone.clone();
+                    view! {
+                        <button::I on:click=move |_| {
+                            leptos::logging::log!("操作: {:?}", data);
+                        }>
+                            {format!("操作 {} - {}",data.id, data.name)}
+                        </button::I>
+                    }
+                })
+
+                // 方法2：或者更简单，让闭包自动转换为 ViewFn
+                // let view_closure = move || {
+                //     let data = data.clone();
+                //     view! {
+                //         <button on:click=move |_| {
+                //             leptos::logging::log!("操作: {:?}", data);
+                //         }>
+                //             {format!("操作 {}", data.name)}
+                //         </button>
+                //     }
+                // };
+                // view_closure.into()
+            })),
+        },
+        TabColumn {
+            width: 150,
+            title: "自定义列",
+            id: "ctrl",
+            view: Some(Arc::new(|data: DataMock| {
+                let data_clone = data.clone();
+                // 方法1：使用 ViewFn::from() - 最推荐的方式
+                ViewFn::from(move || {
+                    let data = data_clone.clone();
+                    view! {
+                        <button::I on:click=move |_| {
+                            leptos::logging::log!("操作: {:?}", data);
+                        }>
+                            {format!("操作 {} - {}",data.id, data.name)}
+                        </button::I>
+                    }
+                })
+
+                // 方法2：或者更简单，让闭包自动转换为 ViewFn
+                // let view_closure = move || {
+                //     let data = data.clone();
+                //     view! {
+                //         <button on:click=move |_| {
+                //             leptos::logging::log!("操作: {:?}", data);
+                //         }>
+                //             {format!("操作 {}", data.name)}
+                //         </button>
+                //     }
+                // };
+                // view_closure.into()
+            })),
+        },
+        TabColumn {
+            width: 150,
+            title: "自定义列",
+            id: "ctrl",
+            view: Some(Arc::new(|data: DataMock| {
+                let data_clone = data.clone();
+                // 方法1：使用 ViewFn::from() - 最推荐的方式
+                ViewFn::from(move || {
+                    let data = data_clone.clone();
+                    view! {
+                        <button::I on:click=move |_| {
+                            leptos::logging::log!("操作: {:?}", data);
+                        }>
+                            {format!("操作 {} - {}",data.id, data.name)}
+                        </button::I>
+                    }
+                })
+
+                // 方法2：或者更简单，让闭包自动转换为 ViewFn
+                // let view_closure = move || {
+                //     let data = data.clone();
+                //     view! {
+                //         <button on:click=move |_| {
+                //             leptos::logging::log!("操作: {:?}", data);
+                //         }>
+                //             {format!("操作 {}", data.name)}
+                //         </button>
+                //     }
+                // };
+                // view_closure.into()
+            })),
+        },
+        TabColumn {
+            width: 150,
+            title: "自定义列",
+            id: "ctrl",
+            view: Some(Arc::new(|data: DataMock| {
+                let data_clone = data.clone();
+                // 方法1：使用 ViewFn::from() - 最推荐的方式
+                ViewFn::from(move || {
+                    let data = data_clone.clone();
+                    view! {
+                        <button::I on:click=move |_| {
+                            leptos::logging::log!("操作: {:?}", data);
+                        }>
+                            {format!("操作 {} - {}",data.id, data.name)}
+                        </button::I>
+                    }
+                })
+
+                // 方法2：或者更简单，让闭包自动转换为 ViewFn
+                // let view_closure = move || {
+                //     let data = data.clone();
+                //     view! {
+                //         <button on:click=move |_| {
+                //             leptos::logging::log!("操作: {:?}", data);
+                //         }>
+                //             {format!("操作 {}", data.name)}
+                //         </button>
+                //     }
+                // };
+                // view_closure.into()
+            })),
+        },
+        TabColumn {
+            width: 150,
+            title: "自定义列",
+            id: "ctrl",
+            view: Some(Arc::new(|data: DataMock| {
+                let data_clone = data.clone();
+                // 方法1：使用 ViewFn::from() - 最推荐的方式
+                ViewFn::from(move || {
+                    let data = data_clone.clone();
+                    view! {
+                        <button::I on:click=move |_| {
+                            leptos::logging::log!("操作: {:?}", data);
+                        }>
+                            {format!("操作 {} - {}",data.id, data.name)}
                         </button::I>
                     }
                 })
