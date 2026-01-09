@@ -15,7 +15,7 @@ pub fn I() -> impl IntoView {
         <myw::Gap/>
         <Tabset id=id>
             <Tab slot id=0 title="首页标题".to_string()>""</Tab>
-            <Tab slot id=1 title="链接".to_string()>""</Tab>
+            <Tab slot id=1 title="首页链接".to_string()>""</Tab>
             <Tab slot id=2 title="关于".to_string()>""</Tab>
             // <Tab slot id=1 title="android".to_string()><android::I/></Tab>
             // <Tab slot id=2 title="windows".to_string()><windows::I/></Tab>

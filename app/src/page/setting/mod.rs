@@ -20,8 +20,8 @@ pub fn I() -> impl IntoView {
             </div>
         <myw::Gap/>
         <Tabset id=id>
-            <Tab slot id=0 title="首页标题".to_string()>""</Tab>
-            <Tab slot id=1 title="链接".to_string()>""</Tab>
+            <Tab slot id=0 title="首页标题".to_string()><title::I/></Tab>
+            <Tab slot id=1 title="首页链接".to_string()>""</Tab>
             <Tab slot id=2 title="关于".to_string()><about::I/></Tab>
         </Tabset>
     }
