@@ -37,8 +37,8 @@ pub fn Modal(
     };
 
     view! {
-        <Show when=is_open>
-            <div>
+        // <Show when=is_open>
+            <div style:display=move || format!("{}", if is_open.get() {"block"} else {"none"}) >
                 <div
                     style="position: fixed; height: 100dvh; width: 100%; background-color: rgba(128, 128, 128, 0.5); z-index: 100000; left: 0; top: 0; opacity: 0.5;"
                     hidden=!is_open.get()
@@ -80,24 +80,20 @@ pub fn Modal(
 
                     // // 按钮区域
                     <div style="float: right;">
-                        <Button on_click=move |_| {
-                            // on_confirm.call(true);
-                            // is_open_clone.set(false);
-                        }>
+                        <Button on_click=click_handler>
                             确认
                         </Button>
 
                         <myw::Gap w=8 />
 
                         <Button border="none" on_click=move |_| {
-                            is_open.set(false);
+                            is_open.set(false)
                         }>
                             取消
                         </Button>
                     </div>
                 </dialog>
             </div>
-        </Show>
 
 
     }
