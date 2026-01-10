@@ -2,6 +2,7 @@ use leptos::prelude::*;
 pub mod button;
 pub mod icon;
 pub mod input;
+pub mod modal;
 pub mod myw;
 pub mod table;
 pub mod tabset;

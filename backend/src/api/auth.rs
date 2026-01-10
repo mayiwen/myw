@@ -73,3 +73,30 @@ async fn get_user_info(
 ) -> ApiResult<ApiResponse<Principal>> {
     Ok(ApiResponse::ok("ok", Some(principal)))
 }
+
+async fn ssr_login(params: LoginParams) -> ApiResult<ApiResponse<LoginResult>> {
+    tracing::info!("开始处理登录逻辑...");
+    let db = crate::get_global_db();
+    let user = login_user::Entity::find()
+        .filter(login_user::Column::Name.eq(&params.name))
+        .one(db)
+        .await?
+        .ok_or_else(|| ApiError::Biz(String::from("账号或密码不正确")))?;
+
+    if !verify_password(&params.password, &user.password)? {
+        return Err(ApiError::Biz(String::from("账号或密码不正确")));
+    }
+
+    let principal = Principal {
+        id: user.id.to_string(),
+        name: user.name,
+    };
+    let access_token = get_jwt().encode(principal)?;
+
+    tracing::info!("登录成功, JWT Token: {access_token}");
+
+    Ok(ApiResponse::ok(
+        "登录成功",
+        Some(LoginResult { access_token }),
+    ))
+}

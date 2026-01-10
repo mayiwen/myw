@@ -116,3 +116,34 @@ pub fn GitLink(
         </svg>
     }
 }
+
+#[component]
+pub fn Close(
+    /// 图标宽度和高度（像素）
+    #[prop(default = 40)]
+    wh: usize,
+    #[prop(default = "".to_string())] style: String,
+) -> impl IntoView {
+    let size_str = format!("{}px", wh);
+    let base_style = format!(
+        "display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; {style}"
+    );
+
+    view! {
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            view_box="0 0 40 40"
+            fill="var(--myw-color)"
+            width=size_str.clone()
+            height=size_str
+            style=base_style
+        >
+            // 核心修改：给 path 加平移，让 13x13 的图形在 40x40 画布居中
+            <path
+                d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z"
+                // 40-13=27，27/2=13.5，平移 13.5 让图形居中
+                style="transform:translate(7.5px, 7.5px)"
+            />
+        </svg>
+    }
+}

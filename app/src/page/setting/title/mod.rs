@@ -17,10 +17,7 @@ pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
 
     // <myw::Gap h=8/>
-    let data = vec![Title {
-        id: 1,
-        title: "首页".to_string(),
-    }];
+    let data = vec![];
     let (data_vec, set_data_vec) = signal(data);
 
     let col_vec: Vec<TabColumn<Title>> = vec![
@@ -83,9 +80,7 @@ pub fn I() -> impl IntoView {
     view! {
         <myw::Gap/>
         <h3>标题设置</h3>
-        <Table
-            data=data_vec
-            col_vec=col_vec
-            > </Table>
+        <myw::Gap/>
+        <Table data=data_vec col_vec=col_vec> </Table>
     }
 }
