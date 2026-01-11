@@ -10,7 +10,7 @@ leptos.workspace = true
 leptos_meta.workspace = true
 leptos_router.workspace = true
 leptos_axum = { workspace = true, optional = true }
-gloo-timers = "0.3"
+gloo-timers = { version = "0.3", features = ["futures"] } # 必须启用 futures 特性！
 # 新增：依赖 server crate（仅 ssr 特性下启用）
 backend = { path = "../backend", optional = true }
 shared = { path = "../shared", optional = true }
