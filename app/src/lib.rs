@@ -1,4 +1,5 @@
 use crate::myw::icon;
+use crate::myw::message::{Message, MessageType};
 use crate::myw::myw::MayiwenBeiAn;
 use crate::myw::tabset::{Tab, Tabset};
 use serde::{Deserialize, Serialize};
@@ -43,6 +44,26 @@ pub type NavFn = Box<dyn Fn(&'static str) + Send + Sync>;
 #[component]
 pub fn App() -> impl IntoView {
     provide_meta_context();
+
+    let message = RwSignal::new(vec![
+        Message {
+            t: MessageType::WARNING,
+            m: "这是一个提示的消息",
+        },
+        Message {
+            t: MessageType::WARNING,
+            m: "这是一个提示的消息",
+        },
+        Message {
+            t: MessageType::WARNING,
+            m: "这是一个提示的消息",
+        },
+        Message {
+            t: MessageType::WARNING,
+            m: "这是一个提示的消息",
+        },
+    ]);
+    provide_context(message);
     let id: RwSignal<u64> = RwSignal::new(0);
     let (_router_active, set_router_active) = signal("".to_string());
     let global_nav: RwSignal<Option<NavFn>> = RwSignal::new(None);
@@ -132,6 +153,8 @@ pub fn App() -> impl IntoView {
                     </main>
                 </Router>
                 <MayiwenBeiAn></MayiwenBeiAn>
+                <myw::message::MessageCreate>
+                </myw::message::MessageCreate>
             </div>
         </div>
 
