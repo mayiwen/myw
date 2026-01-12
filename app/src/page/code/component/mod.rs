@@ -8,12 +8,13 @@ use crate::{
 use leptos::prelude::*;
 pub mod button;
 pub mod icon;
+pub mod message;
 pub mod modal;
 pub mod table;
 /// Renders the home page of your application.
 #[component]
 pub fn I() -> impl IntoView {
-    let id: RwSignal<u64> = RwSignal::new(3);
+    let id: RwSignal<u64> = RwSignal::new(4);
     view! {
         <myw::Gap h=8/>
         <h1>网站自用组件</h1>
@@ -23,6 +24,7 @@ pub fn I() -> impl IntoView {
             <Tab slot id=0 title="按钮".to_string()><button::I/></Tab>
             <Tab slot id=2 title="图标".to_string()><icon::I/></Tab>
             <Tab slot id=3 title="弹窗".to_string()><modal::I/></Tab>
+            <Tab slot id=4 title="消息".to_string()><message::I/></Tab>
         </Tabset>
     }
 }

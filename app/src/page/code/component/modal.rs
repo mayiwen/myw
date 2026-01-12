@@ -1,6 +1,7 @@
 use crate::{
     myw::{
         self,
+        button::Button,
         modal::Modal,
         tabset::{Tab, Tabset},
     },
@@ -15,7 +16,10 @@ pub fn I() -> impl IntoView {
     let title: RwSignal<String> = RwSignal::new("你好".to_string());
     view! {
         <myw::Gap h=8/>
-        <myw::icon::Myw />
+        <Button  on_click=move |_| {
+            is_open.set(true)
+        }>打开弹窗</Button>
+        <myw::Gap w=8/>
         <Modal is_open=is_open title=title  on_click=move |_| {} >
             <div style="width: 400px; height: 300px;">你好</div>
         </Modal>

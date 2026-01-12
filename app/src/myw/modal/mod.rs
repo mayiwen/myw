@@ -63,10 +63,11 @@ pub fn Modal(
                 >
                     // // 标题区域（可选）
                     <h3 style="padding-left: 4px; line-height: 40px;">
-                        {title} {is_open}
+                        {title}
                         <Button
                             on_click=move |_| {is_open.set(false);}
                             style="float: right"
+                            border="none"
                         >
                             <icon::Close />
                         </Button>

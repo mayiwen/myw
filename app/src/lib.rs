@@ -47,20 +47,12 @@ pub fn App() -> impl IntoView {
 
     let message = RwSignal::new(vec![
         Message {
-            t: MessageType::WARNING,
-            m: "这是一个提示的消息",
+            t: MessageType::INFO,
+            m: "基于rust全栈技术(axum与leptos ssr)构建",
         },
         Message {
-            t: MessageType::WARNING,
-            m: "这是一个提示的消息",
-        },
-        Message {
-            t: MessageType::WARNING,
-            m: "这是一个提示的消息",
-        },
-        Message {
-            t: MessageType::WARNING,
-            m: "这是一个提示的消息",
+            t: MessageType::INFO,
+            m: "欢迎访问mayiwen.com",
         },
     ]);
     provide_context(message);
