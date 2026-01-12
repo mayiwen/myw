@@ -4,6 +4,8 @@ use crate::{
     models::{link::Link, title::Title},
     myw::{
         self,
+        button::Button,
+        table::{TabColumn, Table},
         tabset::{Tab, Tabs},
     },
     util::open_url,
@@ -13,7 +15,7 @@ use leptos::{prelude::*, reactive::spawn_local};
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
     let arr_vec: RwSignal<Vec<Title>> = RwSignal::new(vec![]);
-    let link_vec: RwSignal<Vec<Link>> = RwSignal::new(vec![]);
+    let (link_vec, set_link_vec) = signal(vec![]);
     let get_link = move |id: u64| {
         spawn_local(async move {
             let res = crate::get_link(id).await;
@@ -23,7 +25,7 @@ pub fn I() -> impl IntoView {
                         Some(t) => t.id,
                         None => 0,
                     };
-                    link_vec.set(res);
+                    set_link_vec.set(res);
                     // id.set(id_temp);
                 }
                 Err(_) => {}
@@ -66,6 +68,75 @@ pub fn I() -> impl IntoView {
         });
     });
 
+    let col_vec: Vec<TabColumn<Link>> = vec![
+        TabColumn {
+            width: 50,
+            title: "id",
+            id: "id",
+            view: Some(Arc::new(|data: Link| {
+                ViewFn::from(move || {
+                    view! { {data.id} }
+                })
+            })),
+        },
+        TabColumn {
+            width: 300,
+            title: "链接名称",
+            id: "title",
+            view: Some(Arc::new(|data: Link| {
+                ViewFn::from(move || {
+                    view! { {data.title.clone()} }
+                })
+            })),
+        },
+        TabColumn {
+            width: 300,
+            title: "链接路径",
+            id: "src",
+            view: Some(Arc::new(|data: Link| {
+                ViewFn::from(move || {
+                    view! { {data.src.clone()} }
+                })
+            })),
+        },
+        TabColumn {
+            width: 100,
+            title: "排序",
+            id: "index",
+            view: Some(Arc::new(|data: Link| {
+                ViewFn::from(move || {
+                    view! { {data.index} }
+                })
+            })),
+        },
+        TabColumn {
+            width: 70,
+            title: "标题编号",
+            id: "title_id",
+            view: Some(Arc::new(|data: Link| {
+                ViewFn::from(move || {
+                    view! { {data.title_id} }
+                })
+            })),
+        },
+        TabColumn {
+            width: 100,
+            title: "操作",
+            id: "ctrl",
+            view: Some(Arc::new(|data: Link| {
+                let data_clone = data.clone();
+                // 方法1：使用 ViewFn::from() - 最推荐的方式
+                ViewFn::from(move || {
+                    let data = data_clone.clone();
+                    view! {
+                        <Button on_click=move |_| {}>{format!("修改")}</Button> <myw::Gap w=4/>
+                        <Button on_click=move |_| {}>"删除"</Button>
+                    }
+                })
+            })),
+        },
+    ];
+    let (col_vec, _set_col_vec) = signal(col_vec);
     view! {
         <myw::Gap/>
         <h3>首页链接设置</h3>
@@ -73,17 +144,7 @@ pub fn I() -> impl IntoView {
         <div>
             <Tabs tab=tabs id=id />
         </div>
-        // <div style="display: grid; gap: 4px 4px;grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); padding: 4px 0px;  max-width: 1200px;  margin: auto">
-        //     <For
-        //         each=move || link_vec.get()
-        //         key=|state| state.id.clone()
-        //         let:child
-        //     >
-        //         <Button  on_click=move |_| {
-        //             open_url(&child.src);
-        //         }>{child.title}</Button>
-
-        //     </For>
-        // </div>
+        <myw::Gap/>
+        <Table data=link_vec col_vec=col_vec> </Table>
     }
 }
