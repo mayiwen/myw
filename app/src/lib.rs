@@ -210,6 +210,7 @@ pub async fn get_title() -> Result<Vec<models::title::Title>, ServerFnError> {
             .map(|model| models::title::Title {
                 id: model.id as u64,
                 title: model.title,
+                index: model.index,
             })
             .collect();
 
@@ -257,6 +258,8 @@ pub async fn get_link(id: u64) -> Result<Vec<models::link::Link>, ServerFnError>
                 id: model.id as u64,
                 title: model.title.clone(),
                 src: model.src.clone(),
+                index: model.index,
+                title_id: model.title_id as u64,
             })
             .collect();
         Ok(links)

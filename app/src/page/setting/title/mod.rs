@@ -33,11 +33,21 @@ pub fn I() -> impl IntoView {
         },
         TabColumn {
             width: 300,
-            title: "名称",
+            title: "标题名称",
             id: "title",
             view: Some(Arc::new(|data: Title| {
                 ViewFn::from(move || {
                     view! { {data.title.clone()} }
+                })
+            })),
+        },
+        TabColumn {
+            width: 70,
+            title: "排序",
+            id: "index",
+            view: Some(Arc::new(|data: Title| {
+                ViewFn::from(move || {
+                    view! { {data.index} }
                 })
             })),
         },
@@ -79,7 +89,7 @@ pub fn I() -> impl IntoView {
     });
     view! {
         <myw::Gap/>
-        <h3>标题设置</h3>
+        <h3>首页标题设置</h3>
         <myw::Gap/>
         <Table data=data_vec col_vec=col_vec> </Table>
     }

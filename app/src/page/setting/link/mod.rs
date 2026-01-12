@@ -1,27 +1,89 @@
+use std::sync::Arc;
+
 use crate::{
+    models::{link::Link, title::Title},
     myw::{
         self,
-        tabset::{Tab, Tabset},
+        tabset::{Tab, Tabs},
     },
     util::open_url,
 };
-use leptos::prelude::*;
+use leptos::{prelude::*, reactive::spawn_local};
 #[component]
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
+    let arr_vec: RwSignal<Vec<Title>> = RwSignal::new(vec![]);
+    let link_vec: RwSignal<Vec<Link>> = RwSignal::new(vec![]);
+    let get_link = move |id: u64| {
+        spawn_local(async move {
+            let res = crate::get_link(id).await;
+            match res {
+                Ok(res) => {
+                    let id_temp: u64 = match res.get(0) {
+                        Some(t) => t.id,
+                        None => 0,
+                    };
+                    link_vec.set(res);
+                    // id.set(id_temp);
+                }
+                Err(_) => {}
+            }
+        });
+    };
+    // 使用派生信号（根据依赖自动更新）
+    let tabs = Signal::derive(move || {
+        arr_vec
+            .get()
+            .into_iter()
+            .map(|title| {
+                let children_fn: ChildrenFn = Arc::new(move || view! { "" }.into_any());
+                Tab {
+                    children: children_fn,
+                    title: title.title.clone(),
+                    id: title.id,
+                    icon: None,
+                    click: Some(Callback::from(move || get_link(title.id))),
+                }
+            })
+            .collect::<Vec<Tab>>()
+    });
+
+    Effect::new(move |_| {
+        spawn_local(async move {
+            let res = crate::get_title().await;
+            match res {
+                Ok(res) => {
+                    let id_temp: u64 = match res.get(0) {
+                        Some(t) => t.id,
+                        None => 0,
+                    };
+                    arr_vec.set(res);
+                    id.set(id_temp);
+                    get_link(id_temp)
+                }
+                Err(_) => {}
+            }
+        });
+    });
+
     view! {
         <myw::Gap/>
-        <h1>设置与关于</h1>
+        <h3>首页链接设置</h3>
         <myw::Gap/>
-        <Tabset id=id>
-            <Tab slot id=0 title="首页标题".to_string()>""</Tab>
-            <Tab slot id=1 title="首页链接".to_string()>""</Tab>
-            <Tab slot id=2 title="关于".to_string()>""</Tab>
-            // <Tab slot id=1 title="android".to_string()><android::I/></Tab>
-            // <Tab slot id=2 title="windows".to_string()><windows::I/></Tab>
-            // <Tab slot id=3 title="macos".to_string()><macos::I/></Tab>
-            // <Tab slot id=4 title="linux".to_string()><linux::I/></Tab>
-            // <Tab slot id=5 title="功能".to_string() ><ctrl::I/></Tab>
-        </Tabset>
+        <div>
+            <Tabs tab=tabs id=id />
+        </div>
+        // <div style="display: grid; gap: 4px 4px;grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); padding: 4px 0px;  max-width: 1200px;  margin: auto">
+        //     <For
+        //         each=move || link_vec.get()
+        //         key=|state| state.id.clone()
+        //         let:child
+        //     >
+        //         <Button  on_click=move |_| {
+        //             open_url(&child.src);
+        //         }>{child.title}</Button>
+
+        //     </For>
+        // </div>
     }
 }

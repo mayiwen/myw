@@ -6,4 +6,5 @@ type ServerFnResult<T> = Result<T, ServerFnError<String>>;
 pub struct Title {
     pub id: u64,
     pub title: String,
+    pub index: i32,
 }
