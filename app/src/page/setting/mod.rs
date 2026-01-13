@@ -9,16 +9,18 @@ use crate::{
 use leptos::prelude::*;
 pub mod about;
 pub mod link;
+pub mod login;
 pub mod title;
 #[component]
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(1);
     view! {
         <myw::Gap/>
+        <div style="float: right;">
+            <login::I/>
+        </div>
         <h1>设置与关于</h1>
-            <div style="float: right;">
-            <Button on_click=move |_| {}>"管理登录"</Button>
-            </div>
+
         <myw::Gap/>
         <Tabset id=id>
             <Tab slot id=0 title="首页标题".to_string()><title::I/></Tab>

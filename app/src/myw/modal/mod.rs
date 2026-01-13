@@ -38,14 +38,15 @@ pub fn Modal(
 
     view! {
         // <Show when=is_open>
-            <div style:display=move || format!("{}", if is_open.get() {"block"} else {"none"}) >
+        <div style:display=move || if is_open.get() {"block"} else {"none"} >
                 <div
                     style="position: fixed; height: 100dvh; width: 100%; background-color: rgba(128, 128, 128, 0.5); z-index: 100000; left: 0; top: 0; opacity: 0.5;"
-                    hidden=!is_open.get()
+                    // 改动2：hidden 改为响应式闭包
+                    hidden=move || !is_open.get()
                     on:click=move |_| is_open.set(false)
                 ></div>
                 <dialog
-                    open=is_open.get()
+                open=move || is_open.get()
                     style="
                         border: 1px solid var(--myw-border);
                         background-color: var(--myw-bc);

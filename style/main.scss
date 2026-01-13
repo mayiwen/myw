@@ -246,3 +246,20 @@ html,
     width: 100%;
     max-width: 400px;
 }
+
+.myw-2-text {
+    border: 1px solid var(--myw-border);
+    padding: 0 4px;
+    /* 核心：跨浏览器2行省略样式 */
+    -webkit-line-clamp: 2; /* WebKit 2行限制 */
+    -webkit-box-orient: vertical; /* WebKit 垂直排列 */
+    line-clamp: 2; /* 标准属性（Firefox 支持） */
+    box-orient: vertical; /* 标准属性 */
+    overflow: hidden; /* 溢出隐藏 */
+    text-overflow: ellipsis; /* 省略号 */
+    word-break: break-all; /* 强制换行 */
+    max-height: calc(2 * 1.5em); /* 关键：限制最大高度（2行） */
+    line-height: 1.5em; /* 行高（需和max-height匹配） */
+    box-sizing: border-box;
+    user-select: none;
+}

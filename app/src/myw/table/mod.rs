@@ -46,13 +46,28 @@ pub fn Table<T: Clone + 'static + Debug + Send + Sync>(
     data: ReadSignal<Vec<T>>,
     col_vec: ReadSignal<Vec<TabColumn<T>>>,
 ) -> impl IntoView {
+    // 核心：计算表格总宽度的闭包（响应式）
+    let table_total_width = move || {
+        // 遍历 col_vec，累加所有列的宽度
+        let total_width: u32 = col_vec.get().iter().map(|col| col.width).sum();
+        // 如果总宽度为0（无列），返回默认值，否则返回计算出的宽度（px）
+        if total_width == 0 {
+            "100%".to_string() // 兜底默认宽度
+        } else {
+            format!("{}px", total_width)
+        }
+    };
+
     view! {
         <div style="overflow: auto;">
-        <table style="border-collapse: collapse;" >
+        <table style=move || format!(
+                "border-collapse: collapse; table-layout: fixed; width: {};",
+                table_total_width()
+            ) >
             <thead>
                 <tr style={"height: 40px"}>
                     {move || col_vec.get().iter().map(|col| view! {
-                        <th style={format!("width: {}px; font-size: 16px; padding: 0 4px; border: 1px solid var(--myw-border);background-color: var(--myw-boxBc);", col.width)}>{col.title}</th>
+                        <th style={format!("width: {}px; font-size: 16px; padding: 0 4px; border: 1px solid var(--myw-border);background-color: var(--myw-boxBc);", col.width)} class="ellipsis">{col.title}</th>
                     }).collect::<Vec<_>>()}
                 </tr>
             </thead>
@@ -73,7 +88,7 @@ pub fn Table<T: Clone + 'static + Debug + Send + Sync>(
                             };
 
                             view! {
-                                <td style=" border: 1px solid var(--myw-border); padding: 0 4px;">
+                                <td style=" border: 1px solid var(--myw-border); padding: 0 4px;" class="ellipsis">
                                     {cell_view}  // 这里会自动转换为合适的类型
                                 </td>
                             }
