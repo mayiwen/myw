@@ -16,9 +16,17 @@ pub fn I() -> impl IntoView {
     view! {
         <Button  on_click=move |_| {
             is_open.set(true)
-        }>打开弹窗</Button>
+        }>管理登录</Button>
         <Modal is_open=is_open title=title  on_click=move |_| {} >
-            <div style="width: 400px; height: 300px;">你好</div>
+            <div style="width: 350px; height: 200px">
+            <div style="text-align: center">
+            <myw::Gap h=40/>
+            <input class="myw-input" placeholder="请输入用户名"/>
+            <myw::Gap h=16/>
+            <input class="myw-input" placeholder="请输入密码" />
+            </div>
+
+            </div>
         </Modal>
     }
 }
