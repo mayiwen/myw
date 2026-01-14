@@ -2,6 +2,7 @@ use crate::myw::icon;
 use crate::myw::message::{Message, MessageType};
 use crate::myw::myw::MayiwenBeiAn;
 use crate::myw::tabset::{Tab, Tabset};
+
 use serde::{Deserialize, Serialize};
 // 明确指定 ServerFnError 的类型参数为 String（解决类型推导错误）
 use leptos::prelude::*;
@@ -263,6 +264,47 @@ pub async fn get_link(id: u64) -> Result<Vec<models::link::Link>, ServerFnError>
             })
             .collect();
         Ok(links)
+    }
+
+    #[cfg(not(feature = "ssr"))]
+    {
+        Err(ServerFnError::ServerError(
+            "此函数仅在服务端可用".to_string(),
+        ))
+    }
+}
+
+#[server(login, "/api/login")]
+pub async fn login(name: String, pwd: String) -> Result<String, ServerFnError> {
+    #[cfg(feature = "ssr")]
+    {
+        let params = backend::api::auth::LoginParams {
+            name,
+            password: pwd,
+        };
+        use backend::api::auth::LoginResult;
+        use backend::appf::response::ApiResponse;
+
+        // 调用 API 获取数据
+        let result = backend::api::auth::ssr_login(params).await;
+
+        let async_data: ApiResponse<LoginResult> = match result {
+            Ok(data) => data,
+            Err(api_error) => {
+                // 使用 ServerFnError::ServerError
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    api_error
+                )));
+            }
+        };
+        // 获取到token 信息
+        let data: Option<LoginResult> = async_data.data;
+        let data: LoginResult = match data {
+            Some(page) => page,
+            None => return Err(ServerFnError::ServerError("登录入败: ".to_string())),
+        };
+        Ok(data.access_token)
     }
 
     #[cfg(not(feature = "ssr"))]

@@ -24,15 +24,15 @@ pub fn create_router() -> Router<LeptosOptions> {
 #[derive(Debug, Deserialize, Validate)]
 pub struct LoginParams {
     #[validate(length(min = 3, max = 2000, message = "账号长度为3-2000"))]
-    name: String,
+    pub name: String,
     #[validate(length(min = 6, max = 2000, message = "密码长度为3-2000"))]
-    password: String,
+    pub password: String,
 }
 
 #[derive(Debug, Serialize)]
 // #[serde(rename_all = "camelCase")]
 pub struct LoginResult {
-    access_token: String,
+    pub access_token: String,
 }
 
 #[debug_handler]
@@ -74,7 +74,7 @@ async fn get_user_info(
     Ok(ApiResponse::ok("ok", Some(principal)))
 }
 
-async fn ssr_login(params: LoginParams) -> ApiResult<ApiResponse<LoginResult>> {
+pub async fn ssr_login(params: LoginParams) -> ApiResult<ApiResponse<LoginResult>> {
     tracing::info!("开始处理登录逻辑...");
     let db = crate::get_global_db();
     let user = login_user::Entity::find()
