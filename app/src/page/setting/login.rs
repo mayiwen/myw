@@ -15,8 +15,8 @@ pub fn I() -> impl IntoView {
     let is_open: RwSignal<bool> = RwSignal::new(false);
     let str: RwSignal<String> = RwSignal::new("".to_string());
     let title: RwSignal<String> = RwSignal::new("管理登录".to_string());
-    let name: RwSignal<String> = RwSignal::new("mayiwen".to_string());
-    let pwd: RwSignal<String> = RwSignal::new("MA@yiwen".to_string());
+    let name: RwSignal<String> = RwSignal::new("".to_string());
+    let pwd: RwSignal<String> = RwSignal::new("".to_string());
     let login = move |_| {
         spawn_local(async move {
             let name = name.get();
