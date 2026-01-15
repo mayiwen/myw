@@ -1,4 +1,5 @@
 use crate::{
+    models::Login,
     myw::{
         self,
         button::Button,
@@ -14,13 +15,18 @@ pub mod title;
 #[component]
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(1);
+    let login = use_context::<RwSignal<Login>>()
+        .expect("Login context should be provided by parent component");
+    // 关键修复：创建响应式的取值闭包，让 Leptos 追踪状态变化
+    // 闭包会在每次状态变化时重新执行，触发组件重新渲染
+    let current_token = move || login.with(|login_state| login_state.token.clone());
     view! {
         <myw::Gap/>
         <div style="float: right;">
             <login::I/>
         </div>
         <h1>设置与关于</h1>
-
+        <div style="text-align: center; word-break: break-all;" class="">   {current_token}</div>
         <myw::Gap/>
         <Tabset id=id>
             <Tab slot id=0 title="首页标题".to_string()><title::I/></Tab>

@@ -24,8 +24,7 @@ use gloo_timers::future::TimeoutFuture; // 异步定时器（替代同步 Interv
 #[component]
 pub fn MessageCreate() -> impl IntoView {
     // 1. 获取全局消息信号（保留原有逻辑）
-    let message: RwSignal<Vec<Message>> =
-        use_context::<RwSignal<Vec<Message>>>().expect("Message context must exist");
+    let message = use_context::<RwSignal<Vec<Message>>>().expect("Message context must exist");
 
     // 2. 初始化定时逻辑的状态（替代原 Rc<RefCell> 写法，保持逻辑一致）
     let flag = Rc::new(RefCell::new(false));

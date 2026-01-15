@@ -1,4 +1,5 @@
 use crate::{
+    models::Login,
     myw::{
         self,
         button::Button,
@@ -34,54 +35,61 @@ pub fn I() -> impl IntoView {
                 message.update(|msgs| {
                     msgs.push(another_msg); // push 是 Vec 的标准添加方法
                 });
+            } else {
+                let res = crate::login(name, pwd).await;
+                match res {
+                    Ok(res) => {
+                        let message: RwSignal<Vec<Message>> =
+                            use_context::<RwSignal<Vec<Message>>>()
+                                .expect("Message context must exist");
+                        let login = use_context::<RwSignal<Login>>()
+                            .expect("Login context should be provided by parent component");
+                        // 使用 update 方法修改 RwSignal 中的值
+                        login.update(|login_state| {
+                            login_state.token = res.to_string();
+                        });
+                        let another_msg4 = Message {
+                            t: myw::message::MessageType::INFO,
+                            m: "马一文",
+                        };
+                        let another_msg = Message {
+                            t: myw::message::MessageType::INFO,
+                            m: "欢迎归来",
+                        };
+                        let another_msg2 = Message {
+                            t: myw::message::MessageType::INFO,
+                            m: "构建一流网站",
+                        };
+                        let another_msg3 = Message {
+                            t: myw::message::MessageType::INFO,
+                            m: "勇攀技术巅峰",
+                        };
+                        // 向 Vec 中添加新元素
+                        message.update(|msgs| {
+                            msgs.push(another_msg4); // push 是 Vec 的标准添加方法
+                            msgs.push(another_msg); // push 是 Vec 的标准添加方法
+                            msgs.push(another_msg2); // push 是 Vec 的标准添加方法
+                            msgs.push(another_msg3); // push 是 Vec 的标准添加方法
+                        });
+                        is_open.set(false)
+                    }
+                    Err(_) => {
+                        let message: RwSignal<Vec<Message>> =
+                            use_context::<RwSignal<Vec<Message>>>()
+                                .expect("Message context must exist");
+
+                        let another_msg = Message {
+                            t: myw::message::MessageType::ERROR,
+                            m: "马一文才可以登录",
+                        };
+
+                        // 向 Vec 中添加新元素
+                        message.update(|msgs| {
+                            msgs.push(another_msg); // push 是 Vec 的标准添加方法
+                        });
+                    }
+                };
             }
-            let res = crate::login(name, pwd).await;
-            match res {
-                Ok(res) => {
-                    str.set(res);
-                    let message: RwSignal<Vec<Message>> = use_context::<RwSignal<Vec<Message>>>()
-                        .expect("Message context must exist");
-
-                    let another_msg4 = Message {
-                        t: myw::message::MessageType::INFO,
-                        m: "马一文",
-                    };
-                    let another_msg = Message {
-                        t: myw::message::MessageType::INFO,
-                        m: "欢迎归来",
-                    };
-                    let another_msg2 = Message {
-                        t: myw::message::MessageType::INFO,
-                        m: "构建一流网站",
-                    };
-                    let another_msg3 = Message {
-                        t: myw::message::MessageType::INFO,
-                        m: "勇攀技术巅峰",
-                    };
-                    // 向 Vec 中添加新元素
-                    message.update(|msgs| {
-                        msgs.push(another_msg4); // push 是 Vec 的标准添加方法
-                        msgs.push(another_msg); // push 是 Vec 的标准添加方法
-                        msgs.push(another_msg2); // push 是 Vec 的标准添加方法
-                        msgs.push(another_msg3); // push 是 Vec 的标准添加方法
-                    });
-                    is_open.set(false)
-                }
-                Err(_) => {
-                    let message: RwSignal<Vec<Message>> = use_context::<RwSignal<Vec<Message>>>()
-                        .expect("Message context must exist");
-
-                    let another_msg = Message {
-                        t: myw::message::MessageType::ERROR,
-                        m: "马一文才可以登录",
-                    };
-
-                    // 向 Vec 中添加新元素
-                    message.update(|msgs| {
-                        msgs.push(another_msg); // push 是 Vec 的标准添加方法
-                    });
-                }
-            };
         });
     };
     view! {
@@ -90,7 +98,7 @@ pub fn I() -> impl IntoView {
         }>管理登录</Button>
         <Modal is_open=is_open title=title  on_click=login >
 
-            // <div style="text-align: center; word-break: break-all;" class="">   {str}</div>
+
             <div style="width: 350px; height: 200px">
             <div style="text-align: center">
 

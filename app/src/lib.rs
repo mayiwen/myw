@@ -1,3 +1,4 @@
+use crate::models::Login;
 use crate::myw::icon;
 use crate::myw::message::{Message, MessageType};
 use crate::myw::myw::MayiwenBeiAn;
@@ -57,6 +58,10 @@ pub fn App() -> impl IntoView {
         },
     ]);
     provide_context(message);
+    let login = RwSignal::new(Login {
+        token: "未登录，无法显示。".to_string(),
+    });
+    provide_context(login);
     let id: RwSignal<u64> = RwSignal::new(0);
     let (_router_active, set_router_active) = signal("".to_string());
     let global_nav: RwSignal<Option<NavFn>> = RwSignal::new(None);
