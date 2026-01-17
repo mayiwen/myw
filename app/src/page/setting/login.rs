@@ -48,7 +48,13 @@ pub fn I() -> impl IntoView {
                         login.update(|login_state| {
                             login_state.token = res.to_string().clone();
                         });
-                        crate::set_global_token(res.to_string()).unwrap();
+                        crate::set_global_token(format!("{}", res.to_string())).unwrap();
+                        // 打印更新后的 Token，确认是否写入成功
+                        let new_token = crate::get_global_token();
+                        eprintln!(
+                            "[登录成功] set_global_token 调用成功，当前全局Token：{}",
+                            new_token
+                        );
                         let another_msg4 = Message {
                             t: myw::message::MessageType::INFO,
                             m: "马一文".to_string(),
@@ -65,12 +71,17 @@ pub fn I() -> impl IntoView {
                             t: myw::message::MessageType::INFO,
                             m: "勇攀技术巅峰".to_string(),
                         };
+                        let another_msg5 = Message {
+                            t: myw::message::MessageType::INFO,
+                            m: new_token,
+                        };
                         // 向 Vec 中添加新元素
                         message.update(|msgs| {
                             msgs.push(another_msg4); // push 是 Vec 的标准添加方法
                             msgs.push(another_msg); // push 是 Vec 的标准添加方法
                             msgs.push(another_msg2); // push 是 Vec 的标准添加方法
                             msgs.push(another_msg3); // push 是 Vec 的标准添加方法
+                            msgs.push(another_msg5); // push 是 Vec 的标准添加方法
                         });
                         is_open.set(false)
                     }

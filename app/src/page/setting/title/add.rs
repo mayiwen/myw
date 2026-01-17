@@ -31,7 +31,8 @@ pub fn I() -> impl IntoView {
                     msgs.push(another_msg); // push 是 Vec 的标准添加方法
                 });
             } else {
-                let res = crate::create_title(title).await;
+                let token = crate::get_global_token_with_bearer();
+                let res = crate::create_title(title, token).await;
 
                 match res {
                     Ok(res) => {

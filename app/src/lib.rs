@@ -60,13 +60,14 @@ pub fn init_global_token(initial_token: String) -> Result<(), &'static str> {
 
 /// 获取全局 Token（多线程安全，同步函数）
 pub fn get_global_token() -> String {
-    // 1. 获取 OnceLock 中的 RwLock
-    let token_rwlock = GLOBAL_TOKEN
-        .get()
-        .expect("全局 Token 未初始化，请先调用 init_global_token");
+    // 1. 获取 OnceLock 中的 RwLock（兼容未初始化，返回空字符串）
+    let token_rwlock = match GLOBAL_TOKEN.get() {
+        Some(lock) => lock,
+        None => return "".to_string(), // 未初始化时返回空，不 panic
+    };
 
     // 2. 读锁（共享锁，多线程可同时读），处理锁污染（PoisonError）
-    let token_guard = token_rwlock.read().unwrap_or_else(PoisonError::into_inner); // 锁污染时恢复内部值
+    let token_guard = token_rwlock.read().unwrap_or_else(PoisonError::into_inner);
 
     token_guard.clone()
 }
@@ -77,26 +78,30 @@ pub fn set_global_token(new_token: String) -> Result<(), &'static str> {
         return Err("修改的 Token 不能为空");
     }
 
-    // 1. 获取 OnceLock 中的 RwLock
-    let token_rwlock = GLOBAL_TOKEN
-        .get()
-        .ok_or("全局 Token 未初始化，请先调用 init_global_token")?;
+    // 1. 获取 OnceLock 中的 RwLock（未初始化时自动初始化）
+    let token_rwlock = match GLOBAL_TOKEN.get() {
+        Some(lock) => lock,
+        None => {
+            // 自动初始化，忽略重复初始化错误
+            let _ = GLOBAL_TOKEN.set(RwLock::new(new_token.clone()));
+            GLOBAL_TOKEN.get().unwrap() // 初始化后必存在
+        }
+    };
 
     // 2. 写锁（排他锁，同一时间仅一个线程可写），处理锁污染
-    let mut token_guard = token_rwlock.write().unwrap_or_else(PoisonError::into_inner); // 锁污染时恢复内部值
+    let mut token_guard = token_rwlock.write().unwrap_or_else(PoisonError::into_inner);
 
     // 3. 修改内部值（多线程安全）
     *token_guard = new_token;
     Ok(())
 }
-
 /// 快捷获取带 Bearer 前缀的 Token
 pub fn get_global_token_with_bearer() -> String {
     let pure_token = get_global_token();
     if pure_token.is_empty() {
         "".to_string()
     } else {
-        format!("Bearer {}", pure_token)
+        format!("{}", pure_token)
     }
 }
 //  // 1. 初始化 Token
@@ -140,13 +145,13 @@ pub fn App() -> impl IntoView {
     ]);
     provide_context(message);
     let login = RwSignal::new(Login {
-        token: "未登录，无法显示。".to_string(),
+        token: "".to_string(),
     });
     // ========== 核心：全局初始化逻辑（仅执行一次） ==========
     if !APP_INIT_DONE.swap(true, Ordering::SeqCst) {
         // 仅第一次执行 App 组件时进入此分支
         // 1. 初始化全局 Token（捕获错误，避免 unwrap panic）
-        if let Err(e) = init_global_token("未登录，无法显示。".to_string()) {}
+        if let Err(e) = init_global_token("".to_string()) {}
         // 重复初始化时仅打印日志，不崩溃
     }
     provide_context(login);
@@ -408,24 +413,18 @@ pub async fn login(name: String, pwd: String) -> Result<String, ServerFnError> {
     }
 }
 #[server(TitleCreate, "/api/ssr/create_title")]
-pub async fn create_title(name: String) -> Result<String, ServerFnError> {
-    let login = use_context::<RwSignal<Login>>()
-        .expect("Login context should be provided by parent component");
-    let token = login.get().token;
-    let token = format!("Bearer {}", token);
-    use http::header::HeaderMap;
-    use leptos_axum::extract;
-
+pub async fn create_title(name: String, token: String) -> Result<String, ServerFnError> {
     // let headers: HeaderMap = extract().await?;
     // headers.set("X-Custom-Header");
-    let token = get_token();
+
+    // let token = get_token();
     #[cfg(feature = "ssr")]
     {
         use backend::appf::response::ApiResponse;
+        // return Err(ServerFnError::ServerError(format!("{}", &token)));
         if !backend::appf::middleware::validate_jwt_token(&token) {
             return Err(ServerFnError::ServerError(format!("无权限")));
         }
-
         // 调用 API 获取数据
         let result = backend::api::title::create_ssr(name).await;
 
@@ -459,12 +458,5 @@ pub async fn create_title(name: String) -> Result<String, ServerFnError> {
 }
 
 pub fn get_token() -> String {
-    #[cfg(feature = "ssr")]
-    {
-        get_global_token()
-    }
-    #[cfg(not(feature = "ssr"))]
-    {
-        "".to_string()
-    }
+    get_global_token_with_bearer()
 }
