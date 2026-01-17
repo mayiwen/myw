@@ -104,6 +104,20 @@ async fn create(
 
     Ok(ApiResponse::ok("ok", Some(result)))
 }
+pub async fn create_ssr(title: String) -> ApiResult<ApiResponse<title::Model>> {
+    if title.is_empty() {
+        return Err(ApiError::Biz(String::from("标题不能为空")));
+    }
+    // 1. 获取全局 DB（安全版：推荐生产环境用 try_get_global_db）
+    let db = crate::get_global_db();
+    let params = TitleParams { title };
+    let mut active_model = params.into_active_model();
+    // active_model.title = ActiveValue::Set(encode_password(&active_model.title.take().unwrap())?);
+    // active_model.title = ;
+    let result = active_model.insert(db).await?;
+
+    Ok(ApiResponse::ok("ok", Some(result)))
+}
 #[debug_handler]
 async fn delete(
     Extension(db): Extension<DatabaseConnection>,
@@ -168,7 +182,7 @@ async fn sort(
     let mut updated_models = Vec::with_capacity(params_list.len());
 
     for param in params_list {
-        // 1. 检查记录是否存在（自动验证已在ValidJson阶段完成）
+        // 1. 检查记录是否存在（自动验证已在V alidJson阶段完成）
         let existed = title::Entity::find_by_id(param.id)
             .one(&txn) // 使用事务连接
             .await?

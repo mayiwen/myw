@@ -28,7 +28,7 @@ pub fn I() -> impl IntoView {
 
                 let another_msg = Message {
                     t: myw::message::MessageType::ERROR,
-                    m: "请输入内容",
+                    m: "请输入内容".to_string(),
                 };
 
                 // 向 Vec 中添加新元素
@@ -46,23 +46,24 @@ pub fn I() -> impl IntoView {
                             .expect("Login context should be provided by parent component");
                         // 使用 update 方法修改 RwSignal 中的值
                         login.update(|login_state| {
-                            login_state.token = res.to_string();
+                            login_state.token = res.to_string().clone();
                         });
+                        crate::set_global_token(res.to_string()).unwrap();
                         let another_msg4 = Message {
                             t: myw::message::MessageType::INFO,
-                            m: "马一文",
+                            m: "马一文".to_string(),
                         };
                         let another_msg = Message {
                             t: myw::message::MessageType::INFO,
-                            m: "欢迎归来",
+                            m: "欢迎归来".to_string(),
                         };
                         let another_msg2 = Message {
                             t: myw::message::MessageType::INFO,
-                            m: "构建一流网站",
+                            m: "构建一流网站".to_string(),
                         };
                         let another_msg3 = Message {
                             t: myw::message::MessageType::INFO,
-                            m: "勇攀技术巅峰",
+                            m: "勇攀技术巅峰".to_string(),
                         };
                         // 向 Vec 中添加新元素
                         message.update(|msgs| {
@@ -80,7 +81,7 @@ pub fn I() -> impl IntoView {
 
                         let another_msg = Message {
                             t: myw::message::MessageType::ERROR,
-                            m: "马一文才可以登录",
+                            m: "马一文才可以登录".to_string(),
                         };
 
                         // 向 Vec 中添加新元素

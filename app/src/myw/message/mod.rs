@@ -18,7 +18,7 @@ pub struct Message {
     /// type
     pub t: MessageType,
     /// message
-    pub m: &'static str,
+    pub m: String,
 }
 use gloo_timers::future::TimeoutFuture; // 异步定时器（替代同步 Interval）
 #[component]

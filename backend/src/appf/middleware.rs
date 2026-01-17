@@ -90,3 +90,14 @@ fn is_path_protected(uri: &Uri) -> bool {
         .iter()
         .any(|prefix| path.starts_with(prefix))
 }
+
+pub fn validate_jwt_token(token: &str) -> bool {
+    // 1. 获取全局 JWT 实例
+    let jwt = get_jwt();
+
+    // 2. 核心验证逻辑：捕获所有可能的错误，只要出错就返回 false
+    match jwt.decode(token) {
+        Ok(_principal) => true, // 解码成功 = token 合法
+        Err(_err) => false,     // 任何解码错误（过期/签名错误/格式错误等）都返回 false
+    }
+}

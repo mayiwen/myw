@@ -20,7 +20,7 @@ pub fn I() -> impl IntoView {
                 use_context::<RwSignal<Vec<Message>>>().expect("Message context must exist");
             let another_msg = Message {
                 t: myw::message::MessageType::INFO,
-                m: "默认消息",
+                m: "默认消息".to_string(),
             };
             // 向 Vec 中添加新元素
             message.update(|msgs| {
@@ -34,7 +34,7 @@ pub fn I() -> impl IntoView {
 
             let another_msg = Message {
                 t: myw::message::MessageType::ERROR,
-                m: "错误消息",
+                m: "错误消息".to_string(),
             };
 
             // 向 Vec 中添加新元素
@@ -49,7 +49,7 @@ pub fn I() -> impl IntoView {
 
             let another_msg = Message {
                 t: myw::message::MessageType::WARNING,
-                m: "警告消息",
+                m: "警告消息".to_string(),
             };
             // 向 Vec 中添加新元素
             message.update(|msgs| {

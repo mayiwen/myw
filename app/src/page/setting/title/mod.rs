@@ -12,6 +12,7 @@ use crate::{
 
 use crate::models::title::Title;
 use leptos::{prelude::*, reactive::spawn_local};
+pub mod add;
 #[component]
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
@@ -90,6 +91,7 @@ pub fn I() -> impl IntoView {
     view! {
         <myw::Gap/>
         <h3>首页标题设置</h3>
+        <add::I/>
         <myw::Gap/>
         <Table data=data_vec col_vec=col_vec> </Table>
     }

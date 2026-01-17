@@ -1,3 +1,7 @@
+use std::cell::RefCell;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, Mutex, OnceLock, PoisonError, RwLock};
+
 use crate::models::Login;
 use crate::myw::icon;
 use crate::myw::message::{Message, MessageType};
@@ -37,6 +41,84 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
     }
 }
 
+static GLOBAL_TOKEN: OnceLock<RwLock<String>> = OnceLock::new();
+
+// 新增：标记 App 内全局逻辑是否已执行（原子布尔值，线程安全）
+static APP_INIT_DONE: AtomicBool = AtomicBool::new(false);
+
+/// 初始化全局 Token（仅第一次调用有效）
+pub fn init_global_token(initial_token: String) -> Result<(), &'static str> {
+    if initial_token.is_empty() {
+        return Err("初始化 Token 不能为空");
+    }
+    // 初始化时包装成 RwLock（多线程安全）
+    GLOBAL_TOKEN
+        .set(RwLock::new(initial_token))
+        .map_err(|_| "全局 Token 已初始化，不可重复设置")?;
+    Ok(())
+}
+
+/// 获取全局 Token（多线程安全，同步函数）
+pub fn get_global_token() -> String {
+    // 1. 获取 OnceLock 中的 RwLock
+    let token_rwlock = GLOBAL_TOKEN
+        .get()
+        .expect("全局 Token 未初始化，请先调用 init_global_token");
+
+    // 2. 读锁（共享锁，多线程可同时读），处理锁污染（PoisonError）
+    let token_guard = token_rwlock.read().unwrap_or_else(PoisonError::into_inner); // 锁污染时恢复内部值
+
+    token_guard.clone()
+}
+
+/// 修改全局 Token（多线程安全，修复 Sync 错误）
+pub fn set_global_token(new_token: String) -> Result<(), &'static str> {
+    if new_token.is_empty() {
+        return Err("修改的 Token 不能为空");
+    }
+
+    // 1. 获取 OnceLock 中的 RwLock
+    let token_rwlock = GLOBAL_TOKEN
+        .get()
+        .ok_or("全局 Token 未初始化，请先调用 init_global_token")?;
+
+    // 2. 写锁（排他锁，同一时间仅一个线程可写），处理锁污染
+    let mut token_guard = token_rwlock.write().unwrap_or_else(PoisonError::into_inner); // 锁污染时恢复内部值
+
+    // 3. 修改内部值（多线程安全）
+    *token_guard = new_token;
+    Ok(())
+}
+
+/// 快捷获取带 Bearer 前缀的 Token
+pub fn get_global_token_with_bearer() -> String {
+    let pure_token = get_global_token();
+    if pure_token.is_empty() {
+        "".to_string()
+    } else {
+        format!("Bearer {}", pure_token)
+    }
+}
+//  // 1. 初始化 Token
+//     init_global_token("initial_token_123".to_string()).unwrap();
+
+//     // 2. 获取 Token
+//     let token = get_global_token();
+//     println!("当前 Token: {}", token); // 输出：initial_token_123
+
+//     // 3. 修改 Token
+//     set_global_token("new_token_456".to_string()).unwrap();
+
+//     // 4. 再次获取
+//     let new_token = get_global_token();
+//     println!("修改后 Token: {}", new_token); // 输出：new_token_456
+
+//     // 5. 多线程测试（可选，验证线程安全）
+//     std::thread::spawn(|| {
+//         let token = get_global_token();
+//         println!("线程中获取 Token: {}", token); // 输出：new_token_456
+//     }).join().unwrap();
+
 // 1. 定义导航函数的类型（入参是 &'static str，无返回值）
 pub type GlobalNavFn = Callback<&'static str, ()>;
 // 2. 定义上下文的唯一 Key（避免和其他上下文冲突）
@@ -46,21 +128,27 @@ pub type NavFn = Box<dyn Fn(&'static str) + Send + Sync>;
 #[component]
 pub fn App() -> impl IntoView {
     provide_meta_context();
-
     let message = RwSignal::new(vec![
         Message {
             t: MessageType::INFO,
-            m: "基于rust全栈技术(axum与leptos ssr)构建",
+            m: "基于rust全栈技术(axum与leptos ssr)构建".to_string(),
         },
         Message {
             t: MessageType::INFO,
-            m: "欢迎访问mayiwen.com",
+            m: "欢迎访问mayiwen.com".to_string(),
         },
     ]);
     provide_context(message);
     let login = RwSignal::new(Login {
         token: "未登录，无法显示。".to_string(),
     });
+    // ========== 核心：全局初始化逻辑（仅执行一次） ==========
+    if !APP_INIT_DONE.swap(true, Ordering::SeqCst) {
+        // 仅第一次执行 App 组件时进入此分支
+        // 1. 初始化全局 Token（捕获错误，避免 unwrap panic）
+        if let Err(e) = init_global_token("未登录，无法显示。".to_string()) {}
+        // 重复初始化时仅打印日志，不崩溃
+    }
     provide_context(login);
     let id: RwSignal<u64> = RwSignal::new(0);
     let (_router_active, set_router_active) = signal("".to_string());
@@ -317,5 +405,66 @@ pub async fn login(name: String, pwd: String) -> Result<String, ServerFnError> {
         Err(ServerFnError::ServerError(
             "此函数仅在服务端可用".to_string(),
         ))
+    }
+}
+#[server(TitleCreate, "/api/ssr/create_title")]
+pub async fn create_title(name: String) -> Result<String, ServerFnError> {
+    let login = use_context::<RwSignal<Login>>()
+        .expect("Login context should be provided by parent component");
+    let token = login.get().token;
+    let token = format!("Bearer {}", token);
+    use http::header::HeaderMap;
+    use leptos_axum::extract;
+
+    // let headers: HeaderMap = extract().await?;
+    // headers.set("X-Custom-Header");
+    let token = get_token();
+    #[cfg(feature = "ssr")]
+    {
+        use backend::appf::response::ApiResponse;
+        if !backend::appf::middleware::validate_jwt_token(&token) {
+            return Err(ServerFnError::ServerError(format!("无权限")));
+        }
+
+        // 调用 API 获取数据
+        let result = backend::api::title::create_ssr(name).await;
+
+        let async_data: ApiResponse<backend::entity::title::Model> = match result {
+            Ok(data) => data,
+            Err(api_error) => {
+                // 使用 ServerFnError::ServerError
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    api_error
+                )));
+            }
+        };
+        match async_data.data {
+            Some(data) => return Ok("添加成功".to_string()),
+            None => {
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    "api_error"
+                )));
+            }
+        };
+    }
+
+    #[cfg(not(feature = "ssr"))]
+    {
+        Err(ServerFnError::ServerError(
+            "此函数仅在服务端可用".to_string(),
+        ))
+    }
+}
+
+pub fn get_token() -> String {
+    #[cfg(feature = "ssr")]
+    {
+        get_global_token()
+    }
+    #[cfg(not(feature = "ssr"))]
+    {
+        "".to_string()
     }
 }
