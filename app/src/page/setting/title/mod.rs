@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{cell::RefCell, rc::Rc, sync::Arc};
 
 use crate::{
     myw::{
@@ -70,28 +70,41 @@ pub fn I() -> impl IntoView {
         },
     ];
     let (col_vec, _set_col_vec) = signal(col_vec);
-
-    Effect::new(move |_| {
-        spawn_local(async move {
-            let res = crate::get_title().await;
-            match res {
-                Ok(res) => {
-                    let id_temp: u64 = match res.get(0) {
-                        Some(t) => t.id,
-                        None => 0,
-                    };
-                    set_data_vec.set(res);
-                    // id.set(id_temp);
-                    // get_link(id_temp)
+    // 1. 重构 load_data 为【无参闭包】，去掉多余的 |_| 参数
+    //    同时克隆 set_data_vec 到异步闭包，避免所有权提前转移
+    let load_data = {
+        let set_data_vec = set_data_vec.clone();
+        move || {
+            let set_data_vec = set_data_vec.clone();
+            spawn_local(async move {
+                let res = crate::get_title().await;
+                match res {
+                    Ok(res) => {
+                        let id_temp: u64 = res.get(0).map(|t| t.id).unwrap_or(0); // 简化写法
+                        set_data_vec.set(res);
+                        // id.set(id_temp);
+                        // get_link(id_temp)
+                    }
+                    Err(_) => {}
                 }
-                Err(_) => {}
-            }
-        });
+            });
+        }
+    };
+
+    // 2. 修正 Effect 调用（Leptos 新版推荐 create_effect，旧版 Effect::new 也需适配无参）
+    //    组件挂载时自动执行一次 load_data
+    Effect::new(move |_| {
+        load_data(); // 无参调用，符合 Effect 要求
     });
+
+    let on_click_cb = move |_success: bool| {
+        // 直接调用 load_data，跳过解包 reload_callback（更简洁）
+        load_data();
+    };
     view! {
         <myw::Gap/>
         <h3>首页标题设置</h3>
-        <add::I/>
+        <add::I on_click=on_click_cb />
         <myw::Gap/>
         <Table data=data_vec col_vec=col_vec> </Table>
     }

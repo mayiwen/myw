@@ -1,8 +1,6 @@
-use std::sync::Arc;
+use std::{cell::RefCell, rc::Rc, sync::Arc};
 
-use crate::models::title::Title;
 use crate::{
-    models::Login,
     myw::{
         self,
         button::Button,
@@ -12,11 +10,16 @@ use crate::{
     },
     util::open_url,
 };
-use leptos::{prelude::*, reactive::spawn_local};
+use leptos::{ev::MouseEvent, prelude::*, reactive::spawn_local};
 #[component]
-pub fn I() -> impl IntoView {
+pub fn I(#[prop(optional)] on_click: Option<impl FnMut(bool) + 'static>) -> impl IntoView {
+    // ========== 关键修改1：替换 Arc 为 Rc（单线程场景无需 Arc） ==========
+    let on_click_rc = Rc::new(RefCell::new(on_click));
     let title: RwSignal<String> = RwSignal::new("你好".to_string());
     let login = move |_| {
+        // ========== 关键修改2：克隆 Rc 到异步闭包（避免所有权转移导致消耗） ==========
+        let on_click_rc_clone = on_click_rc.clone();
+        let title_clone = title.clone(); // 克隆信号，避免 move 消耗
         spawn_local(async move {
             let title = title.get();
             if title.is_empty() {
@@ -48,26 +51,16 @@ pub fn I() -> impl IntoView {
                         message.update(|msgs| {
                             msgs.push(another_msg4); // push 是 Vec 的标准添加方法
                         });
+
+                        // ========== 关键修改3：正确处理 FnMut 闭包的调用（避免消耗） ==========
+                        // 1. 短生命周期借用 RefCell（调用后立即释放）
+                        // 2. 用 if let 匹配后直接调用，不持有长期引用
+                        if let Ok(mut cb_opt) = on_click_rc_clone.try_borrow_mut() {
+                            if let Some(cb) = &mut *cb_opt {
+                                cb(true); // 调用 FnMut 闭包，支持多次调用
+                            }
+                        }
                     }
-                    // WrappedServerError(E),
-                    // /// Error while trying to register the server function (only occurs in case of poisoned RwLock).
-                    // Registration(String),
-                    // /// Occurs on the client if there is a network error while trying to run function on server.
-                    // Request(String),
-                    // /// Occurs on the server if there is an error creating an HTTP response.
-                    // Response(String),
-                    // /// Occurs when there is an error while actually running the function on the server.
-                    // ServerError(String),
-                    // /// Occurs when there is an error while actually running the middleware on the server.
-                    // MiddlewareError(String),
-                    // /// Occurs on the client if there is an error deserializing the server's response.
-                    // Deserialization(String),
-                    // /// Occurs on the client if there is an error serializing the server function arguments.
-                    // Serialization(String),
-                    // /// Occurs on the server if there is an error deserializing one of the arguments that's been sent.
-                    // Args(String),
-                    // /// Occurs on the server if there's a missing argument.
-                    // MissingArg(String),
                     Err(res) => {
                         let error_msg = match res {
                             ServerFnError::ServerError(msg) => msg, // 提取自定义服务端错误信息
