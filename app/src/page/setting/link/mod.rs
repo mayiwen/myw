@@ -10,6 +10,7 @@ use crate::{
     },
     util::open_url,
 };
+pub mod add;
 use leptos::{prelude::*, reactive::spawn_local};
 #[component]
 pub fn I() -> impl IntoView {
@@ -49,6 +50,10 @@ pub fn I() -> impl IntoView {
             })
             .collect::<Vec<Tab>>()
     });
+
+    let load_data = {
+        get_link(id.get());
+    };
 
     Effect::new(move |_| {
         spawn_local(async move {
@@ -136,11 +141,18 @@ pub fn I() -> impl IntoView {
             })),
         },
     ];
+
+    let on_click_cb = move |_success: bool| {
+        // 直接调用 load_data，跳过解包 reload_callback（更简洁）
+        get_link(id.get());
+    };
     let (col_vec, _set_col_vec) = signal(col_vec);
     view! {
         <myw::Gap/>
+        {id}
         <h3>首页链接设置</h3>
         <myw::Gap/>
+        <add::I on_click=on_click_cb id=id/>
         <div>
             <Tabs tab=tabs id=id />
         </div>

@@ -414,14 +414,9 @@ pub async fn login(name: String, pwd: String) -> Result<String, ServerFnError> {
 }
 #[server(TitleCreate, "/api/ssr/create_title")]
 pub async fn create_title(name: String, token: String) -> Result<String, ServerFnError> {
-    // let headers: HeaderMap = extract().await?;
-    // headers.set("X-Custom-Header");
-
-    // let token = get_token();
     #[cfg(feature = "ssr")]
     {
         use backend::appf::response::ApiResponse;
-        // return Err(ServerFnError::ServerError(format!("{}", &token)));
         if !backend::appf::middleware::validate_jwt_token(&token) {
             return Err(ServerFnError::ServerError(format!("无权限")));
         }
@@ -431,7 +426,6 @@ pub async fn create_title(name: String, token: String) -> Result<String, ServerF
         let async_data: ApiResponse<backend::entity::title::Model> = match result {
             Ok(data) => data,
             Err(api_error) => {
-                // 使用 ServerFnError::ServerError
                 return Err(ServerFnError::ServerError(format!(
                     "API调用失败: {}",
                     api_error
@@ -448,15 +442,94 @@ pub async fn create_title(name: String, token: String) -> Result<String, ServerF
             }
         };
     }
+}
 
-    #[cfg(not(feature = "ssr"))]
+#[server(TitleDeltete, "/api/ssr/title_delete")]
+pub async fn title_delete(id: i64, token: String) -> Result<String, ServerFnError> {
+    #[cfg(feature = "ssr")]
     {
-        Err(ServerFnError::ServerError(
-            "此函数仅在服务端可用".to_string(),
-        ))
+        use backend::appf::response::ApiResponse;
+        if !backend::appf::middleware::validate_jwt_token(&token) {
+            return Err(ServerFnError::ServerError(format!("无权限")));
+        }
+        // 调用 API 获取数据
+        let result = backend::api::title::delete_ssr(id).await;
+
+        match result {
+            Ok(data) => return Ok("添加成功".to_string()),
+            Err(api_error) => {
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    api_error
+                )));
+            }
+        }
+    }
+}
+#[server(TitleUpdate, "/api/ssr/title_update")]
+pub async fn title_update(id: i64, title: String, token: String) -> Result<String, ServerFnError> {
+    #[cfg(feature = "ssr")]
+    {
+        use backend::appf::response::ApiResponse;
+        if !backend::appf::middleware::validate_jwt_token(&token) {
+            return Err(ServerFnError::ServerError(format!("无权限")));
+        }
+        // 调用 API 获取数据
+        let result = backend::api::title::update_ssr(id, title).await;
+
+        match result {
+            Ok(data) => return Ok("添加成功".to_string()),
+            Err(api_error) => {
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    api_error
+                )));
+            }
+        }
     }
 }
 
+#[server(LinkCreate, "/api/ssr/create_link")]
+pub async fn create_link(
+    id: u64,
+    title: String,
+    src: String,
+    token: String,
+) -> Result<String, ServerFnError> {
+    #[cfg(feature = "ssr")]
+    {
+        use backend::appf::response::ApiResponse;
+        if !backend::appf::middleware::validate_jwt_token(&token) {
+            return Err(ServerFnError::ServerError(format!("无权限")));
+        }
+        let params = backend::api::link::LinkParams {
+            title,
+            title_id: id as i64,
+            src,
+        };
+        // 调用 API 获取数据
+        let result = backend::api::link::create_ssr(params).await;
+
+        let async_data: ApiResponse<backend::entity::link::Model> = match result {
+            Ok(data) => data,
+            Err(api_error) => {
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    api_error
+                )));
+            }
+        };
+        match async_data.data {
+            Some(data) => return Ok("添加成功".to_string()),
+            None => {
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    "api_error"
+                )));
+            }
+        };
+    }
+}
 pub fn get_token() -> String {
     get_global_token_with_bearer()
 }

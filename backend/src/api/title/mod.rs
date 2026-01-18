@@ -136,7 +136,7 @@ async fn delete(
 
     Ok(ApiResponse::ok("ok", None))
 }
-async fn delete_ssr(id: i64) -> ApiResult<ApiResponse<()>> {
+pub async fn delete_ssr(id: i64) -> ApiResult<ApiResponse<()>> {
     let db = crate::get_global_db();
     let existed_user = title::Entity::find_by_id(id)
         .one(db)
@@ -176,7 +176,7 @@ async fn update(
     let result = existed_active_model.update(&db).await?;
     Ok(ApiResponse::ok("ok", Some(result)))
 }
-async fn update_ssr(id: i64, title: String) -> ApiResult<ApiResponse<title::Model>> {
+pub async fn update_ssr(id: i64, title: String) -> ApiResult<ApiResponse<title::Model>> {
     let params = TitleParams { title };
     let db = crate::get_global_db();
     let existed_user = title::Entity::find_by_id(id)
@@ -236,7 +236,7 @@ async fn sort(
 
     Ok(ApiResponse::ok("批量更新索引成功", Some(updated_models)))
 }
-async fn sort_ssr(params_list: Vec<SortParams>) -> ApiResult<ApiResponse<Vec<title::Model>>> {
+pub async fn sort_ssr(params_list: Vec<SortParams>) -> ApiResult<ApiResponse<Vec<title::Model>>> {
     let db = crate::get_global_db();
     // 开启事务保证原子性
     let txn = db.begin().await?;

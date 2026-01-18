@@ -123,6 +123,17 @@ async fn create(
 
     Ok(ApiResponse::ok("ok", Some(result)))
 }
+pub async fn create_ssr(params: LinkParams) -> ApiResult<ApiResponse<link::Model>> {
+    let db = crate::get_global_db();
+    if params.title.is_empty() {
+        return Err(ApiError::Biz(String::from("标题不能为空")));
+    }
+    let mut active_model = params.into_active_model();
+    // active_model.title = ActiveValue::Set(encode_password(&active_model.title.take().unwrap())?);
+    let result = active_model.insert(db).await?;
+
+    Ok(ApiResponse::ok("ok", Some(result)))
+}
 
 #[debug_handler]
 async fn delete(
@@ -143,7 +154,7 @@ async fn delete(
     Ok(ApiResponse::ok("ok", None))
 }
 
-async fn delete_ssr(id: i64) -> ApiResult<ApiResponse<()>> {
+pub async fn delete_ssr(id: i64) -> ApiResult<ApiResponse<()>> {
     let db = crate::get_global_db();
     let existed_user = link::Entity::find_by_id(id)
         .one(db)
@@ -190,7 +201,7 @@ async fn update(
 
     Ok(ApiResponse::ok("ok", Some(result)))
 }
-async fn update_ssr(id: i64, params: LinkParams) -> ApiResult<ApiResponse<link::Model>> {
+pub async fn update_ssr(id: i64, params: LinkParams) -> ApiResult<ApiResponse<link::Model>> {
     let db = crate::get_global_db();
     let existed_user = link::Entity::find_by_id(id)
         .one(db)
@@ -254,7 +265,7 @@ async fn sort(
 
     Ok(ApiResponse::ok("批量更新索引成功", Some(updated_models)))
 }
-async fn sort_ssr(params_list: Vec<SortParams>) -> ApiResult<ApiResponse<Vec<link::Model>>> {
+pub async fn sort_ssr(params_list: Vec<SortParams>) -> ApiResult<ApiResponse<Vec<link::Model>>> {
     let db = crate::get_global_db();
     // 开启事务保证原子性
     let txn = db.begin().await?;

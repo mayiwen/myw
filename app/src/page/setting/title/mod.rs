@@ -4,6 +4,8 @@ use crate::{
     myw::{
         self,
         button::Button,
+        message::Message,
+        modal::Modal,
         table::{TabColumn, Table},
         tabset::{Tab, Tabset},
     },
@@ -16,11 +18,20 @@ pub mod add;
 #[component]
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
-
+    let is_open_delete: RwSignal<bool> = RwSignal::new(false);
+    let is_open_update: RwSignal<bool> = RwSignal::new(false);
+    let title_delete: RwSignal<String> = RwSignal::new("是否确认删除？".to_string());
+    let title_update: RwSignal<String> = RwSignal::new("是否确认修改？".to_string());
     // <myw::Gap h=8/>
     let data = vec![];
     let (data_vec, set_data_vec) = signal(data);
+    let is_open_delete_col = is_open_delete.clone();
+    let is_open_update_col = is_open_update.clone();
 
+    let delete_id: RwSignal<String> = RwSignal::new("删除id".to_string());
+    let delete_title: RwSignal<String> = RwSignal::new("删除title".to_string());
+    let update_id: RwSignal<String> = RwSignal::new("删除id".to_string());
+    let update_title: RwSignal<String> = RwSignal::new("删除title".to_string());
     let col_vec: Vec<TabColumn<Title>> = vec![
         TabColumn {
             width: 50,
@@ -43,7 +54,7 @@ pub fn I() -> impl IntoView {
             })),
         },
         TabColumn {
-            width: 70,
+            width: 100,
             title: "排序",
             id: "index",
             view: Some(Arc::new(|data: Title| {
@@ -56,14 +67,28 @@ pub fn I() -> impl IntoView {
             width: 100,
             title: "操作",
             id: "ctrl",
-            view: Some(Arc::new(|data: Title| {
+            view: Some(Arc::new(move |data: Title| {
                 let data_clone = data.clone();
                 // 方法1：使用 ViewFn::from() - 最推荐的方式
                 ViewFn::from(move || {
                     let data = data_clone.clone();
+                    let data_clone = data_clone.clone();
+                    let is_open_delete = is_open_delete_col.clone();
+                    let is_open_update = is_open_update_col.clone();
+                    let delete_id = delete_id.clone();
+                    let delete_title = delete_title.clone();
+                    let data_title: String = data.title.clone();
                     view! {
-                        <Button on_click=move |_| {}>{format!("修改")}</Button> <myw::Gap w=4/>
-                        <Button on_click=move |_| {}>"删除"</Button>
+                        <Button on_click=move |_| {
+                            is_open_update.set(true);
+                            update_id.set(data.id.to_string());
+                            update_title.set(data.title.clone());
+                        }>{format!("修改")}</Button> <myw::Gap w=4/>
+                        <Button on_click=move |_| {
+                            is_open_delete.set(true);
+                            delete_id.set(data_clone.id.to_string());
+                            delete_title.set(data_clone.title.clone());
+                        }>"删除"</Button>
                     }
                 })
             })),
@@ -101,11 +126,123 @@ pub fn I() -> impl IntoView {
         // 直接调用 load_data，跳过解包 reload_callback（更简洁）
         load_data();
     };
+
+    let delete_confirm = move |_| {
+        is_open_delete.set(false);
+        let id = delete_id.get(); // 获取到要删除的id;
+        let id = str_to_i64(&id);
+        match id {
+            Ok(id) => {
+                spawn_local(async move {
+                    let res = crate::title_delete(id, crate::get_global_token_with_bearer()).await;
+                    match res {
+                        Ok(res) => {
+                            let message: RwSignal<Vec<Message>> =
+                                use_context::<RwSignal<Vec<Message>>>()
+                                    .expect("Message context must exist");
+                            // 使用 update 方法修改 RwSignal 中的值
+                            let another_msg4 = Message {
+                                t: myw::message::MessageType::INFO,
+                                m: "删除成功".to_string(),
+                            };
+                            // 向 Vec 中添加新元素
+                            message.update(|msgs| {
+                                msgs.push(another_msg4); // push 是 Vec 的标准添加方法
+                            });
+                            load_data();
+                        }
+                        Err(_) => {
+                            let message: RwSignal<Vec<Message>> =
+                                use_context::<RwSignal<Vec<Message>>>()
+                                    .expect("Message context must exist");
+                            // 使用 update 方法修改 RwSignal 中的值
+                            let another_msg4 = Message {
+                                t: myw::message::MessageType::INFO,
+                                m: "删除失败".to_string(),
+                            };
+                            // 向 Vec 中添加新元素
+                            message.update(|msgs| {
+                                msgs.push(another_msg4); // push 是 Vec 的标准添加方法
+                            });
+                        }
+                    }
+                });
+            }
+            Err(_) => {}
+        }
+    };
+
+    let update_confirm = move |_| {
+        let id = update_id.get(); // 获取到要删除的id;
+        let title = update_title.get().clone(); // 获取到要删除的id;
+        let id = str_to_i64(&id);
+        match id {
+            Ok(id) => {
+                spawn_local(async move {
+                    let res =
+                        crate::title_update(id, title, crate::get_global_token_with_bearer()).await;
+                    match res {
+                        Ok(res) => {
+                            let message: RwSignal<Vec<Message>> =
+                                use_context::<RwSignal<Vec<Message>>>()
+                                    .expect("Message context must exist");
+                            // 使用 update 方法修改 RwSignal 中的值
+                            let another_msg4 = Message {
+                                t: myw::message::MessageType::INFO,
+                                m: "修改成功".to_string(),
+                            };
+                            // 向 Vec 中添加新元素
+                            message.update(|msgs| {
+                                msgs.push(another_msg4); // push 是 Vec 的标准添加方法
+                            });
+                            is_open_update.set(false);
+                            load_data();
+                        }
+                        Err(_) => {
+                            let message: RwSignal<Vec<Message>> =
+                                use_context::<RwSignal<Vec<Message>>>()
+                                    .expect("Message context must exist");
+                            // 使用 update 方法修改 RwSignal 中的值
+                            let another_msg4 = Message {
+                                t: myw::message::MessageType::INFO,
+                                m: "修改失败".to_string(),
+                            };
+                            // 向 Vec 中添加新元素
+                            message.update(|msgs| {
+                                msgs.push(another_msg4); // push 是 Vec 的标准添加方法
+                            });
+                        }
+                    }
+                });
+            }
+            Err(_) => {}
+        }
+    };
+
     view! {
         <myw::Gap/>
         <h3>首页标题设置</h3>
         <add::I on_click=on_click_cb />
         <myw::Gap/>
         <Table data=data_vec col_vec=col_vec> </Table>
+        <Modal is_open=is_open_delete title=title_delete  on_click=delete_confirm >
+            <div style="width: 200px;">
+                <input class="myw-input" placeholder="id" bind:value=delete_id disabled/>
+                <myw::Gap h=16/>
+                <input class="myw-input" placeholder="标题" bind:value=delete_title disabled/>
+            </div>
+        </Modal>
+        <Modal is_open=is_open_update title=title_update  on_click=update_confirm >
+            <div style="width: 200px;">
+                <input class="myw-input" placeholder="id" bind:value=update_id disabled/>
+                <myw::Gap h=16/>
+                <input class="myw-input" placeholder="标题" bind:value=update_title />
+            </div>
+        </Modal>
     }
+}
+fn str_to_i64(s: &str) -> Result<i64, Box<dyn std::error::Error>> {
+    // parse 返回 Result<i64, ParseIntError>，直接返回即可
+    let num = s.parse::<i64>()?;
+    Ok(num)
 }
