@@ -15,7 +15,7 @@ use leptos::{ev::MouseEvent, prelude::*, reactive::spawn_local};
 pub fn I(#[prop(optional)] on_click: Option<impl FnMut(bool) + 'static>) -> impl IntoView {
     // ========== 关键修改1：替换 Arc 为 Rc（单线程场景无需 Arc） ==========
     let on_click_rc = Rc::new(RefCell::new(on_click));
-    let title: RwSignal<String> = RwSignal::new("你好".to_string());
+    let title: RwSignal<String> = RwSignal::new("".to_string());
     let login = move |_| {
         // ========== 关键修改2：克隆 Rc 到异步闭包（避免所有权转移导致消耗） ==========
         let on_click_rc_clone = on_click_rc.clone();
