@@ -533,3 +533,60 @@ pub async fn create_link(
 pub fn get_token() -> String {
     get_global_token_with_bearer()
 }
+
+#[server(LinkDelete, "/api/ssr/link_delete")]
+pub async fn link_delete(id: i64, token: String) -> Result<String, ServerFnError> {
+    #[cfg(feature = "ssr")]
+    {
+        use backend::appf::response::ApiResponse;
+        if !backend::appf::middleware::validate_jwt_token(&token) {
+            return Err(ServerFnError::ServerError(format!("无权限")));
+        }
+        // 调用 API 获取数据
+        let result = backend::api::link::delete_ssr(id).await;
+
+        match result {
+            Ok(data) => return Ok("添加成功".to_string()),
+            Err(api_error) => {
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    api_error
+                )));
+            }
+        }
+    }
+}
+
+#[server(LinkUpdate, "/api/ssr/link_update")]
+pub async fn link_update(
+    id: i64,
+    title: String,
+    src: String,
+    title_id: i64,
+    token: String,
+) -> Result<String, ServerFnError> {
+    #[cfg(feature = "ssr")]
+    {
+        use backend::appf::response::ApiResponse;
+        if !backend::appf::middleware::validate_jwt_token(&token) {
+            return Err(ServerFnError::ServerError(format!("无权限")));
+        }
+        let params = backend::api::link::LinkParams {
+            title,
+            src,
+            title_id,
+        };
+        // 调用 API 获取数据
+        let result = backend::api::link::update_ssr(id, params).await;
+
+        match result {
+            Ok(data) => return Ok("添加成功".to_string()),
+            Err(api_error) => {
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    api_error
+                )));
+            }
+        }
+    }
+}

@@ -18,16 +18,16 @@ pub mod add;
 #[component]
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
+
+    // <myw::Gap h=8/>
+    let data = vec![];
+    let (data_vec, set_data_vec) = signal(data);
     let is_open_delete: RwSignal<bool> = RwSignal::new(false);
     let is_open_update: RwSignal<bool> = RwSignal::new(false);
     let title_delete: RwSignal<String> = RwSignal::new("是否确认删除？".to_string());
     let title_update: RwSignal<String> = RwSignal::new("是否确认修改？".to_string());
-    // <myw::Gap h=8/>
-    let data = vec![];
-    let (data_vec, set_data_vec) = signal(data);
     let is_open_delete_col = is_open_delete.clone();
     let is_open_update_col = is_open_update.clone();
-
     let delete_id: RwSignal<String> = RwSignal::new("删除id".to_string());
     let delete_title: RwSignal<String> = RwSignal::new("删除title".to_string());
     let update_id: RwSignal<String> = RwSignal::new("删除id".to_string());
