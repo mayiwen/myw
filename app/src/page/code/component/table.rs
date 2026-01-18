@@ -84,6 +84,7 @@ pub fn I() -> impl IntoView {
         <Table
             data=data_vec
             col_vec=col_vec
+            on_row_drop=Box::new(move |_|{})
             > </Table>
     }
 }

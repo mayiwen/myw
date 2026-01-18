@@ -224,7 +224,7 @@ pub fn I() -> impl IntoView {
         <h3>首页标题设置</h3>
         <add::I on_click=on_click_cb />
         <myw::Gap/>
-        <Table data=data_vec col_vec=col_vec> </Table>
+        <Table data=data_vec col_vec=col_vec on_row_drop=Box::new(move |_|{})> </Table>
         <Modal is_open=is_open_delete title=title_delete  on_click=delete_confirm >
             <div style="width: 200px;">
                 <input class="myw-input" placeholder="id" bind:value=delete_id disabled/>

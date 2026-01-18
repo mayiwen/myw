@@ -1,6 +1,11 @@
 use super::button;
 use leptos::prelude::*;
-use std::{fmt::Debug, sync::Arc};
+use std::{
+    cell::RefCell,
+    fmt::Debug,
+    rc::Rc,
+    sync::{Arc, Mutex},
+};
 // pub struct TabColumn<T> {
 //     pub width: u32,
 //     pub title: &'static str,
@@ -45,59 +50,93 @@ struct DataMock {
 pub fn Table<T: Clone + 'static + Debug + Send + Sync>(
     data: ReadSignal<Vec<T>>,
     col_vec: ReadSignal<Vec<TabColumn<T>>>,
+    /// 拖拽完成回调：改用 Box<dyn FnMut> 做类型擦除（核心修复）
+    #[prop(optional)]
+    on_row_drop: Option<Box<dyn FnMut((usize, usize)) + Send + 'static>>,
 ) -> impl IntoView {
-    // 核心：计算表格总宽度的闭包（响应式）
+    // 计算表格总宽度
     let table_total_width = move || {
-        // 遍历 col_vec，累加所有列的宽度
         let total_width: u32 = col_vec.get().iter().map(|col| col.width).sum();
-        // 如果总宽度为0（无列），返回默认值，否则返回计算出的宽度（px）
         if total_width == 0 {
-            "100%".to_string() // 兜底默认宽度
+            "100%".to_string()
         } else {
             format!("{}px", total_width)
         }
     };
 
+    // 拖拽索引信号
+    let (dragged_index, set_dragged_index) = signal::<Option<usize>>(None);
+    // Arc<Mutex> 包装类型擦除后的回调
+    let on_row_drop = Arc::new(Mutex::new(on_row_drop));
+
     view! {
         <div style="overflow: auto;">
-        <table style=move || format!(
-                "border-collapse: collapse; table-layout: fixed; width: {};",
-                table_total_width()
-            ) >
-            <thead>
-                <tr style={"height: 40px"}>
-                    {move || col_vec.get().iter().map(|col| view! {
-                        <th style={format!("width: {}px; font-size: 16px; padding: 0 4px; border: 1px solid var(--myw-border);background-color: var(--myw-boxBc);", col.width)} class="ellipsis">{col.title}</th>
-                    }).collect::<Vec<_>>()}
-                </tr>
-            </thead>
-            <tbody>
-                {move || data.get().into_iter().enumerate().map(|(_row_index, item)| {
-                    let item = item.clone();
-                    view! {
-                        <tr style={"height: 40px;  "}>
-                            {col_vec.get().iter().enumerate().map(|(_col_index, col)| {
-                            let cell_view = match &col.view {
-                                Some(view_fn) => {
-                                    let view_fn_instance = view_fn(item.clone());
-                                    view_fn_instance.run()
-                                }
-                                None => {
-                                    view! { <span>{col.id}</span> }.into_view().into_any()
-                                }
-                            };
-
-                            view! {
-                                <td style=" border: 1px solid var(--myw-border); padding: 0 4px;" class="ellipsis">
-                                    {cell_view}  // 这里会自动转换为合适的类型
-                                </td>
-                            }
+            <table style=move || format!(
+                    "border-collapse: collapse; table-layout: fixed; width: {};",
+                    table_total_width()
+                ) >
+                <thead>
+                    <tr style={"height: 40px"}>
+                        {move || col_vec.get().iter().map(|col| view! {
+                            <th style={format!("width: {}px; font-size: 16px; padding: 0 4px; border: 1px solid var(--myw-border);background-color: var(--myw-boxBc);", col.width)} class="ellipsis">{col.title}</th>
                         }).collect::<Vec<_>>()}
-                        </tr>
-                    }
-                }).collect::<Vec<_>>()}
-            </tbody>
-        </table>
+                    </tr>
+                </thead>
+                <tbody>
+                    {move || data.get().into_iter().enumerate().map(|(current_row_idx, item)| {
+                        let item = item.clone();
+                        // 克隆 Arc（线程安全）
+                        let on_row_drop = on_row_drop.clone();
+                        let dragged_index = dragged_index.clone();
+
+                        view! {
+                            <tr
+                                style={"height: 40px; "}
+                                draggable="true"
+                                on:dragstart=move |ev| {
+                                    set_dragged_index.set(Some(current_row_idx));
+                                }
+                                on:dragover=move |ev| {
+                                    ev.prevent_default();
+                                }
+                                on:drop=move |_| {
+                                    if let Some(start_idx) = dragged_index.get() {
+                                        if start_idx != current_row_idx {
+                                            // 安全调用回调
+                                            if let Ok(mut callback_opt) = on_row_drop.lock() {
+                                                if let Some(ref mut callback) = *callback_opt {
+                                                    callback((start_idx, current_row_idx));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                on:dragend=move |_| {
+                                    set_dragged_index.set(None);
+                                }
+                            >
+                                {col_vec.get().iter().enumerate().map(|(_col_index, col)| {
+                                    let cell_view = match &col.view {
+                                        Some(view_fn) => {
+                                            let view_fn_instance = view_fn(item.clone());
+                                            view_fn_instance.run()
+                                        }
+                                        None => {
+                                            view! { <span>{col.id}</span> }.into_view().into_any()
+                                        }
+                                    };
+
+                                    view! {
+                                        <td style=" border: 1px solid var(--myw-border); padding: 0 4px;" class="ellipsis">
+                                            {cell_view}
+                                        </td>
+                                    }
+                                }).collect::<Vec<_>>()}
+                            </tr>
+                        }
+                    }).collect::<Vec<_>>()}
+                </tbody>
+            </table>
         </div>
     }
 }

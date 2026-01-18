@@ -302,7 +302,7 @@ pub fn I() -> impl IntoView {
             <Tabs tab=tabs id=id />
         </div>
         <myw::Gap/>
-        <Table data=link_vec col_vec=col_vec> </Table>
+        <Table data=link_vec col_vec=col_vec on_row_drop=Box::new(move |_|{})> </Table>
         <Modal is_open=is_open_delete title=title_delete  on_click=delete_confirm >
                 <myw::Gap h=16/>
                 <div style="display: inline-block; width: 50px">id</div>
