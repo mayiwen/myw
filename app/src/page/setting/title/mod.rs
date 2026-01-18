@@ -218,13 +218,64 @@ pub fn I() -> impl IntoView {
             Err(_) => {}
         }
     };
+    let drag = move |start: usize, end: usize| {
+        let message: RwSignal<Vec<Message>> =
+            use_context::<RwSignal<Vec<Message>>>().expect("Message context must exist");
+        let another_msg4 = Message {
+            t: myw::message::MessageType::INFO,
+            m: format!("{}-{}", start, end),
+        };
+        message.update(|msgs| {
+            msgs.push(another_msg4); // push 是 Vec 的标准添加方法
+        });
+        let link_v = data_vec.clone().get().clone();
+        let mut nav_title_one = link_v;
+        let item_save = nav_title_one.remove(start);
+        nav_title_one.insert(end, item_save);
 
+        spawn_local(async move {
+            let res = crate::title_sort(nav_title_one, crate::get_global_token_with_bearer()).await;
+            match res {
+                Ok(res) => {
+                    let message: RwSignal<Vec<Message>> = use_context::<RwSignal<Vec<Message>>>()
+                        .expect("Message context must exist");
+                    let another_msg4 = Message {
+                        t: myw::message::MessageType::INFO,
+                        m: "修改成功".to_string(),
+                    };
+                    message.update(|msgs| {
+                        msgs.push(another_msg4); // push 是 Vec 的标准添加方法
+                    });
+                    let id_i64 = id.get() as u64;
+                    let id_u64 = if id_i64 >= 0 {
+                        id_i64 as u64 // 仅当非负时转换
+                    } else {
+                        0u64
+                    };
+                    load_data();
+                }
+                Err(_) => {
+                    let message: RwSignal<Vec<Message>> = use_context::<RwSignal<Vec<Message>>>()
+                        .expect("Message context must exist");
+                    let another_msg4 = Message {
+                        t: myw::message::MessageType::INFO,
+                        m: "修改失败".to_string(),
+                    };
+                    message.update(|msgs| {
+                        msgs.push(another_msg4); // push 是 Vec 的标准添加方法
+                    });
+                }
+            }
+        });
+    };
     view! {
         <myw::Gap/>
         <h3>首页标题设置</h3>
         <add::I on_click=on_click_cb />
         <myw::Gap/>
-        <Table data=data_vec col_vec=col_vec on_row_drop=Box::new(move |_|{})> </Table>
+        <Table data=data_vec col_vec=col_vec on_row_drop=Box::new(move |(start, end)|{
+            drag(start, end);
+        })> </Table>
         <Modal is_open=is_open_delete title=title_delete  on_click=delete_confirm >
             <div style="width: 200px;">
                 <input class="myw-input" placeholder="id" bind:value=delete_id disabled/>

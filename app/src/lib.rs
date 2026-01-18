@@ -590,3 +590,70 @@ pub async fn link_update(
         }
     }
 }
+
+#[server(LinkSort, "/api/ssr/link_sort")]
+pub async fn link_sort(
+    vec: Vec<models::link::Link>,
+    token: String,
+) -> Result<String, ServerFnError> {
+    #[cfg(feature = "ssr")]
+    {
+        if !backend::appf::middleware::validate_jwt_token(&token) {
+            return Err(ServerFnError::ServerError(format!("无权限")));
+        }
+        let params = vec
+            .iter()
+            .enumerate()
+            .map(|(index, x)| backend::api::link::SortParams {
+                id: x.id as i64,
+                index: index as i32,
+            })
+            .collect::<Vec<_>>();
+
+        // 调用 API 获取数据
+        let result = backend::api::link::sort_ssr(params).await;
+
+        match result {
+            Ok(data) => return Ok("添加成功".to_string()),
+            Err(api_error) => {
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    api_error
+                )));
+            }
+        }
+    }
+}
+#[server(TitleSort, "/api/ssr/title_sort")]
+pub async fn title_sort(
+    vec: Vec<models::title::Title>,
+    token: String,
+) -> Result<String, ServerFnError> {
+    #[cfg(feature = "ssr")]
+    {
+        if !backend::appf::middleware::validate_jwt_token(&token) {
+            return Err(ServerFnError::ServerError(format!("无权限")));
+        }
+        let params = vec
+            .iter()
+            .enumerate()
+            .map(|(index, x)| backend::api::title::SortParams {
+                id: x.id as i64,
+                index: index as i32,
+            })
+            .collect::<Vec<_>>();
+
+        // 调用 API 获取数据
+        let result = backend::api::title::sort_ssr(params).await;
+
+        match result {
+            Ok(data) => return Ok("添加成功".to_string()),
+            Err(api_error) => {
+                return Err(ServerFnError::ServerError(format!(
+                    "API调用失败: {}",
+                    api_error
+                )));
+            }
+        }
+    }
+}
