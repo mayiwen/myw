@@ -130,8 +130,8 @@ pub fn I() -> impl IntoView {
             })),
         },
         TabColumn {
-            width: 70,
-            title: "标题编号",
+            width: 100,
+            title: "标题id",
             id: "title_id",
             view: Some(Arc::new(|data: Link| {
                 ViewFn::from(move || {
@@ -348,7 +348,6 @@ pub fn I() -> impl IntoView {
     view! {
         <myw::Gap/>
         <h3>首页链接设置</h3>
-        <myw::Gap/>
         <add::I on_click=on_click_cb id=id/>
         <div>
             <Tabs tab=tabs id=id />
@@ -360,27 +359,27 @@ pub fn I() -> impl IntoView {
         <Modal is_open=is_open_delete title=title_delete  on_click=delete_confirm >
             <div style="width: 300px">
                 <myw::Gap h=16/>
-                <div style="display: inline-block; width: 50px">id</div>
+                <div style="display: inline-block; width: 100px">id</div>
                 <input class="myw-input" placeholder="id" bind:value=delete_id disabled/>
                 <myw::Gap h=16/>
-                <div style="display: inline-block; width: 50px">标题</div>
-                <input class="myw-input" placeholder="标题" bind:value=delete_title disabled/>
+                <div style="display: inline-block; width: 100px">链接名称</div>
+                <input class="myw-input" placeholder="链接名称" bind:value=delete_title disabled/>
             </div>
         </Modal>
         <Modal is_open=is_open_update title=title_update  on_click=update_confirm >
             <div style="width: 300px;">
-                <div style="display: inline-block; width: 50px">id</div>
+                <div style="display: inline-block; width: 100px">id</div>
                 <input class="myw-input" placeholder="id" bind:value=update_id disabled/>
                 <myw::Gap h=16/>
-                <div style="display: inline-block; width: 50px">标题</div>
-                <input class="myw-input" placeholder="标题" bind:value=update_title />
+                <div style="display: inline-block; width: 100px">链接名称</div>
+                <input class="myw-input" placeholder="链接名称" bind:value=update_title />
                 <myw::Gap h=16/>
-                <div style="display: inline-block; width: 50px">src</div>
+                <div style="display: inline-block; width: 100px">链接路径</div>
 
-                <input type="text" class="myw-input" placeholder="src" bind:value=update_src />
+                <input type="text" class="myw-input" placeholder="链接路径" bind:value=update_src />
                 <myw::Gap h=16/>
-                <div style="display: inline-block; width: 50px">title id</div>
-                <input type="number" class="myw-input" placeholder="src" bind:value=update_title_id />
+                <div style="display: inline-block; width: 100px">标题id</div>
+                <input type="number" class="myw-input" placeholder="标题id" bind:value=update_title_id />
                 <myw::Gap h=16/>
             </div>
         </Modal>

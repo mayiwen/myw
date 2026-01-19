@@ -109,16 +109,14 @@ pub fn YinSiShengMing() -> impl IntoView {
         use_context::<RwSignal<Option<crate::NavFn>>>().expect("请确保 App 组件已提供全局导航信号");
     view! {
         <p style="text-align: right; margin-right: 8px;">
-            <a
-                style="text-decoration: underline; cursor: pointer;"
-                on:click= move |_| {
-                    global_nav.with(|nav_opt| {
+                <Button  on_click=move |_| {
+                       global_nav.with(|nav_opt| {
                         if let Some(nav) = nav_opt {
                             nav("/yueduqi"); // 调用 App 封装的导航逻辑
                         };
                     });
-                }
-                title="https://mayiwen.com/yueduqi">一文小说阅读器主页</a>
+                    }>一文小说阅读器主页</Button><myw::Gap w=8/>
+
         </p>
 
         <h1 style="text-align: center;">{"一文小说阅读器 隐私声明"}</h1>

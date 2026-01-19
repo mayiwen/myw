@@ -156,6 +156,7 @@ a {
     box-sizing: border-box;
     border: 1px solid var(--myw-border);
     outline: none;
+    margin-bottom: 8px;
 }
 .myw-input:disabled {
     cursor: not-allowed;
