@@ -263,3 +263,6 @@ html,
     box-sizing: border-box;
     user-select: none;
 }
+* {
+    word-break: break-all; /* 强制换行 */
+}

@@ -14,7 +14,7 @@ pub mod login;
 pub mod title;
 #[component]
 pub fn I() -> impl IntoView {
-    let id: RwSignal<u64> = RwSignal::new(1);
+    let id: RwSignal<u64> = RwSignal::new(0);
     let login = use_context::<RwSignal<Login>>()
         .expect("Login context should be provided by parent component");
     // 关键修复：创建响应式的取值闭包，让 Leptos 追踪状态变化
