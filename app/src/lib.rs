@@ -151,7 +151,7 @@ pub fn App() -> impl IntoView {
     global_nav.set(Some(Box::new(nav)));
     view! {
         <Stylesheet id="leptos" href="/pkg/myw.css"/>
-        <Title text="马一文 mayiwen mayiwen.com | 建设纪录"/>
+        <Title text="马一文 mayiwen mayiwen.com | 建设纪录 | 构建一流网站 勇攀技术巅峰 "/>
         <div style="height: 100%" class="front_box">
             <div style="height: 40px">
                 <myw::Gap h=1/>
@@ -214,7 +214,7 @@ pub fn App() -> impl IntoView {
                         });
                     }
                     <main>
-                        <Routes fallback=|| "Page not found.".into_view()>
+                        <Routes fallback=crate::page::not_found::I>
                         <Route path=StaticSegment("") view=crate::page::home::I/>
                             <Route path=StaticSegment("code") view=crate::page::code::I/>
                             <Route path=StaticSegment("setting") view=crate::page::setting::I/>

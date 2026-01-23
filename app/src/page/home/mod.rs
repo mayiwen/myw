@@ -1,7 +1,7 @@
 use crate::myw::Gap;
 use crate::page::home::logo::MayiwenLogo;
 use leptos::prelude::*;
-mod logo;
+pub mod logo;
 pub mod nav;
 mod search;
 use leptos::reactive::spawn_local;
