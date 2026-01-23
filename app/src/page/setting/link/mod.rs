@@ -357,7 +357,7 @@ pub fn I() -> impl IntoView {
             drag(start, end);
         })> </Table>
         <Modal is_open=is_open_delete title=title_delete  on_click=delete_confirm >
-            <div style="width: 300px">
+            <div style="width: 320px">
                 <myw::Gap h=16/>
                 <div style="display: inline-block; width: 100px">id</div>
                 <input class="myw-input" placeholder="id" bind:value=delete_id disabled/>
@@ -367,7 +367,7 @@ pub fn I() -> impl IntoView {
             </div>
         </Modal>
         <Modal is_open=is_open_update title=title_update  on_click=update_confirm >
-            <div style="width: 300px;">
+            <div style="width: 320px;">
                 <div style="display: inline-block; width: 100px">id</div>
                 <input class="myw-input" placeholder="id" bind:value=update_id disabled/>
                 <myw::Gap h=16/>

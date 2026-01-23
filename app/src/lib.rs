@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex, OnceLock, PoisonError, RwLock};
 
-use crate::models::Login;
+use crate::models::{Login, SettingTab};
 use crate::myw::icon;
 use crate::myw::message::{Message, MessageType};
 use crate::myw::myw::MayiwenBeiAn;
@@ -104,25 +104,6 @@ pub fn get_global_token_with_bearer() -> String {
         format!("{}", pure_token)
     }
 }
-//  // 1. 初始化 Token
-//     init_global_token("initial_token_123".to_string()).unwrap();
-
-//     // 2. 获取 Token
-//     let token = get_global_token();
-//     println!("当前 Token: {}", token); // 输出：initial_token_123
-
-//     // 3. 修改 Token
-//     set_global_token("new_token_456".to_string()).unwrap();
-
-//     // 4. 再次获取
-//     let new_token = get_global_token();
-//     println!("修改后 Token: {}", new_token); // 输出：new_token_456
-
-//     // 5. 多线程测试（可选，验证线程安全）
-//     std::thread::spawn(|| {
-//         let token = get_global_token();
-//         println!("线程中获取 Token: {}", token); // 输出：new_token_456
-//     }).join().unwrap();
 
 // 1. 定义导航函数的类型（入参是 &'static str，无返回值）
 pub type GlobalNavFn = Callback<&'static str, ()>;
@@ -155,6 +136,8 @@ pub fn App() -> impl IntoView {
         // 重复初始化时仅打印日志，不崩溃
     }
     provide_context(login);
+    let setting_tab = RwSignal::new(SettingTab { value: 0 });
+    provide_context(setting_tab);
     let id: RwSignal<u64> = RwSignal::new(0);
     let (_router_active, set_router_active) = signal("".to_string());
     let global_nav: RwSignal<Option<NavFn>> = RwSignal::new(None);
@@ -252,24 +235,6 @@ pub fn App() -> impl IntoView {
     }
 }
 
-/// Renders the home page of your application.
-#[component]
-fn HomePage() -> impl IntoView {
-    // Creates a reactive value to update the button
-    let count = RwSignal::new(0);
-    let on_click = move |_| *count.write() += 1;
-
-    view! {
-        <h1>"Welcome to Leptos!"</h1>
-        <button on:click=on_click>"Click Me: " {count}</button>
-    }
-}
-
-// 修复后的 Server Function
-// 关键修改：
-// 1. 函数标识用 PascalCase（Greet），确保是「纯标识符」（无特殊字符）
-// 2. 显式指定返回值的 Error 类型为 ServerFnError
-// 3. 函数体用 async + Result
 #[server(Greet, "/api/ssr/hello")]
 pub async fn greet() -> Result<String, ServerFnError> {
     // 服务端逻辑：简单返回字符串

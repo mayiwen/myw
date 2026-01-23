@@ -1,5 +1,5 @@
 use crate::{
-    models::Login,
+    models::{Login, SettingTab},
     myw::{
         self,
         button::Button,
@@ -20,6 +20,22 @@ pub fn I() -> impl IntoView {
     // 关键修复：创建响应式的取值闭包，让 Leptos 追踪状态变化
     // 闭包会在每次状态变化时重新执行，触发组件重新渲染
     let current_token = move || login.with(|login_state| login_state.token.clone());
+
+    Effect::new(move |_| {
+        // 获取到
+        let tab: Option<RwSignal<SettingTab>> = use_context::<RwSignal<SettingTab>>();
+        match tab {
+            Some(v) => {
+                if v.get().value == 2 {
+                    id.set(2);
+                    v.update(|st| {
+                        st.value = 0;
+                    });
+                }
+            }
+            None => {}
+        }
+    });
     view! {
         <myw::Gap/>
         <div style="float: right;">
