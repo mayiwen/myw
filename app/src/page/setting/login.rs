@@ -36,7 +36,7 @@ pub fn I() -> impl IntoView {
                     msgs.push(another_msg); // push 是 Vec 的标准添加方法
                 });
             } else {
-                let res = crate::login(name, pwd).await;
+                let res: Result<String, ServerFnError> = crate::login(name, pwd).await;
                 match res {
                     Ok(res) => {
                         let message: RwSignal<Vec<Message>> =
@@ -85,14 +85,15 @@ pub fn I() -> impl IntoView {
                         });
                         is_open.set(false)
                     }
-                    Err(_) => {
+                    Err(err) => {
+                        let user_error_msg = format!("登录失败：{}", err); // 等价于 err.to_string()
                         let message: RwSignal<Vec<Message>> =
                             use_context::<RwSignal<Vec<Message>>>()
                                 .expect("Message context must exist");
 
                         let another_msg = Message {
                             t: myw::message::MessageType::ERROR,
-                            m: "马一文才可以登录".to_string(),
+                            m: user_error_msg,
                         };
 
                         // 向 Vec 中添加新元素
