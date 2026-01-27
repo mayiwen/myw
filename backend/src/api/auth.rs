@@ -10,6 +10,7 @@ use axum::extract::{ConnectInfo, State};
 use axum::{debug_handler, routing, Extension, Router};
 use leptos::config::LeptosOptions;
 use sea_orm::prelude::*;
+use sea_orm::ActiveValue::Set;
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use validator::Validate;
@@ -82,8 +83,27 @@ pub async fn ssr_login(params: LoginParams) -> ApiResult<ApiResponse<LoginResult
         .one(db)
         .await?
         .ok_or_else(|| ApiError::Biz(String::from("账号或密码不正确")))?;
-
+    tracing::info!("密码验证逻辑1");
+    if user.login_count > 4 {
+        return Err(ApiError::Biz(String::from("login count is used。")));
+    };
     if !verify_password(&params.password, &user.password)? {
+        // 密码验证不正确，要在登录次数上加1
+        // 构建要更新的 ActiveModel（只更新 login_count）
+        let mut user_active_model = login_user::ActiveModel::from(user.clone());
+        tracing::warn!("当前的user{}", user.clone().login_count);
+
+        // login_count 加 1（注意处理空值，这里默认如果是 null 则按 0 处理）
+        user_active_model.login_count = Set(user.login_count + 1);
+        // 执行更新操作
+        login_user::Entity::update(user_active_model)
+            .exec(db)
+            .await
+            .map_err(|e| {
+                // 即使更新失败，也建议记录日志，仍返回原登录错误（避免泄露信息）
+                eprintln!("更新登录失败次数失败: {:?}", e);
+                ApiError::Biz(String::from("账号或密码不正确"))
+            })?;
         return Err(ApiError::Biz(String::from("账号或密码不正确")));
     }
 

@@ -16,8 +16,8 @@ pub fn I() -> impl IntoView {
     let is_open: RwSignal<bool> = RwSignal::new(false);
     let str: RwSignal<String> = RwSignal::new("".to_string());
     let title: RwSignal<String> = RwSignal::new("管理登录".to_string());
-    let name: RwSignal<String> = RwSignal::new("".to_string());
-    let pwd: RwSignal<String> = RwSignal::new("".to_string());
+    let name: RwSignal<String> = RwSignal::new("mayiwen_dev".to_string());
+    let pwd: RwSignal<String> = RwSignal::new("123456".to_string());
     let login = move |_| {
         spawn_local(async move {
             let name = name.get();
@@ -110,11 +110,8 @@ pub fn I() -> impl IntoView {
             is_open.set(true)
         }>管理登录</Button>
         <Modal is_open=is_open title=title  on_click=login >
-
-
             <div style="width: 350px; height: 200px">
             <div style="text-align: center">
-
             <myw::Gap h=40/>
             <input class="myw-input" placeholder="请输入用户名" bind:value=name/>
             <myw::Gap h=16/>
