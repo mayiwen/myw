@@ -63,9 +63,17 @@ pub fn MessageCreate() -> impl IntoView {
                     }
                     *prev_len = curr_len;
                 }
+                // ========== 新增：限制最多显示5条消息 ==========
+                // 保留最后5条（最新的5条），移除超出的旧消息
+                if msgs.len() > 5 {
+                    // 计算需要保留的起始索引，截断前面的旧消息
+                    let keep_start = msgs.len() - 5;
+                    msgs.drain(0..keep_start); // 原地删除超出的旧消息，不移动msgs所有权
+                };
+                // =============================================
                 message_clone.set(msgs);
                 drop(state);
-                TimeoutFuture::new(1000).await;
+                TimeoutFuture::new(1500).await;
             }
         });
     });

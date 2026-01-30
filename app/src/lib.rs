@@ -577,7 +577,6 @@ pub async fn link_sort(
 
         // 调用 API 获取数据
         let result = backend::api::link::sort_ssr(params).await;
-
         match result {
             Ok(data) => return Ok("添加成功".to_string()),
             Err(api_error) => {
