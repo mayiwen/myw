@@ -20,15 +20,11 @@ pub struct Message {
     /// message
     pub m: String,
 }
-use gloo_timers::future::TimeoutFuture; // 异步定时器（替代同步 Interval）
+use gloo_timers::future::TimeoutFuture;
 #[component]
 pub fn MessageCreate() -> impl IntoView {
     let message = use_context::<RwSignal<Vec<Message>>>().expect("Message context must exist");
-    let state = Rc::new(RefCell::new((
-        false,
-        0,
-        false,
-    )));
+    let state = Rc::new(RefCell::new((false, 0, false)));
     Effect::new(move |_| {
         let message_clone = message.clone();
         let state_clone = Rc::clone(&state);
