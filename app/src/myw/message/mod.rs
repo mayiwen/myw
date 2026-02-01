@@ -25,9 +25,9 @@ use gloo_timers::future::TimeoutFuture; // 异步定时器（替代同步 Interv
 pub fn MessageCreate() -> impl IntoView {
     let message = use_context::<RwSignal<Vec<Message>>>().expect("Message context must exist");
     let state = Rc::new(RefCell::new((
-        false, // flag: 原有最后一条延迟标记
-        0,     // prev_len: 上一次消息数量
-        false, // force_remove: 强制移除标记
+        false,
+        0,
+        false,
     )));
     Effect::new(move |_| {
         let message_clone = message.clone();
