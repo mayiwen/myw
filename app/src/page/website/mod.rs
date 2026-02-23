@@ -19,6 +19,10 @@ pub fn I() -> impl IntoView {
         <div style=" max-width: 400px; margin: auto; text-align: center">
             <myw::Gap/>
             <h1>"nuoruo"</h1>
+            <h4>"诺若软件开发"</h4>
+            <myw::Gap/>
+            <p>"自用软件使用马一文的名义发布"</p>
+            <p>"通用软件使用诺若的名义发布"</p>
             <myw::Gap/>
             <h4>"logo 演示"</h4>
             <myw::Gap/>
