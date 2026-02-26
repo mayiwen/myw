@@ -49,9 +49,9 @@ pub fn Index() -> impl IntoView {
                 <Button  on_click=move |_| {
                     open_url("https://github.com/mayiwen/yueduqi");
                     }><icon::Github/></Button><myw::Gap w=8/>
-                <Button  on_click=move |_| {
-                        open_url("https://gitlink.org.cn/mayiwen/yueduqi");
-                }><icon::GitLink/></Button>
+                // <Button  on_click=move |_| {
+                //         open_url("https://gitlink.org.cn/mayiwen/yueduqi");
+                // }><icon::GitLink/></Button>
             </div>
             <div style="text-align: center; max-width: 400px; margin: auto;">
                 <myw::Gap h=12/>

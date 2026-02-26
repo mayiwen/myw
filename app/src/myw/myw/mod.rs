@@ -56,10 +56,9 @@ pub fn MayiwenBeiAn() -> impl IntoView {
                 <Button  on_click=move |_| {
                     open_url("https://github.com/mayiwen");
                 }><icon::Github/></Button><myw::Gap w=8/>
-                <Button  on_click=move |_| {
-                    // open_url(&child.src);
-                     open_url("https://gitlink.org.cn/mayiwen");
-                }><icon::GitLink/></Button>
+                // <Button  on_click=move |_| {
+                //      open_url("https://gitlink.org.cn/mayiwen");
+                // }><icon::GitLink/></Button>
             </div>
             <myw::Gap h=20/>
 
