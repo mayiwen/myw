@@ -33,7 +33,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <AutoReload options=options.clone()/>
                 <HydrationScripts options/>
                 <MetaTags/>
-                <link rel="icon" href="/favicon.ico" sizes="any"/>
+                <link rel="icon" href="favicon.ico" sizes="any"/>
             </head>
             <body>
                 <App/>
@@ -152,7 +152,7 @@ pub fn App() -> impl IntoView {
     global_nav.set(Some(Box::new(nav)));
     view! {
         <Stylesheet id="leptos" href="/pkg/myw.css"/>
-        <Title text="马一文 mayiwen mayiwen.com | 建设纪录"/>
+        <Title text="马一文个人网站 mayiwen.com | 马一文 mayiwen | 建设纪录"/>
         <div style="height: 100%" class="front_box">
             <div style="height: 40px">
                 <myw::Gap h=1/>

@@ -58,10 +58,11 @@ pub fn Index() -> impl IntoView {
                 <h1 style="font-weight: bold;">一文小说阅读器</h1>
                 <myw::Gap h=12/>
                 <Button style="transform: scale(1.2); transform-origin: center"  on_click=move |_| {
-                    open_url("https://gitlink.org.cn/mayiwen/yueduqi/releases");
-                }>软件与说明书下载</Button>
+                    open_url("https://github.com/mayiwen/yueduqi/releases");
+                    open_url("");
+                }>Github软件下载</Button>
                 <myw::Gap  h=12/>
-                <a href="https://github.com/mayiwen/yueduqi/releases" target="_blank">github分流下载</a>
+                <a href="https://gitlink.org.cn/mayiwen/yueduqi/releases" target="_blank">"上面无法访问，请点击此处下载"</a>
                 <myw::Gap h=12/>
                 <div style="text-align: left;">
                     <Tabset id=id>

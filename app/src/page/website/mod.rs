@@ -33,6 +33,11 @@ pub fn I() -> impl IntoView {
             <p>"nuoruo.com"</p>
             <p>"nuoruo.cn"</p>
             <myw::Gap h=30/>
+            <h4>"诺若浏览器"</h4>
+             <myw::Gap h=8/>
+            <p>"https://nuoruo.com/browser"</p>
+            <p>"使用rust、tauri、leptos封装一个浏览器，建设中..."</p>
+            <myw::Gap h=30/>
             // <h4>"放这看"</h4>
             // <myw::Gap h=8/>
             // <p>"还没想好做什么"</p>
