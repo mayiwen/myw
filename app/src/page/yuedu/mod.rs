@@ -62,7 +62,7 @@ pub fn Index() -> impl IntoView {
                     open_url("");
                 }>Github软件下载</Button>
                 <myw::Gap  h=12/>
-                <a href="https://gitlink.org.cn/mayiwen/yueduqi/releases" target="_blank">"上面无法访问，请点击此处下载"</a>
+                <a href="https://gitlink.org.cn/mayiwen/yueduqi/releases" target="_blank">"若您无法访问上面，请点击此处下载"</a>
                 <myw::Gap h=12/>
                 <div style="text-align: left;">
                     <Tabset id=id>
