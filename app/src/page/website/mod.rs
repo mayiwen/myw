@@ -18,6 +18,7 @@ pub fn I() -> impl IntoView {
         " "
         <div style=" max-width: 400px; margin: auto; text-align: center">
             <myw::Gap/>
+            <img style="width: 100%; max-width: 60px;" src="img/nuoruo/nuoruo_logo_square.png" alt="nuoruo logo" />
             <h1>"nuoruo"</h1>
             <h4>"诺若软件开发"</h4>
             <myw::Gap/>
@@ -26,7 +27,7 @@ pub fn I() -> impl IntoView {
             <myw::Gap/>
             <h4>"logo 演示"</h4>
             <myw::Gap/>
-            <img style="width: 100%; max-width: 400px;" src="img/nuoruo/logo.png" alt="ios image" />
+            <img style="width: 100%; max-width: 400px;" src="img/nuoruo/nuoruo_logo.png" alt="nuoruo logo" />
             <myw::Gap h=30/>
             <h4>"域名持有"</h4>
              <myw::Gap h=8/>
