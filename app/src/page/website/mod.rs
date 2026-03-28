@@ -14,44 +14,56 @@ use leptos_router::components::Outlet;
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
     view! {
-        <myw::Gap h=8/>
-        "下方网站"
-        " "
-        <div style=" max-width: 400px; margin: auto; text-align: center">
-            <myw::Gap h=30/>
-            <img style="width: 100%; max-width: 200px;" src="img/nuoruo/nuoruo_logo.png" alt="nuoruo logo" />
-            <myw::Gap/>
-            <h1>"nuoruo"</h1>
-            <h4>"诺若软件开发"</h4>
-            <p>"网站建设中"</p>
-            <myw::Gap/>
-            <p>"自用软件使用马一文的名义发布"</p>
-            <p>"通用软件使用诺若的名义发布"</p>
-            <myw::Gap/>
-            <h4>"logo 演示"</h4>
-            <myw::Gap/>
-            <img style="width: 100%; max-width: 400px;" src="img/nuoruo/nuoruo_logo_square.png" alt="nuoruo logo" />
-            <h4>"域名持有"</h4>
-             <myw::Gap h=8/>
-            <p>"nuoruo.com"</p>
-            <p>"nuoruo.cn"</p>
-            <myw::Gap h=30/>
-            <h4>"诺若浏览器"</h4>
-             <myw::Gap h=8/>
-            <p>"https://nuoruo.com/browser"</p>
-            <p>"使用rust、tauri、leptos封装一个浏览器，建设中..."</p>
-            <myw::Gap h=30/>
-            // <h4>"放这看"</h4>
-            // <myw::Gap h=8/>
-            // <p>"还没想好做什么"</p>
-            // <p>"放在这里先看着"</p>
-            // <p>"不定什么时候就有了灵感"</p>
-            // <h4>"标语"</h4>
-            <myw::Gap h=8/>
-            <p>"构建一流网站"</p>
-            <p>"勇攀技术巅峰"</p>
+      <myw::Gap h=8 />
+      // "下方网站"
+      // " "
+      <div style=" max-width: 400px; margin: auto; text-align: center">
+        <myw::Gap h=30 />
+        <div>
+          <img
+            style="max-width: 150px;"
+            src="img/nuoruo/nuoruo_logo_square.png"
+            alt="nuoruo logo"
+          />
         </div>
+        <h2>"诺若浏览器主页"</h2>
+        <p>"https://mayiwen.com/browser"</p>
+        <p>"基于rust、wry、tauri、leptos构建"</p>
+        <myw::Gap />
+        // <h1>"nuoruo"</h1>
+        // <h4>"诺若软件开发"</h4>
+        // <p>"网站建设中"</p>
+        <myw::Gap />
+        // <p>"自用软件使用马一文的名义发布"</p>
+        // <p>"通用软件使用诺若的名义发布"</p>
+        // <myw::Gap />
+        // <h4>"logo 演示"</h4>
+        // <myw::Gap />
 
+        // <h4>"域名持有"</h4>
 
+        <myw::Gap h=30 />
+
+        <myw::Gap h=8 />
+        <img
+          style="width: 100%; max-width: 100px;"
+          src="img/nuoruo/nuoruo_logo.png"
+          alt="nuoruo logo"
+        />
+        // <p>"nuoruo.com"</p>
+        // <p>"nuoruo.cn"</p>
+        <p>"https://mayiwen.com/browser"</p>
+        <p>"nuoruo网站暂未开放，需访问mayiwen.com"</p>
+        <myw::Gap h=30 />
+      // <h4>"放这看"</h4>
+      // <myw::Gap h=8/>
+      // <p>"还没想好做什么"</p>
+      // <p>"放在这里先看着"</p>
+      // <p>"不定什么时候就有了灵感"</p>
+      // <h4>"标语"</h4>
+      // <myw::Gap h=8 />
+      // <p>"构建一流网站"</p>
+      // <p>"勇攀技术巅峰"</p>
+      </div>
     }
 }
