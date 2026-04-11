@@ -17,7 +17,7 @@ pub fn I() -> impl IntoView {
       <myw::Gap h=8 />
       // "下方网站"
       // " "
-      <div style=" max-width: 400px; margin: auto; text-align: center">
+      <div style=" max-width: 800px; margin: auto; text-align: center">
         <myw::Gap h=30 />
         <div>
           <img
@@ -33,7 +33,15 @@ pub fn I() -> impl IntoView {
         <a href="https://github.com/mayiwen/nuoruo_browser">
           "https://github.com/mayiwen/nuoruo_browser"
         </a>
-        <myw::Gap />
+        <myw::Gap h=30 />
+        <h3>"基础界面展示"</h3>
+        <myw::Gap h=10 />
+        <img
+          src="img/nuoruo_browser/nuoruo_browser.png"
+          class="myw-img"
+          style="max-width: 800px;"
+        />
+
         // <h1>"nuoruo"</h1>
         // <h4>"诺若软件开发"</h4>
         // <p>"网站建设中"</p>
@@ -49,11 +57,11 @@ pub fn I() -> impl IntoView {
         <myw::Gap h=30 />
 
         <myw::Gap h=8 />
-        <img
-          style="width: 100%; max-width: 200px;filter:  invert(35%) sepia(81%) saturate(2200%) hue-rotate(332deg) brightness(99%) contrast(101%);"
-          src="img/nuoruo/nuoruo_logo.png"
-          alt="nuoruo logo"
-        />
+        // <img
+        // style="width: 100%; max-width: 200px;filter:  invert(35%) sepia(81%) saturate(2200%) hue-rotate(332deg) brightness(99%) contrast(101%);"
+        // src="img/nuoruo/nuoruo_logo.png"
+        // alt="nuoruo logo"
+        // />
         // <p>"nuoruo.com"</p>
         // <p>"nuoruo.cn"</p>
         // <p>"https://mayiwen.com/browser"</p>
