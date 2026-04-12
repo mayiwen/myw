@@ -21,7 +21,7 @@ pub fn I() -> impl IntoView {
         <myw::Gap h=30 />
         <div>
           <img
-            style="max-width: 150px;filter:  invert(35%) sepia(81%) saturate(2200%) hue-rotate(332deg) brightness(99%) contrast(101%)"
+            style="max-width: 100px;filter:  invert(35%) sepia(81%) saturate(2200%) hue-rotate(332deg) brightness(99%) contrast(101%)"
             src="img/nuoruo/nuoruo_logo_square.png"
             alt="nuoruo logo"
           />
@@ -30,7 +30,7 @@ pub fn I() -> impl IntoView {
         <h2>"诺若浏览器主页"</h2>
         <p>"https://mayiwen.com/browser"</p>
         <p>"基于rust、wry、tauri、leptos构建"</p>
-        <a href="https://github.com/mayiwen/nuoruo_browser">
+        <a href="https://github.com/mayiwen/nuoruo_browser" target="_blank">
           "https://github.com/mayiwen/nuoruo_browser"
         </a>
         <myw::Gap h=30 />
