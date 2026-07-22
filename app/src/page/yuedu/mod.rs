@@ -95,9 +95,6 @@ pub fn Index() -> impl IntoView {
                         "豫ICP备2022018473号-2A"
                     </a>
                 </p>
-                // a 标签显示备案号并链接到工信部备案平台
-
-
             </div>
         </div>
     }

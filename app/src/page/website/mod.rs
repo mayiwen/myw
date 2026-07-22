@@ -24,7 +24,6 @@ pub fn I() -> impl IntoView {
         <myw::Gap h=30 />
         <div>
           <img
-          //  invert(35%) sepia(81%) saturate(2200%) hue-rotate(332deg) brightness(99%) contrast(101%)
             style="max-width: 100px;filter: "
             src="img/nuoruo/nuoruo_logo_square.png"
             alt="nuoruo logo"
@@ -32,15 +31,20 @@ pub fn I() -> impl IntoView {
         </div>
         <h2>"诺若浏览器"</h2>
         <p>"https://mayiwen.com/browser"</p>
+        // https://gitlink.org.cn/mayiwen/nuoruo_browser/releases
+        <myw::Gap h=30 />
+          <Button style="transform: scale(1.2); transform-origin: center"  on_click=move |_| {
+              open_url("https://gitlink.org.cn/mayiwen/nuoruo_browser/releases");
+          }>前往下载</Button>
         // <p>"基于rust、wry、tauri、leptos构建"</p>
         // <a href="https://github.com/mayiwen/nuoruo_browser" target="_blank">
-        //   "https://github.com/mayiwen/nuoruo_browser"
+        //   "https://github.com/mayiwen/nuoruo_browser"  
         // </a>
         <myw::Gap h=30 />
         <div style="text-align: left;">
           <Tabset id=id>
-            <Tab slot id=0 title="ios".to_string()><ios::I/></Tab>
             <Tab slot id=1 title="android".to_string()><android::I/></Tab>
+            <Tab slot id=0 title="ios".to_string()><ios::I/></Tab>
             <Tab slot id=2 title="windows".to_string()><windows::I/></Tab>
             <Tab slot id=3 title="macos".to_string()><macos::I/></Tab>
             <Tab slot id=4 title="linux".to_string()><linux::I/></Tab>
