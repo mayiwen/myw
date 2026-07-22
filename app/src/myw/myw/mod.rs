@@ -33,10 +33,10 @@ pub fn MayiwenBeiAn() -> impl IntoView {
     view! {
         <div style="text-align: center; margin-top: 40px">
             <div>
-                <Button  on_click=move |_| {
+                <Button title="切换主题" on_click=move |_| {
                     toggle_theme()
                 }><icon::Theme/></Button> <myw::Gap w=8/>
-                <Button  on_click=move |_| {
+                <Button title="关于本网站" on_click=move |_| {
                         let tab: Option<RwSignal<SettingTab>> = use_context::<RwSignal<SettingTab>>();
                         match tab {
                             Some(v) => {
@@ -53,12 +53,12 @@ pub fn MayiwenBeiAn() -> impl IntoView {
                         };
                     });
                 }><icon::Bookmark/></Button> <myw::Gap w=8/>
-                <Button  on_click=move |_| {
+                <Button title="关注GitHub" on_click=move |_| {
                     open_url("https://github.com/mayiwen");
                 }><icon::Github/></Button><myw::Gap w=8/>
-                // <Button  on_click=move |_| {
-                //      open_url("https://gitlink.org.cn/mayiwen");
-                // }><icon::GitLink/></Button>
+                 <Button title="关注GitLink" on_click=move |_| {
+                     open_url("https://gitlink.org.cn/mayiwen");
+                }><icon::GitLink/></Button>
             </div>
             <myw::Gap h=20/>
 

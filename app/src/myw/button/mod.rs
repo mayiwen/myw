@@ -34,6 +34,7 @@ pub fn I(
 
 #[component]
 pub fn Button(
+    #[prop(optional, into)] title: Signal<String>,
     children: Children,
     #[prop(optional, into)] border: Signal<String>,
     #[prop(optional, into)] style: Signal<String>,
@@ -65,6 +66,7 @@ pub fn Button(
         <button
             class="myw-button"
             style:border=border_style
+            title=title
             style=style
             class:active=move || active.get()
             // 绑定点击事件，和官方文档写法一致
