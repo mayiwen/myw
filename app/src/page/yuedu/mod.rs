@@ -65,8 +65,8 @@ pub fn Index() -> impl IntoView {
                 <myw::Gap h=12/>
                 <div style="text-align: left;">
                     <Tabset id=id>
-                        <Tab slot id=0 title="ios".to_string()><ios::I/></Tab>
-                        <Tab slot id=1 title="android".to_string()><android::I/></Tab>
+                        <Tab slot id=0 title="android".to_string()><android::I/></Tab>
+                        <Tab slot id=1 title="ios".to_string()><ios::I/></Tab>
                         <Tab slot id=2 title="windows".to_string()><windows::I/></Tab>
                         <Tab slot id=3 title="macos".to_string()><macos::I/></Tab>
                         <Tab slot id=4 title="linux".to_string()><linux::I/></Tab>
@@ -75,7 +75,6 @@ pub fn Index() -> impl IntoView {
                 </div>
             </div>
             <div style="text-align: center; margin-top: 30px;">
-                // p 标签显示阅读器名称
                 <p style="color: #666;">"一文小说阅读器"</p>
                 <p >
                      <a
