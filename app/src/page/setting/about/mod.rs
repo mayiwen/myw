@@ -31,7 +31,8 @@ pub fn I() -> impl IntoView {
             <p>"js、scss、remixicon、web_sys、serde、tokio"</p>
 
             <myw::Gap h=30/>
-            <h2>"联系我"</h2>
+            <h2>"关于我"</h2>
+            <p>"前端开发程序员"</p>
             <p>"建议与反馈邮箱：i@mayiwen.com"</p>
             <p>"在github联系我：https://github.com/mayiwen"</p>
             <p>"在gitlink联系我：https://gitlink.org.cn/mayiwen"</p>
