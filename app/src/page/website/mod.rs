@@ -14,13 +14,38 @@ mod ios;
 mod linux;
 mod macos;
 mod windows;
+pub mod yinsishengming;
 
 #[component]
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
+      let global_nav =
+        use_context::<RwSignal<Option<crate::NavFn>>>().expect("请确保 App 组件已提供全局导航信号");
     view! {
       <myw::Gap h=8 />
+          <div style="text-align: right; margin-right: 8px;">
+                <a
+                    style="text-decoration: underline; cursor: pointer; line-height: 40px;"
+                    on:click= move |_| {
+                        global_nav.with(|nav_opt| {
+                            if let Some(nav) = nav_opt {
+                                nav("/browser/yinsishengming"); // 调用 App 封装的导航逻辑
+                            };
+                        });
+                    }
+                    title="https://mayiwen.com/browser/yinsishengming">
+                        隐私声明
+                </a>
+                <myw::Gap w=8/>
+                <Button  on_click=move |_| {
+                    open_url("https://github.com/mayiwen/nuoruo_browser");
+                    }><icon::Github/></Button><myw::Gap w=8/>
+                // <Button  on_click=move |_| {
+                //         open_url("https://gitlink.org.cn/mayiwen/yueduqi");
+                // }><icon::GitLink/></Button>
+            </div>
       <div style=" max-width: 400px; margin: auto; text-align: center">
+     
         <myw::Gap h=30 />
         <div>
           <img
@@ -53,6 +78,7 @@ pub fn I() -> impl IntoView {
         <myw::Gap h=30 />
         <p>"nuoruo网站暂未开放"</p>
         <p>"需访问mayiwen.com"</p>
+ 
         <myw::Gap h=30 />
       </div>
     }
