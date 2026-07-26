@@ -232,10 +232,10 @@ pub fn App() -> impl IntoView {
                 <Route path=StaticSegment("code") view=crate::page::code::I />
                 <Route path=StaticSegment("setting") view=crate::page::setting::I />
                 <ParentRoute path=StaticSegment("browser") view=crate::page::website::I>
-                  <Route path=StaticSegment("") view=crate::page::website::I />
+                  <Route path=StaticSegment("") view=crate::page::website::Index />
                   <Route
                     path=StaticSegment("yinsishengming")
-                    view=crate::page::website::yinsishengming::Yinsishengming
+                    view=crate::page::website::yinsishengming::YinSiShengMing
                   />
                 </ParentRoute>
                 <ParentRoute path=StaticSegment("yueduqi") view=crate::page::yuedu::I>

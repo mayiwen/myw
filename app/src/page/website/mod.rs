@@ -15,11 +15,19 @@ mod linux;
 mod macos;
 mod windows;
 pub mod yinsishengming;
+use leptos_router::components::Outlet;
 
 #[component]
 pub fn I() -> impl IntoView {
+    view! {
+        <Outlet/>
+    }
+}
+
+#[component]
+pub fn Index() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
-      let global_nav =
+    let global_nav =
         use_context::<RwSignal<Option<crate::NavFn>>>().expect("请确保 App 组件已提供全局导航信号");
     view! {
       <myw::Gap h=8 />
@@ -29,7 +37,7 @@ pub fn I() -> impl IntoView {
                     on:click= move |_| {
                         global_nav.with(|nav_opt| {
                             if let Some(nav) = nav_opt {
-                                nav("/browser/yinsishengming"); // 调用 App 封装的导航逻辑
+                                nav("/browser/yinsishengming");
                             };
                         });
                     }
@@ -40,9 +48,6 @@ pub fn I() -> impl IntoView {
                 <Button  on_click=move |_| {
                     open_url("https://github.com/mayiwen/nuoruo_browser");
                     }><icon::Github/></Button><myw::Gap w=8/>
-                // <Button  on_click=move |_| {
-                //         open_url("https://gitlink.org.cn/mayiwen/yueduqi");
-                // }><icon::GitLink/></Button>
             </div>
       <div style=" max-width: 400px; margin: auto; text-align: center">
      
@@ -56,15 +61,10 @@ pub fn I() -> impl IntoView {
         </div>
         <h2>"诺若浏览器"</h2>
         <p>"https://mayiwen.com/browser"</p>
-        // https://gitlink.org.cn/mayiwen/nuoruo_browser/releases
         <myw::Gap h=30 />
           <Button style="transform: scale(1.2); transform-origin: center"  on_click=move |_| {
               open_url("https://gitlink.org.cn/mayiwen/nuoruo_browser/releases");
           }>前往下载</Button>
-        // <p>"基于rust、wry、tauri、leptos构建"</p>
-        // <a href="https://github.com/mayiwen/nuoruo_browser" target="_blank">
-        //   "https://github.com/mayiwen/nuoruo_browser"  
-        // </a>
         <myw::Gap h=30 />
         <div style="text-align: left;">
           <Tabset id=id>
