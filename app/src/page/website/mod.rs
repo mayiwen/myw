@@ -50,8 +50,6 @@ pub fn Index() -> impl IntoView {
                     }><icon::Github/></Button><myw::Gap w=8/>
             </div>
       <div style=" max-width: 400px; margin: auto; text-align: center">
-     
-        <myw::Gap h=30 />
         <div>
           <img
             style="max-width: 100px;filter: "
@@ -65,7 +63,9 @@ pub fn Index() -> impl IntoView {
           <Button style="transform: scale(1.2); transform-origin: center"  on_click=move |_| {
               open_url("https://gitlink.org.cn/mayiwen/nuoruo_browser/releases");
           }>前往下载</Button>
-        <myw::Gap h=30 />
+          <myw::Gap  h=12/>
+          <a href="https://github.com/mayiwen/nuoruo_browser/releases" target="_blank">"前往github下载"</a>
+          <myw::Gap h=12/>
         <div style="text-align: left;">
           <Tabset id=id>
             <Tab slot id=0 title="android".to_string()><android::I/></Tab>
@@ -78,8 +78,8 @@ pub fn Index() -> impl IntoView {
         <myw::Gap h=30 />
         <p>"nuoruo网站暂未开放"</p>
         <p>"需访问mayiwen.com"</p>
- 
-        <myw::Gap h=30 />
+
+       <myw::Gap h=30 />
       </div>
     }
 }
