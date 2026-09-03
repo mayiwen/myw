@@ -20,7 +20,7 @@ pub fn YinSiShengMing() -> impl IntoView {
             </p>
 
             <h1 style="text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px;">{"诺若浏览器 隐私声明"}</h1>
-            <h3 style=" margin-bottom: 16px;">{"隐私声明最后更新日期：22026-07-25"}</h3>
+            <h3 style=" margin-bottom: 16px;">{"隐私声明最后更新日期：2026-07-25"}</h3>
             <myw::Gap h=16 />
 
             <p style="line-height: 1.8; ">{"欢迎您使用诺若浏览器，本软件不会收集您的任何信息，所有的数据都存储在您的本地设备上。"}</p>
