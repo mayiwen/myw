@@ -641,3 +641,14 @@ pub async fn title_sort(
         }
     }
 }
+#[server(SSrGetDate, "/api/ssr/get_date")]
+pub async fn get_date(
+) -> Result<String, ServerFnError> {
+    #[cfg(feature = "ssr")]
+    {
+        let date = backend::api::util::time::ssr_get_date().await;
+        return Ok(date);
+    }
+}
+
+

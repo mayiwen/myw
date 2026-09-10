@@ -12,6 +12,7 @@ pub mod about;
 pub mod link;
 pub mod login;
 pub mod title;
+pub mod api_ssr;
 #[component]
 pub fn I() -> impl IntoView {
     let id: RwSignal<u64> = RwSignal::new(0);
@@ -47,7 +48,8 @@ pub fn I() -> impl IntoView {
         <Tabset id=id>
             <Tab slot id=0 title="首页标题".to_string()><title::I/></Tab>
             <Tab slot id=1 title="首页链接".to_string()><link::I/></Tab>
-            <Tab slot id=2 title="关于".to_string()><about::I/></Tab>
+            <Tab slot id=2 title="api".to_string()><api_ssr::Date/></Tab>
+            <Tab slot id=3 title="关于".to_string()><about::I/></Tab>
         </Tabset>
     }
 }

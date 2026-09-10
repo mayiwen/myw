@@ -7,6 +7,7 @@ pub mod hello;
 pub mod link;
 pub mod models;
 pub mod title;
+pub mod util;
 pub mod user;
 use crate::appf::middleware::get_auth_layer;
 use axum::{
