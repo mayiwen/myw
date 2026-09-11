@@ -650,5 +650,14 @@ pub async fn get_date(
         return Ok(date);
     }
 }
+#[server(SSrGetDateNum, "/api/ssr/get_date_num")]
+pub async fn get_date_num(
+) -> Result<String, ServerFnError> {
+    #[cfg(feature = "ssr")]
+    {
+        let date = backend::api::util::time::ssr_get_date_num().await;
+        return Ok(date);
+    }
+}
 
 
