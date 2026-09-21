@@ -58,6 +58,20 @@ pub fn Index() -> impl IntoView {
           />
         </div>
         <h2>"诺若浏览器"</h2>
+        <p>
+          <span  on:click=move |_| {
+              open_url("https://nuoruo.cn");
+            }>
+          "https://nuoruo.cn"
+          </span>
+        </p>
+        <p>
+          <span  on:click=move |_| {
+              open_url("https://nuoruo.com");
+            }>
+          "https://nuoruo.com"
+          </span>
+        </p>
         <p>"https://mayiwen.com/browser"</p>
         <myw::Gap h=30 />
           <Button style="transform: scale(1.2); transform-origin: center"  on_click=move |_| {
