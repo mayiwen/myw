@@ -116,10 +116,10 @@ pub type NavFn = Box<dyn Fn(&'static str) + Send + Sync>;
 pub fn App() -> impl IntoView {
     provide_meta_context();
     let message = RwSignal::new(vec![
-        Message {
-            t: MessageType::INFO,
-            m: "基于rust全栈技术(axum与leptos ssr)构建".to_string(),
-        },
+        // Message {
+        //     t: MessageType::INFO,
+        //     m: "基于rust全栈技术(axum与leptos ssr)构建".to_string(),
+        // },
         Message {
             t: MessageType::INFO,
             m: "欢迎访问mayiwen.com".to_string(),

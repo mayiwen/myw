@@ -23,19 +23,36 @@ pub fn I() -> impl IntoView {
         <p style="text-align: center">
             <a
                 style="text-decoration: underline; cursor: pointer;"
-                title="一文小说阅读器，点击前往了解一下吧。"
+                title="诺若浏览器，点击前往了解一下吧。"
                 on:click= move |_| {
                     // with() 会借用内部值执行闭包，绕过 Clone 要求
                     global_nav.with(|nav_opt| {
                         if let Some(nav) = nav_opt {
-                            nav("/yueduqi"); // 调用 App 封装的导航逻辑
+                            nav("/browser"); // 调用 App 封装的导航逻辑
                         };
                     });
                 }
             >
-                "前往一文小说阅读器"
+                "前往诺若浏览器"
             </a>
         </p>
+        // <p style="text-align: center">
+        //     <a
+        //         style="text-decoration: underline; cursor: pointer;"
+        //         title="一文小说阅读器，点击前往了解一下吧。"
+        //         on:click= move |_| {
+        //             // with() 会借用内部值执行闭包，绕过 Clone 要求
+        //             global_nav.with(|nav_opt| {
+        //                 if let Some(nav) = nav_opt {
+        //                     nav("/yueduqi"); // 调用 App 封装的导航逻辑
+        //                 };
+        //             });
+        //         }
+        //     >
+        //         "前往一文小说阅读器"
+        //     </a>
+        // </p>
+      
         <Gap h=16/>
         <nav::I/>
     }

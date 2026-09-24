@@ -28,19 +28,20 @@ pub fn I() -> impl IntoView {
             <p>"跨平台客户端：tauri"</p>
             <p>"云服务器、域名：腾迅云"</p>
             <p>"代码平台：https://github.com/mayiwen/myw"</p>
+            <p>"手机端：java、swift"</p>
             <p>"js、scss、remixicon、web_sys、serde、tokio"</p>
 
             <myw::Gap h=30/>
             <h2>"关于我"</h2>
-            <p>"前端开发程序员"</p>
+            <p>"前端开发马一文"</p>
             <p>"建议与反馈邮箱：i@mayiwen.com"</p>
             <p>"在github联系我：https://github.com/mayiwen"</p>
             <p>"在gitlink联系我：https://gitlink.org.cn/mayiwen"</p>
             <myw::Gap h=30/>
             <h2>"版本"</h2>
-            <p>"当前版本： V1.2.8"</p>
-            <p>"2026-07-28 1.2.8 升级leptos至0.9，诺若浏览器添加下载与隐私声明"</p>
-            <p>"2026-07-12 1.2.7 添加诺若浏览器0.4.18 beta版本，支持android、ios、windows、macos、linux平台"</p>
+            <p>"当前版本： V1.2.9"</p>
+            <p>"2026-09-24 1.2.9 添加nuoruo.com, nuoruo.cn跳转至https://mayiwen.com/browser,后续将推进诺若浏览器苹果上架"</p>
+            <p>"2026-07-28 1.2.7 添加诺若浏览器0.4.18 beta版本，支持android、ios、windows、macos、linux平台。升级leptos至0.9，诺若浏览器添加下载与隐私声明"</p>
             <p>"2026-03-09 1.2.6 添加诺若子网站，对leptos前端框架技术进行二次确认，做了一个艰难的决定，后续不再纠结框架。"</p>
             <p>"2026-01-23 1.2.5 前端框架切到leptos完成，使用ssr重构网站，网站技术栈自此固化"</p>
             <p>"2025-11-01 1.2.4 昨天dioxus发布0.7版本，今日升级"</p>
