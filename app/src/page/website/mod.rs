@@ -24,7 +24,7 @@ pub fn I() -> impl IntoView {
 
 #[component]
 pub fn Index() -> impl IntoView {
-    let id: RwSignal<u64> = RwSignal::new(0);
+    let id: RwSignal<u64> = RwSignal::new(1);
     let global_nav =
         use_context::<RwSignal<Option<crate::NavFn>>>().expect("请确保 App 组件已提供全局导航信号");
     view! {
@@ -55,19 +55,22 @@ pub fn Index() -> impl IntoView {
       <div style=" max-width: 400px; margin: auto; text-align: center">
         <div>
           <img
-            style="max-width: 100px;filter: "
-            src="img/nuoruo/nuoruo_logo_square.png"
+            style="max-width: 220px;cursor: pointer;"
+            src="img/nuoruo_browser/nuoruo_logo.png"
             alt="nuoruo logo"
+            on:click=move |_| {
+              open_url("https://nuoruo.com");
+            }
           />
         </div>
         <h2>"诺若浏览器"</h2>
 
-        <p>
-          <span style="cursor: pointer; text-decoration: underline;" on:click=move |_| {
-            open_url("https://nuoruo.com");
-          }>"https://nuoruo.com"</span>
-        </p>
-        <myw::Gap h=30 />
+        // <p>
+        //  <span style="cursor: pointer; text-decoration: underline;" on:click=move |_| {
+        //    open_url("https://mayiwen.com/browser");
+        //  }>"https://mayiwen.com/browser"</span>
+        // </p>
+        <myw::Gap h=20 />
         <Button
           style="transform: scale(1.2); transform-origin: center"
           on_click=move |_| {
@@ -76,11 +79,11 @@ pub fn Index() -> impl IntoView {
         >
           前往下载
         </Button>
-        <myw::Gap h=12 />
-        <a href="https://github.com/mayiwen/nuoruo_browser/releases" target="_blank">
-          "前往github下载"
-        </a>
-        <myw::Gap h=12 />
+        // <myw::Gap h=12 />
+        // <a href="https://github.com/mayiwen/nuoruo_browser/releases" target="_blank">
+        //   "前往github下载"
+        // </a>
+        <myw::Gap h=20 />
         <div style="text-align: left;">
           <Tabset id=id>
             <Tab slot id=0 title="android".to_string()>
