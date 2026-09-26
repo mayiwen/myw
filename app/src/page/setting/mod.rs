@@ -27,8 +27,8 @@ pub fn I() -> impl IntoView {
         let tab: Option<RwSignal<SettingTab>> = use_context::<RwSignal<SettingTab>>();
         match tab {
             Some(v) => {
-                if v.get().value == 2 {
-                    id.set(2);
+                if v.get().value == 3 {
+                    id.set(3);
                     v.update(|st| {
                         st.value = 0;
                     });

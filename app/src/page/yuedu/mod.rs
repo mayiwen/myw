@@ -27,7 +27,7 @@ pub fn I() -> impl IntoView {
 }
 #[component]
 pub fn Index() -> impl IntoView {
-    let id: RwSignal<u64> = RwSignal::new(0);
+    let id: RwSignal<u64> = RwSignal::new(5);
     let global_nav =
         use_context::<RwSignal<Option<crate::NavFn>>>().expect("请确保 App 组件已提供全局导航信号");
     view! {

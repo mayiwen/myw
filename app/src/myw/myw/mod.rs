@@ -41,7 +41,7 @@ pub fn MayiwenBeiAn() -> impl IntoView {
                         match tab {
                             Some(v) => {
                                 v.update(|st| {
-                                    st.value = 2;
+                                    st.value = 3;
                                 });
                             }
                             None => {}
