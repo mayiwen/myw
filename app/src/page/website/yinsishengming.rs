@@ -7,17 +7,17 @@ pub fn YinSiShengMing() -> impl IntoView {
     let global_nav =
         use_context::<RwSignal<Option<crate::NavFn>>>().expect("请确保 App 组件已提供全局导航信号");
     view! {
-        <div style="padding: 20px; margin: 0 auto;">
-            <p style="text-align: right; margin-bottom: 20px;">
+        <div style="padding-bottom: 20px; margin: 0 auto;">
+            <div style="text-align: right; margin-bottom: 20px;">
                   <Button  on_click=move |_| {
                        global_nav.with(|nav_opt| {
                         if let Some(nav) = nav_opt {
                             nav("/browser"); // 调用 App 封装的导航逻辑
                         };
                     });
-                    }>诺若浏览器主页</Button><myw::Gap w=8/>
+                    }>诺若浏览器主页</Button><myw::Gap w=8 />
 
-            </p>
+            </div>
 
             <h1 style="text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px;">{"诺若浏览器 隐私声明"}</h1>
             <h3 style=" margin-bottom: 16px;">{"隐私声明最后更新日期：2026-07-25"}</h3>
@@ -31,10 +31,10 @@ pub fn YinSiShengMing() -> impl IntoView {
             <p style="line-height: 1.8; ">{"首页导航信息与主页网址，基于web localStorage技术存储,存于您设备的本地localStorage中。"}</p>
 
             <myw::Gap h=12 />
-            <p style="line-height: 1.8; ">{"访问历史与下载历史记录，使用sqllite数据库存储,存于您设备的本地数据库中。该数据库位于应用安装目录的history.db等文件中。"}</p>
+            <p style="line-height: 1.8; ">{"访问历史与下载历史记录，使用sqllite数据库存储,存于您设备的本地数据库中。该数据库位于应用安装目录的nuoruo_browser.db、nuoruo_browser.db-shm、nuoruo_browser.db-wal文件中。"}</p>
             <myw::Gap h=12 />
 
-            <p style="line-height: 1.8; ">{"下载的文件，会存储在您设备的本地本应用私用目录中。不会访问到您的其他应用文件。"}</p>
+            <p style="line-height: 1.8; ">{"下载的文件，会存储在您设备的本地本应用私有目录的download文件夹中。不会访问到您的其他应用文件。"}</p>
             <myw::Gap h=12 />
 
             <h3 style="font-size: 18px; font-weight: bold; margin-top: 24px; margin-bottom: 12px;">{"个人承诺"}</h3>
@@ -44,7 +44,7 @@ pub fn YinSiShengMing() -> impl IntoView {
 
             <h3 style="font-size: 18px; font-weight: bold; margin-top: 24px; margin-bottom: 12px;">{"链接跳转说明"}</h3>
             <myw::Gap h=12 />
-            <p style="line-height: 1.8; ">{"本软件会提供链接跳转功能，部分可能会跳转至mayiwen.com，此为获取软件更新及使用帮助。不会收集您的任何个人信息。"}</p>
+            <p style="line-height: 1.8; ">{"本软件会提供链接跳转功能，在首页或设置中可以跳转至https://mayiwen.com/browser或https://mayiwen.com/browser/privacy，此为获取软件更新及使用帮助，提供隐私声明。不会收集您的任何个人信息。"}</p>
             <p style="line-height: 1.8; ">{"搜索功能将调用百度搜索，输入网址会跳转第三方网站。这些网站可能会收集您的信息，请查阅各个网站的隐私政策以了解他们的数据处理方式。"}</p>
             <myw::Gap h=12 />
 

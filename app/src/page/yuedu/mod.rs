@@ -38,11 +38,11 @@ pub fn Index() -> impl IntoView {
                     on:click= move |_| {
                         global_nav.with(|nav_opt| {
                             if let Some(nav) = nav_opt {
-                                nav("/yueduqi/yinsishengming"); // 调用 App 封装的导航逻辑
+                                nav("/yueduqi/privacy"); // 调用 App 封装的导航逻辑
                             };
                         });
                     }
-                    title="https://mayiwen.com/yueduqi/yinsishengming">
+                    title="https://mayiwen.com/yueduqi/privacy">
                         隐私声明
                 </a>
                 <myw::Gap w=8/>
@@ -104,7 +104,7 @@ pub fn YinSiShengMing() -> impl IntoView {
     let global_nav =
         use_context::<RwSignal<Option<crate::NavFn>>>().expect("请确保 App 组件已提供全局导航信号");
     view! {
-        <p style="text-align: right; margin-right: 8px;">
+        <div style="text-align: right; margin-right: 8px;">
                 <Button  on_click=move |_| {
                        global_nav.with(|nav_opt| {
                         if let Some(nav) = nav_opt {
@@ -113,7 +113,7 @@ pub fn YinSiShengMing() -> impl IntoView {
                     });
                     }>一文小说阅读器主页</Button><myw::Gap w=8/>
 
-        </p>
+        </div>
 
         <h1 style="text-align: center;">{"一文小说阅读器 隐私声明"}</h1>
         <h3>{"隐私声明最后更新日期：2025-10-25"}</h3>   <myw::Gap/>

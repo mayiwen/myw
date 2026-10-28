@@ -28,7 +28,6 @@ pub fn Index() -> impl IntoView {
     let global_nav =
         use_context::<RwSignal<Option<crate::NavFn>>>().expect("请确保 App 组件已提供全局导航信号");
     view! {
-      <myw::Gap h=8 />
       <div style="text-align: right; margin-right: 8px;">
         <a
           style="text-decoration: underline; cursor: pointer; line-height: 40px;"
@@ -36,11 +35,11 @@ pub fn Index() -> impl IntoView {
             global_nav
               .with(|nav_opt| {
                 if let Some(nav) = nav_opt {
-                  nav("/browser/yinsishengming");
+                  nav("/browser/privacy");
                 }
               });
           }
-          title="https://mayiwen.com/browser/yinsishengming"
+          title="https://mayiwen.com/browser/privacy"
         >
           隐私声明
         </a>
@@ -56,7 +55,7 @@ pub fn Index() -> impl IntoView {
         <div>
           <img
             style="max-width: 220px;cursor: pointer;"
-            src="img/nuoruo_browser/nuoruo_logo.png"
+            src="img/nuoruo_browser/nuoruo.com.png"
             alt="nuoruo logo"
             on:click=move |_| {
               open_url("https://nuoruo.com");
