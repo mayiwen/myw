@@ -44,7 +44,7 @@ pub fn YinSiShengMing() -> impl IntoView {
 
             <h3 style="font-size: 18px; font-weight: bold; margin-top: 24px; margin-bottom: 12px;">{"链接跳转说明"}</h3>
             <myw::Gap h=12 />
-            <p style="line-height: 1.8; ">{"本软件会提供链接跳转功能，在首页或设置中可以跳转至https://mayiwen.com/browser或https://mayiwen.com/browser/privacy，此为获取软件更新及使用帮助，提供隐私声明。不会收集您的任何个人信息。"}</p>
+            <p style="line-height: 1.8; ">{"本软件会提供链接跳转功能，在首页或设置中可以跳转至https://mayiwen.com/及子页面，此为获取软件更新及使用帮助，提供隐私声明。不会收集您的任何个人信息。"}</p>
             <p style="line-height: 1.8; ">{"搜索功能将调用百度搜索，输入网址会跳转第三方网站。这些网站可能会收集您的信息，请查阅各个网站的隐私政策以了解他们的数据处理方式。"}</p>
             <myw::Gap h=12 />
 
