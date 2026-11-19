@@ -9,11 +9,11 @@ pub fn I() -> impl IntoView {
             <myw::Gap/>
             <h3>"ios 主界面"</h3>
             <myw::Gap/>
-            <img style="width: 100%; max-width: 400px;" src="img/nuoruo_browser/ios-0.4.18-home.png" alt="ios home" />
+            <img style="width: 100%; max-width: 400px;" src="img/nuoruo_browser/ios/ios-0.4.18-home.png" alt="ios home" />
             <myw::Gap/>
             <h3>"ios webview"</h3>
             <myw::Gap/>
-            <img style="width: 100%; max-width: 400px;" src="img/nuoruo_browser/ios-0.4.18-webview.png" alt="ios webview" />
+            <img style="width: 100%; max-width: 400px;" src="img/nuoruo_browser/ios/ios-0.4.18-webview.png" alt="ios webview" />
         </div>
     }
 }

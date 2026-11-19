@@ -9,14 +9,14 @@ pub fn I() -> impl IntoView {
             <myw::Gap/>
             <h3>"linux 主界面"</h3>
             <myw::Gap/>
-            <img style="width: 100%; max-width: 800px;" src="img/nuoruo_browser/linux-0.4.18-home.png" alt="linux home" />
+            <img style="width: 100%; max-width: 800px;" src="img/nuoruo_browser/linux/linux-0.4.18-home.png" alt="linux home" />
             <myw::Gap/>
             <h3>"linux webview"</h3>
             <myw::Gap/>
-            <img style="width: 100%; max-width: 800px;" src="img/nuoruo_browser/linux-0.4.18-webview.png" alt="linux webview" />
+            <img style="width: 100%; max-width: 800px;" src="img/nuoruo_browser/linux/linux-0.4.18-webview.png" alt="linux webview" />
             <h3>"dev linux"</h3>
             <myw::Gap/>
-            <img style="width: 100%; max-width: 800px;" src="img/nuoruo_browser/dev_linux.png" alt="linux webview" />
+            <img style="width: 100%; max-width: 800px;" src="img/nuoruo_browser/linux/dev_linux.png" alt="linux webview" />
         </div>
     }
 }

@@ -10,6 +10,7 @@ use crate::{
 use leptos::prelude::*;
 
 mod android;
+mod harmonyos;
 mod ios;
 mod linux;
 mod macos;
@@ -91,29 +92,36 @@ pub fn Index() -> impl IntoView {
             <Tab slot id=1 title="ios".to_string()>
               <ios::I />
             </Tab>
-            <Tab slot id=2 title="windows".to_string()>
+            <Tab slot id=2 title="harmonyos".to_string()>
+              <harmonyos::I />
+            </Tab>
+            <Tab slot id=3 title="windows".to_string()>
               <windows::I />
             </Tab>
-            <Tab slot id=3 title="macos".to_string()>
+            <Tab slot id=4 title="macos".to_string()>
               <macos::I />
             </Tab>
-            <Tab slot id=4 title="linux".to_string()>
+            <Tab slot id=5 title="linux".to_string()>
               <linux::I />
             </Tab>
           </Tabset>
         </div>
         <myw::Gap h=30 />
-        <p>
-          <span style="cursor: pointer; text-decoration: underline;" on:click=move |_| {
-            open_url("https://nuoruo.cn");
-          }>"https://nuoruo.cn"</span>
-        </p>
-        <p>
-          <span style="cursor: pointer; text-decoration: underline;" on:click=move |_| {
-            open_url("https://nuoruo.com");
-          }>"https://nuoruo.com"</span>
-        </p>
-       
+        <p style="color: #666;">"诺若浏览器"</p>
+        // <p>
+        //   <span style="cursor: pointer; text-decoration: underline;" on:click=move |_| {
+        //     open_url("https://nuoruo.com");
+        //   }>"https://nuoruo.com"</span>
+        // </p>
+           <p >
+                    <a
+                        href="https://beian.miit.gov.cn/"
+                        target="_blank"
+                        style="color: #666;"
+                    >
+                        "豫ICP备2022018473号-3A"
+                    </a>
+                </p>
         <p>
           <span style="cursor: pointer; text-decoration: underline;" on:click=move |_| {
             open_url("https://mayiwen.com/browser");

@@ -9,11 +9,11 @@ pub fn I() -> impl IntoView {
             <myw::Gap/>
             <h3>"windows 主界面"</h3>
             <myw::Gap/>
-            <img style="width: 100%; max-width: 800px;" src="img/nuoruo_browser/windows-0.4.18-home.png" alt="windows home" />
+            <img style="width: 100%; max-width: 800px;" src="img/nuoruo_browser/windows/windows-0.4.18-home.png" alt="windows home" />
             <myw::Gap/>
             <h3>"windows webview"</h3>
             <myw::Gap/>
-            <img style="width: 100%; max-width: 800px;" src="img/nuoruo_browser/windows-0.4.18-webview.png" alt="windows webview" />
+            <img style="width: 100%; max-width: 800px;" src="img/nuoruo_browser/windows/windows-0.4.18-webview.png" alt="windows webview" />
         </div>
     }
 }
