@@ -122,11 +122,11 @@ pub fn Index() -> impl IntoView {
                         "豫ICP备2022018473号-3A"
                     </a>
                 </p>
-        <p>
-          <span style="cursor: pointer; text-decoration: underline;" on:click=move |_| {
-            open_url("https://mayiwen.com/browser");
-          }>"https://mayiwen.com/browser"</span>
-        </p>
+        // <p>
+        //   <span style="cursor: pointer; text-decoration: underline;" on:click=move |_| {
+        //     open_url("https://mayiwen.com/browser");
+        //   }>"https://mayiwen.com/browser"</span>
+        // </p>
 
         <myw::Gap h=30 />
       </div>
