@@ -25,7 +25,7 @@ thiserror = "2.0.12"
 tokio = { version = "1.45.0", features = ["full"] }
 tower = { version = "0.5.2", features = ["full"] }
 tower-http = { version = "0.6.4", features = ["full"] }
-wasm-bindgen = "0.2.100"
+wasm-bindgen = "=0.2.126"
 
 # See https://github.com/leptos-rs/cargo-leptos for documentation of all the parameters.
 
@@ -97,3 +97,11 @@ lib-features = []
 #
 # Optional. Defaults to false.
 lib-default-features = false
+
+# [Optional] Hash frontend files (js/wasm/css) for cache-busting and write a
+# "hash.txt" (js:/wasm:/css:) next to the server binary. Defaults to false.
+#
+# Intentionally NOT set here so `cargo leptos watch` (dev) keeps unhashed names
+# (myw.css etc.) and the hardcoded <Stylesheet href="/pkg/myw.css"> resolves.
+# Enable only for release/nginx deploys via env var:
+#   $env:LEPTOS_HASH_FILES="true"; cargo leptos build --release

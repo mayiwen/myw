@@ -57,11 +57,19 @@ By default, `cargo-leptos` uses `nightly` Rust, `cargo-generate`, and `sass`. If
 5. `npm install -g sass` - install `dart-sass` (should be optional in future
 
 ## Compiling for Release
+
+Dev (`cargo leptos watch`) does NOT hash assets, so the hardcoded
+`<Stylesheet href="/pkg/myw.css">` resolves and styles load. For production /
+nginx deploys, enable content hashing (cache-busting) via the env var:
+
 ```bash
-cargo leptos build --release
+# PowerShell
+$env:LEPTOS_HASH_FILES="true"; cargo leptos build --release
 ```
 
-Will generate your server binary in target/server/release and your site package in target/site
+Will generate your server binary in `target/release`, a `hash.txt` (js:/wasm:/css:)
+next to it, and your hashed site package in `target/site`. nginx reads `hash.txt`
+to rewrite requests to the hashed filenames.
 
 ## Testing Your Project
 
