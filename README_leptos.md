@@ -58,13 +58,14 @@ By default, `cargo-leptos` uses `nightly` Rust, `cargo-generate`, and `sass`. If
 
 ## Compiling for Release
 
-Dev (`cargo leptos watch`) does NOT hash assets, so the hardcoded
-`<Stylesheet href="/pkg/myw.css">` resolves and styles load. For production /
-nginx deploys, enable content hashing (cache-busting) via the env var:
+`Cargo.toml` keeps `hash-files = true` so release builds hash assets and write
+`hash.txt` for nginx cache-busting. Because the app hardcodes
+`<Stylesheet href="/pkg/myw.css">`, **comment out `hash-files = true` before
+running local dev (`cargo leptos watch`)**, then uncomment it for release:
 
 ```bash
-# PowerShell
-$env:LEPTOS_HASH_FILES="true"; cargo leptos build --release
+# dev  -> Cargo.toml: #hash-files = true   ; cargo leptos watch
+# release -> Cargo.toml: hash-files = true ; cargo leptos build --release
 ```
 
 Will generate your server binary in `target/release`, a `hash.txt` (js:/wasm:/css:)
